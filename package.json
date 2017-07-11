@@ -1,7 +1,7 @@
 {
   "name": "deskproapps-trello",
-  "version": "0.2.0",
-  "description": "This application adds a sidebar that lets you link tickets to trello cards",
+  "version": "0.2.1",
+  "description": "Trello integration built with deskpro apps sdk",
   "main": "lib/main/javascript/index.js",
   "scripts": {
     "dev": "dpat server .",
