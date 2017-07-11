@@ -13,12 +13,12 @@ module.exports = function (env)
   );
 
   const resources = dpat.Resources.copyDescriptors(buildManifest, PROJECT_ROOT_PATH);
-  const vendorPackages = dpat.BuildUtils.runTimePackages(PROJECT_ROOT_PATH);
+  const bundlePackages = dpat.BuildUtils.bundlePackages(PROJECT_ROOT_PATH, ['react', 'react-dom']);
   const babelOptions = dpat.Babel.resolveOptions(PROJECT_ROOT_PATH, { babelrc: false });
 
   // emulate the Files API path which is used by deskpro to fetch the app files
   const FILES_API_PATH = `v${buildManifest.getAppVersion()}/files`;
-  // the relative path of the assets inside the distribution
+  // the relative path of the assets inside the distribution bundle
   const DISTRIBUTION_ASSET_PATH = 'assets';
 
   const extractCssPlugin = new dpat.Webpack.ExtractTextPlugin({
@@ -53,7 +53,7 @@ module.exports = function (env)
         `webpack-dev-server/client?http://localhost:31080`,
         path.resolve(PROJECT_ROOT_PATH, 'src/webpack/entrypoint.js')
       ],
-      vendor: vendorPackages
+      vendor: bundlePackages
     },
     module: {
       loaders: [
@@ -101,10 +101,10 @@ module.exports = function (env)
     ],
     resolve: {
       extensions: ['*', '.js', '.jsx', '.scss', '.css'],
-      modules: [ "node_modules", dpat.Paths("node_modules"), path.join(PROJECT_ROOT_PATH, "node_modules") ],
+      modules: [ "node_modules", dpat.path("node_modules"), path.join(PROJECT_ROOT_PATH, "node_modules") ],
     },
     resolveLoader: {
-      modules: [ "node_modules", dpat.Paths("node_modules"), path.join(PROJECT_ROOT_PATH, "node_modules") ]
+      modules: [ "node_modules", dpat.path("node_modules"), path.join(PROJECT_ROOT_PATH, "node_modules") ]
     },
     node: {fs: 'empty'},
     bail: true
