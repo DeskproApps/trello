@@ -38,5 +38,16 @@
     "semantic-ui-react": "0.67.2",
     "superagent": "3.5.2",
     "superagent-promise": "1.1.0"
+  },
+  "deskpro" : {
+    "title": "Trello",
+    "is_single": true,
+    "scope": "agent",
+    "targets": [
+      { "target": "ticket-sidebar", "url": "html/ticket-sidebar.html" }
+    ],
+    "settings": [],
+    "deskpro_api_tags": ["tickets.*"],
+    "external_apis": []
   }
 }
