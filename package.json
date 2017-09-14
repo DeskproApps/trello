@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/DeskproApps/trello#readme",
   "dependencies": {
-    "@deskproapps/deskproapps-sdk-react": "1.0.0-beta.5"
+    "@deskproapps/deskproapps-sdk-react": "1.0.0-beta.6"
   },
   "devDependencies": {
     "@deskproapps/dpat": "0.5.2",
@@ -46,6 +46,12 @@
     "isSingle": true,
     "scope": "agent",
     "state": [
+      {
+        "name": "install",
+        "isBackendOnly": false,
+        "permRead": "EVERYBODY",
+        "permWrite": "OWNER"
+      },
       {
         "name": "auth",
         "isBackendOnly": false,
