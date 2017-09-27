@@ -5,7 +5,8 @@
   "main": "lib/main/javascript/index.js",
   "scripts": {
     "dev": "dpat server .",
-    "package": "dpat clean . && dpat compile . && dpat verify ./dist && dpat package .",
+    "package": "dpat clean . && dpat compile . && dpat compile-installer . && dpat verify ./dist && dpat package .",
+    "package-installer": "dpat verify ./dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md"
   },
@@ -41,11 +42,11 @@
     "superagent-promise": "1.1.0"
   },
   "deskpro": {
-    "version": "2.1.0",
+    "version": "2.3.0",
     "title": "Trello",
     "isSingle": true,
     "scope": "agent",
-    "state": [
+    "storage": [
       {
         "name": "install",
         "isBackendOnly": false,
@@ -71,7 +72,29 @@
         "url": "html/ticket-sidebar.html"
       }
     ],
-    "settings": [],
+    "settings": [
+      {
+        "type": "text",
+        "name": "apiKey",
+        "title": "Trello Api key",
+
+        "defaultValue": "",
+        "required": true,
+        "validator": {
+          "type": "regex",
+          "pattern": "^.+"
+        },
+        "isBackendOnly": false
+      }
+    ],
+    "customFields" : [
+      {
+        "type": "dataJson",
+        "attachedTo": "ticket",
+        "alias": "trelloCards",
+        "enabled": true
+      }
+    ],
     "deskproApiTags": [
       "tickets.*"
     ],
