@@ -84,9 +84,26 @@ function parseTrelloCardFormJS(formModel, boards, lists, labels) {
       }
     }
   }
-
-  const due = duedate instanceof Date ? duedate: null;
-  return new TrelloCard({ id: '', name: title, url: '', description, subscribed: true, board: boardObject, list:listObject, due, labels });
+  
+  let due = null;
+  if (duedate) {
+    due = duedate;
+    if (!(due instanceof Date)) {
+      due = new Date(due);
+    }
+  }
+  
+  return new TrelloCard({
+    id: '',
+    name: title,
+    url: '',
+    description,
+    subscribed: true,
+    board: boardObject,
+    list: listObject,
+    due,
+    labels
+  });
 }
 
 /**

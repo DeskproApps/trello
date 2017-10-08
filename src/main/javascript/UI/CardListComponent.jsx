@@ -1,6 +1,5 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Icon, Scrollbar} from '@deskpro/react-components';
 
 class CardCommand {
   /**
@@ -134,13 +133,12 @@ function renderTitle(card, cardIndex) {
  */
 function renderCardOption(card, cardIndex, cardOption) {
   const { command, iconName } = cardOption;
+  
   return (
     <Icon
       key={['icon', command.name, card.id].join('-')}
-      link
-      fitted
-      size="large"
-      name={iconName}
+      name={iconName.split(' ').join('-')}
+      size="xlarge"
       className="option"
       data-card-list-command={[command.name, cardIndex].join(':')}
     />
@@ -181,7 +179,7 @@ function renderCardOptionsLayout(card, cardIndex, cardOptions) {
  */
 function renderCard(renderOptions, card, cardIndex, cardOptions) {
   return (
-    <div className="ui trelloapp-card-list-item">
+    <div className="trelloapp-card-list-item">
 
       {renderCardOptionsLayout(card, cardIndex, cardOptions)}
 
@@ -215,7 +213,7 @@ const CardListComponent = ({ cards, showCardLocation, showBorder, onGotoCard, on
   if (onUnlinkCard) {
     command = new CardCommand('unlinkcard', onUnlinkCard);
     commands.push(command);
-    cardOptions.push(new CardOption('broken chain', command));
+    cardOptions.push(new CardOption('chain broken', command));
   }
 
   if (onSelectCard) {
@@ -230,9 +228,9 @@ const CardListComponent = ({ cards, showCardLocation, showBorder, onGotoCard, on
   }
   return (
     <div onClick={createOnClickHandler(cards, commands)} className={classNames.join(' ')}>
-      <Scrollbars renderThumbVertical={renderScrollbarThumb} autoHeightMax={400} autoHeight={true} autoHideTimeout={500}>
+      <Scrollbar>
       {children}
-      </Scrollbars>
+      </Scrollbar>
     </div>
   );
 };
@@ -255,7 +253,7 @@ CardListComponent.propTypes = {
   showBorder: React.PropTypes.bool,
   onGotoCard: React.PropTypes.func,
   onUnlinkCard: React.PropTypes.func,
-  onSelectCard: React.PropTypes.func,
+  onSelectCard: React.PropTypes.func
 };
 
 CardListComponent.defaultProps = {

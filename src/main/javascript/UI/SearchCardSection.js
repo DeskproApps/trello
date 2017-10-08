@@ -1,6 +1,5 @@
 import React from 'react';
-import { Layout } from '@deskproapps/deskproapps-sdk-react';
-import { Divider } from 'semantic-ui-react';
+import { Container, Section, Heading, Button } from '@deskpro/react-components';
 import CardsListComponent from './CardListComponent';
 import SearchInputComponent from './SearchInputComponent';
 
@@ -8,11 +7,18 @@ const SearchCardSection = ({ onSelectCard, onGotoCard, onCancel, onSearchChange,
 
   let searchInput;
   const onChange = value => { searchInput = value; };
-  const onSearchButtonClick = () => { if (searchInput) { onSearchChange(searchInput); };  };
+  const onSearchButtonClick = () => {
+    if (searchInput) {
+      onSearchChange(searchInput);
+    }
+  };
 
   return (
-    <Layout.Section title="SEARCH FOR A CARD">
-      <Layout.Block>
+    <Container {...otherProps}>
+      <Heading size={3}>
+        Search for a card
+      </Heading>
+      <Section>
         <SearchInputComponent
           fluid
           placeholder="Search card or paste URL..."
@@ -20,22 +26,26 @@ const SearchCardSection = ({ onSelectCard, onGotoCard, onCancel, onSearchChange,
           onSearch={onSearchChange}
           onChange={onChange}
         />
-      </Layout.Block>
-
-      <Layout.Block>
-        <CardsListComponent cards={cards || []} onSelectCard={onSelectCard} onGotoCard={onGotoCard} showBorder={true} />
-      </Layout.Block>
-
-      <Layout.Block>
-        <Layout.Button onClick={onSearchButtonClick}>Search</Layout.Button>
-        <Divider hidden />
-        <Layout.Button onClick={onCancel}>Cancel</Layout.Button>
-      </Layout.Block>
-
-    </Layout.Section>
+      </Section>
+      <Section>
+        <CardsListComponent
+          cards={cards || []}
+          onSelectCard={onSelectCard}
+          onGotoCard={onGotoCard}
+          showBorder={true}
+        />
+      </Section>
+      <Section>
+        <Button onClick={onSearchButtonClick}>
+          Search
+        </Button>
+        <Button onClick={(e) => { e.preventDefault(); onCancel(e); }}>
+          Cancel
+        </Button>
+      </Section>
+    </Container>
   );
 };
-
 
 SearchCardSection.propTypes = {
   cards: React.PropTypes.array,

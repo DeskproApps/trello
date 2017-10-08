@@ -1,6 +1,5 @@
 import React from 'react';
-import { Layout } from '@deskproapps/deskproapps-sdk-react';
-
+import { Container, Heading } from '@deskpro/react-components';
 import CardListComponent from './CardListComponent';
 
 const LinkedCardsSection = ({ cards, onGotoCard, onUnlinkCard, onSelectCard }) => {
@@ -9,10 +8,19 @@ const LinkedCardsSection = ({ cards, onGotoCard, onUnlinkCard, onSelectCard }) =
   }
 
   return (
-    <Layout.Section title="LINKED CARDS">
-      <CardListComponent cards={cards} onGotoCard={onGotoCard} onUnlinkCard={onUnlinkCard} onSelectCard={onSelectCard} />
-    </Layout.Section>
-  )};
+    <Container>
+      <Heading size={3}>
+        Linked cards
+      </Heading>
+      <CardListComponent
+        cards={cards}
+        onGotoCard={onGotoCard}
+        onUnlinkCard={onUnlinkCard}
+        onSelectCard={onSelectCard}
+      />
+    </Container>
+  )
+};
 
 LinkedCardsSection.propTypes = {
   cards: React.PropTypes.array.isRequired,

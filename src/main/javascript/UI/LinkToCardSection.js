@@ -1,21 +1,32 @@
 import React from 'react';
-import { Divider } from 'semantic-ui-react';
-import { Layout } from '@deskproapps/deskproapps-sdk-react';
+import { Container, Heading, Button } from '@deskpro/react-components';
 
-const LinkToCardSection = ({ onCreate, onPick, onSearch }) => {
+const LinkToCardSection = ({ cards, onCreate, onPick, onSearch }) => {
   return (
-    <Layout.Section title="LINK TO ANOTHER CARD">
-      <Layout.Button onClick={onSearch}>Search for card</Layout.Button>
-      <Divider hidden />
-      <Layout.Button onClick={onPick}>Pick card</Layout.Button>
-      <Divider hidden />
-      <Layout.Button onClick={onCreate}>Create new card</Layout.Button>
-    </Layout.Section>
-  )};
+    <Container>
+      <Heading size={3}>
+        {cards.length > 0
+          ? 'Link to another card'
+          : 'Link to a card'
+        }
+      </Heading>
+      <Button onClick={onSearch}>
+        Search for card
+      </Button>
+      <Button onClick={onPick}>
+        Pick card
+      </Button>
+      <Button onClick={onCreate}>
+        Create new card
+      </Button>
+    </Container>
+  );
+};
 
 LinkToCardSection.propTypes = {
+  cards: React.PropTypes.array.isRequired,
   onCreate: React.PropTypes.func.isRequired,
   onPick: React.PropTypes.func.isRequired,
-  onSearch: React.PropTypes.func.isRequired,
+  onSearch: React.PropTypes.func.isRequired
 };
 export default LinkToCardSection;
