@@ -74,7 +74,7 @@
     "settings": [],
     "customFields": [
       {
-        "type": "dataJson",
+        "type": "dataList",
         "attachedTo": "ticket",
         "alias": "trelloCards",
         "title": "Trello linked cards"
