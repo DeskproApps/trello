@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import * as TrellParsers from './Trello/TrelloParsers';
 import { TrelloApiClient, TrelloApiError, TrelloServices, TrelloClientError, parseTrelloCardUrl } from './Trello';
@@ -8,7 +9,7 @@ import { CreateCardSection, LinkedCardsSection, LinkToCardSection, PickCardSecti
 
 export default class TrelloApp extends React.Component {
 
-  static propTypes = { dpapp: React.PropTypes.object.isRequired };
+  static propTypes = { dpapp: PropTypes.object };
 
   constructor(props) {
     super(props);
@@ -40,7 +41,6 @@ export default class TrelloApp extends React.Component {
       uiState: this.initUiState,
 
       createCardModel: null,
-      pickCardModel: null,
 
       refreshCount: 0
     };
@@ -314,16 +314,16 @@ export default class TrelloApp extends React.Component {
       throw new Error('missing next ui state');
     }
 
-    const { dpapp } = this.props;
+    const { ui } = this.props;
     const stateTransitionsCount = this.stateTransitionCount++;
 
     if (!hideLoader) {
-      dpapp.ui.showLoading();
+      ui.setLoading(true);
     }
 
     return transition.then(
       newState => {
-        dpapp.ui.hideLoading();
+        ui.setLoading(false);
 
         const nextState = {
           stateTransitionsCount,
@@ -336,7 +336,7 @@ export default class TrelloApp extends React.Component {
         return Promise.resolve(newState);
       },
       error => {
-        dpapp.ui.hideLoading();
+        ui.setLoading(false);
         console.log('ERROR: nextUIStateTransition', error);
 
         if (error instanceof AuthenticationRequiredError) {
@@ -350,15 +350,20 @@ export default class TrelloApp extends React.Component {
     );
   };
 
-  renderAuthenticationRequired = () => (<AuthenticationRequiredPage onAuthenticate={this.onAuthenticate} />);
+  renderAuthenticationRequired = () => (
+    <AuthenticationRequiredPage onAuthenticate={this.onAuthenticate} />
+  );
 
   renderCreateCard = () =>
   {
     const { loadBoardLists } = this;
-    const { createCardModel, boards, lists } = this.state;
+    const { boards, lists } = this.state;
 
     const onCancel = () => {
-      this.nextUIStateTransition('ticket-loaded', Promise.resolve({ createCardModel: null, boards:[], lists: [] }));
+      this.nextUIStateTransition(
+        'ticket-loaded',
+        Promise.resolve({ boards:[], lists: [] })
+      );
     };
 
     const onSubmit = (model) =>
@@ -377,16 +382,16 @@ export default class TrelloApp extends React.Component {
 
       this
         .nextUIStateTransition('ticket-loaded', createCardPromise)
-        .then(nextState => ({ ...nextState, createCardModel: null, boards:[], lists: [] }));
+        .then(nextState => ({ ...nextState, boards:[], lists: [] }));
     };
 
-    const onChange = (key, value, model) => {
+    const onChange = (value, key) => {
       let stateChangePromise;
 
-      if (key === 'board' && value) {
+      if (key === 'board') {
         const executor = data => {
           const listId =  data.lists && data.lists.length ? data.lists[0].id : null;
-          return { ...data, createCardModel: {...model, list: listId} };
+          return { ...data };
         };
         const board = boards.filter(board => board.id === value).pop();
 
@@ -404,7 +409,6 @@ export default class TrelloApp extends React.Component {
           onCancel={onCancel}
           onSubmit={onSubmit}
           onChange={onChange}
-          model={createCardModel}
           boards={boards}
           lists={lists}
         />
@@ -463,16 +467,19 @@ export default class TrelloApp extends React.Component {
 
   renderPickCard = () =>
   {
-    const { pickCardModel, boards, lists, cards } = this.state;
+    const { boards, lists, cards } = this.state;
     const { loadBoardLists, loadListCards } = this;
 
     const onCancel = () => {
-      this.nextUIStateTransition('ticket-loaded', Promise.resolve({ pickCardModel: null, cards: null, boards: [], lists: [] }));
+      this.nextUIStateTransition(
+        'ticket-loaded',
+        Promise.resolve({ cards: null, boards: [], lists: [] })
+      );
     };
 
-    const onChange = (key, value, model) => {
+    const onChange = (value, key) => {
       let stateChangePromise;
-      const executor = data => ({ ...data, pickCardModel: model });
+      const executor = data => ({ ...data });
 
       if (key === 'board' && value) {
         const board = boards.filter(board => board.id === value).pop();
@@ -502,7 +509,6 @@ export default class TrelloApp extends React.Component {
           onSelectCard={onSelectCard}
           onCancel={onCancel}
           onChange={onChange}
-          model={pickCardModel}
           boards={boards}
           lists={lists}
           cards={cards}
@@ -585,8 +591,17 @@ export default class TrelloApp extends React.Component {
 
     return (
       <div>
-        <LinkedCardsSection cards={linkedCards} onSelectCard={onGotoCard} onUnlinkCard={onUnlinkCard} />
-        <LinkToCardSection onPick={onPick} onCreate={onCreate} onSearch={onSearch} />
+        <LinkedCardsSection
+          cards={linkedCards}
+          onSelectCard={onGotoCard}
+          onUnlinkCard={onUnlinkCard}
+        />
+        <LinkToCardSection
+          cards={linkedCards}
+          onPick={onPick}
+          onCreate={onCreate}
+          onSearch={onSearch}
+        />
       </div>
     );
   };
