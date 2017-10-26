@@ -1,4 +1,20 @@
-@import "./deskpro/colors";
-@import "./semantic-ui/globals/reset.overrides";
-@import "./CardList/index";
+$dp-styles-font-path: "~@deskpro/react-components/src/styles/fonts/";
+@import "~@deskpro/react-components/src/styles/main.scss";
+@import "./cards";
 
+.dp-input {
+  width: 100%;
+  input {
+    width: 100%;
+  }
+}
+
+.dp-datepicker {
+  width: 100%;
+  max-width: 100%;
+}
+
+.dp-button {
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
