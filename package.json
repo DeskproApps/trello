@@ -28,17 +28,16 @@
   },
   "homepage": "https://github.com/DeskproApps/trello#readme",
   "dependencies": {
-    "@deskpro/apps-sdk-react": "^0.0.9",
-    "@deskpro/react-components": "^1.1.0",
-    "error-wrapper": "2.1.0"
+    "react": "15.5.3",
+    "react-dom": "15.5.3"
   },
   "devDependencies": {
     "@deskpro/apps-dpat": "0.9.1",
-    "babel-core": "^6.26.0",
-    "react": "15.5.3",
-    "react-dom": "15.5.3",
+    "@deskpro/apps-sdk-react": "^0.0.9",
+    "@deskpro/react-components": "^1.1.0",
     "superagent": "3.5.2",
-    "superagent-promise": "1.1.0"
+    "superagent-promise": "1.1.0",
+    "error-wrapper": "2.1.0"
   },
   "deskpro": {
     "version": "2.1.0",
