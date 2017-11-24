@@ -244,10 +244,10 @@ export default class TrelloApp extends React.Component {
     const newLinkedCardIds = newLinkedCards.map(card => card.id);
 
     const { trelloApiClient, trelloServices } = this;
-    const { tabUrl } = this.props.dpapp.context;
-    const { customField } = this;
+    const { context } = this.props.dpapp;
+    const { tabUrl } = context;
 
-    return context.customFields.setAppField(customField, newLinkedCardIds)
+    return context.customFields.setField(`app:${this.props.dpapp.instanceId}:${this.customField}`, newLinkedCardIds)
       .then(() => trelloServices.createCardUnlinkedComment(trelloApiClient, card, tabUrl))
       .then(() => ({ linkedCards: newLinkedCards }))
     ;
