@@ -222,9 +222,8 @@ export default class TrelloApp extends React.Component {
     const { context } = this.props.dpapp;
     const { tabUrl } = this.props.dpapp.context;
     const { trelloApiClient, trelloServices } = this;
-    const { customField } = this;
 
-    return context.customFields.setAppField(customField, newLinkedCardIds)
+    return context.customFields.setField(`app:${this.props.dpapp.instanceId}:${this.customField}`, newLinkedCardIds)
       .then(() => trelloServices.createCardLinkedComment(trelloApiClient, card, tabUrl))
       .then(() => ({ linkedCards: newLinkedCards }))
       ;
@@ -293,7 +292,7 @@ export default class TrelloApp extends React.Component {
     const { trelloApiClient, trelloServices } = this;
 
     // notify dp the app is ready
-    return context.customFields.getAppField(this.customField)
+    return context.customFields.getField(`app:${this.props.dpapp.instanceId}:${this.customField}`)
       .then(cardIds => {
         if (cardIds instanceof Array && cardIds.length) {
           return trelloServices.getCardList(trelloApiClient, cardIds).then((linkedCards) => ({ linkedCards }));
