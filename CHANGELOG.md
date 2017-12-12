@@ -4,6 +4,13 @@ This project is following [Semantic Versioning](http://semver.org)
 
 ## [Unreleased][]
 
+### Changed
+ - use latest version of apps-sdk-react
+
+### Fixed 
+ - duplicate cards created by repeatedly pressing the create card button 
+
+
 ## [0.2.6][] - 2017-11-24
 
 ### Added
