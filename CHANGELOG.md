@@ -8,7 +8,7 @@ This project is following [Semantic Versioning](http://semver.org)
 
 ### Fixed 
  - remove hardcoded container widths 
-
+ - upgrade to @deskpro/apps-sdk-react version 0.2.3 
 
 ## [0.2.7-beta.1][] - 2017-12-13
 
