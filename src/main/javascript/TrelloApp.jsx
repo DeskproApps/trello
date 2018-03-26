@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import * as TrellParsers from './Trello/TrelloParsers';
 import { TrelloApiClient, TrelloApiError, TrelloServices, TrelloClientError, parseTrelloCardUrl } from './Trello';
@@ -11,7 +12,7 @@ import { Container } from '@deskpro/react-components';
 
 export default class TrelloApp extends React.Component {
 
-  static propTypes = { dpapp: React.PropTypes.object.isRequired };
+  static propTypes = { dpapp: PropTypes.object.isRequired };
 
   constructor(props) {
 
