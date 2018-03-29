@@ -4,6 +4,7 @@
   "description": "This application adds a sidebar that lets you link tickets to trello cards",
   "main": "lib/main/javascript/index.js",
   "scripts": {
+    "dpat": "dpat",
     "dev": "dpat server .",
     "package": "dpat clean . && dpat compile . && dpat bundle-installer . && dpat verify ./dist && dpat package .",
     "test": "echo \"Error: no test specified\" && exit 1",
