@@ -4,6 +4,8 @@ This project is following [Semantic Versioning](http://semver.org)
 
 ## [Unreleased][]
 
+## [0.2.9][] - 2018-03-29
+
 ### Added
 
     - travis will atttach builds to Github PR's when enabled via s3 environment variables
@@ -80,7 +82,8 @@ QA passed
 
 
 
-[Unreleased]: https://github.com/DeskproApps/trello/compare/v0.2.8...HEAD
+[Unreleased]: https://github.com/DeskproApps/trello/compare/v0.2.9...HEAD
+[0.2.9]: https://github.com/DeskproApps/trello/compare/v0.2.8...v0.2.9
 [0.2.8]: https://github.com/DeskproApps/trello/compare/v0.2.7...v0.2.8
 [0.2.7]: https://github.com/DeskproApps/trello/compare/v0.2.7-beta.3...v0.2.7
 [0.2.7-beta.3]: https://github.com/DeskproApps/trello/compare/v0.2.7-beta.2...v0.2.7-beta.3
