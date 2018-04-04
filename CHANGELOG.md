@@ -15,6 +15,7 @@ This project is following [Semantic Versioning](http://semver.org)
 
     - upgrade to @deskpro/apps-sdk-react version 0.2.13
     - upgrade to @deskpro/apps-dpat version 0.10.4
+    - upgrade to react version ^16.0.0
 
 ## [0.2.8][] - 2018-02-09
 
