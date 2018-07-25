@@ -28,9 +28,11 @@
     "url": "https://github.com/DeskproApps/trello/issues"
   },
   "homepage": "https://github.com/DeskproApps/trello#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@deskpro/apps-components": "^0.3.6"
+  },
   "devDependencies": {
-    "@deskpro/apps-dpat": "0.10.4",
+    "@deskpro/apps-dpat": "0.10.6",
     "@deskpro/apps-sdk-react": "0.2.13",
     "@deskpro/react-components": "1.3.11",
     "@deskpro/redux-components": "^1.0.2",
