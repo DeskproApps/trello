@@ -4,6 +4,8 @@ This project is following [Semantic Versioning](http://semver.org)
 
 ## [Unreleased][]
 
+## [0.3.0-beta.1][] - 2018-07-25
+
 
 ### Changed
 
@@ -92,7 +94,8 @@ QA passed
 
 
 
-[Unreleased]: https://github.com/DeskproApps/trello/compare/v0.2.9...HEAD
+[Unreleased]: https://github.com/DeskproApps/trello/compare/v0.3.0-beta.1...HEAD
+[0.3.0-beta.1]: https://github.com/DeskproApps/trello/compare/v0.2.9...v0.3.0-beta.1
 [0.2.9]: https://github.com/DeskproApps/trello/compare/v0.2.8...v0.2.9
 [0.2.8]: https://github.com/DeskproApps/trello/compare/v0.2.7...v0.2.8
 [0.2.7]: https://github.com/DeskproApps/trello/compare/v0.2.7-beta.3...v0.2.7
