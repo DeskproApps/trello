@@ -55,7 +55,6 @@ class TrelloCard
    * @return {TrelloCard}
    */
   changeUrl = newUrl => {
-    const { url, ...rest } = this.props;
     const newProps = Object.assign({}, this.props, { url: newUrl });
 
     return new TrelloCard(newProps);
@@ -66,7 +65,6 @@ class TrelloCard
    * @return {TrelloCard}
    */
   changeId = newId => {
-    const { id, ...rest } = this.props;
     const newProps = Object.assign({}, this.props, { id: newId });
 
     return new TrelloCard(newProps);
@@ -77,7 +75,6 @@ class TrelloCard
    * @return {TrelloCard}
    */
   changeBoard = newBoard => {
-    const { board, list, ...rest } = this.props;
     const newProps = Object.assign({}, this.props, { board: newBoard, list: null });
 
     return new TrelloCard(newProps);

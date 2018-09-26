@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from '@deskpro/apps-components';
 
 class SearchInputComponent extends React.Component {
 

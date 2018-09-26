@@ -60,7 +60,7 @@ function parseTrelloCardJS(card) {
  * @return {TrelloCard}
  */
 function parseTrelloCardFormJS(formModel, boards, lists, labels) {
-  const { title, description, subscribe: subscribed, duedate } = formModel;
+  const { title, description, duedate } = formModel;
 
   let boardObject = null;
   if (formModel.board) {

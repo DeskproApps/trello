@@ -1,19 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Panel } from '@deskpro/apps-components';
+import { Action, ActionBar, Button, Panel } from '@deskpro/apps-components';
 
 import CardsListComponent from './CardListComponent';
 import SearchInputComponent from './SearchInputComponent';
 
-const SearchCardSection = ({ onSelectCard, onGotoCard, onCancel, onSearchChange, cards, ...otherProps }) => {
+const SearchCardSection = ({ onSelectCard, onSearchChange, cards, history }) => {
 
   let searchInput;
   const onChange = value => { searchInput = value; };
+  const onCancel = () => {
+    history.push("ticket-loaded", null);
+    history.go(1);
+  };
+
   const onSearchButtonClick = () => { if (searchInput) { onSearchChange(searchInput); };  };
 
   return (
     <Panel title={"Search for card"}>
+      <ActionBar title="Create card">
+        <Action icon="close" onClick={onCancel} />
+      </ActionBar>
       <div className="dp-form-group">
         <SearchInputComponent
           placeholder   ="Enter text or paste URL..."
@@ -23,7 +31,7 @@ const SearchCardSection = ({ onSelectCard, onGotoCard, onCancel, onSearchChange,
         />
       </div>
 
-      <CardsListComponent cards={cards || []} onSelectCard={onSelectCard} onGotoCard={onGotoCard} showBorder={true} />
+      <CardsListComponent cards={cards || []} onSelectCard={onSelectCard} showBorder={true} />
 
       <div className="dp-form-group dp-form-controls">
         <Button onClick={onSearchButtonClick} className={"dp-form-control dp-Button--wide"}>Search</Button>
@@ -36,10 +44,8 @@ const SearchCardSection = ({ onSelectCard, onGotoCard, onCancel, onSearchChange,
 
 SearchCardSection.propTypes = {
   cards: PropTypes.array,
-  onCancel: PropTypes.func,
   onSearchChange: PropTypes.func,
   onSelectCard: PropTypes.func,
-  onGotoCard: PropTypes.func
 };
 
 export default SearchCardSection;

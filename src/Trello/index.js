@@ -9,5 +9,5 @@ import TrelloCard from './TrelloCard';
 import TrelloList from './TrelloList';
 import TrelloLabel from './TrelloLabel';
 
-export { TrelloApiClient, TrelloApiError, TrelloServices, TrelloClientError, TrelloBoard, TrelloCard, TrelloList };
+export { TrelloApiClient, TrelloApiError, TrelloServices, TrelloClientError, TrelloBoard, TrelloCard, TrelloList, TrelloLabel };
 export { parseCardURL as parseTrelloCardUrl } from './TrelloURL';
