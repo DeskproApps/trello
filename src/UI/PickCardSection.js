@@ -6,7 +6,7 @@ import { Form, Select, required, Group } from '../Forms';
 import CardsListComponent from './CardListComponent';
 import { listToOption, boardsToOptions, boardToOption } from './utils'
 
-const PickCardSection = ({ onSelectCard, onChange, model, boards, lists, cards, history }) => {
+const PickCardSection = ({ onSelectCard, onChange, model, boards, lists, cards }) => {
   const onModelChange = (value, key) => {
     let nextModel = null;
 

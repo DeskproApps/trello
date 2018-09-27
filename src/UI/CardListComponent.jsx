@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, ListItem, Level, Menu, Action, ActionBar } from '@deskpro/apps-components';
+import { Avatar, List, ListItem, Level, Menu, Action, ActionBar } from '@deskpro/apps-components';
 import trelloLogo from '../main/resources/icon.png';
 
 class Card extends React.Component
@@ -64,7 +64,7 @@ class Card extends React.Component
   };
 
   closeMenu = (e) => {
-    if (this.menu.current && this.menu.current.contains(e.target)) {
+    if (e && this.menu.current && this.menu.current.contains(e.target)) {
       return;
     }
     this.setState({
@@ -87,7 +87,7 @@ class Card extends React.Component
    * @param {Array} cardActions
    */
   render() {
-    const { renderOptions, card, cardIndex, onSelectCard, onUnlinkCard } = this.props;
+    const { card, cardIndex, onSelectCard, onUnlinkCard } = this.props;
     const { menuOpen, confirmUnlink } = this.state;
 
     const cardActions = [
@@ -138,29 +138,21 @@ class Card extends React.Component
           </Menu>
         </ActionBar>
 
-        {
-          renderOptions.showCardLocation &&
-          <Level>
-            <Level align={"left"}>
-              <b>Board</b>
-            </Level>
-            <Level align={"right"}>
-              <span>{ card.board && card.board.name ? card.board.name : "" }</span>
-            </Level>
+        <Level>
+          <Level align={"left"}>
+            <span>{ card.board && card.board.name ? card.board.name : "" }&nbsp;
+            |&nbsp;{ card.list && card.list.name ? card.list.name : "" }</span>
           </Level>
-        }
-
-        {
-          renderOptions.showCardLocation &&
-          <Level>
-            <Level align={"left"}>
-              <b>List</b>
-            </Level>
-            <Level align={"right"}>
-              <span>{ card.list && card.list.name ? card.list.name : "" }</span>
-            </Level>
+          <Level align={"right"}>
+            { card.members && card.members.length > 0 ? card.members.map(member =>
+              <Avatar
+                shape="round"
+                src={`${member.avatarUrl}/30.png`}
+                title={member.fullName}
+              />
+            ) : "" }
           </Level>
-        }
+        </Level>
 
 
       </ListItem>

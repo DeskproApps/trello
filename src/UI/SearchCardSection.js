@@ -2,23 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Action, ActionBar, Panel } from '@deskpro/apps-components';
+import debounce from '@deskpro/js-utils/dist/debounce';
 
 import CardsListComponent from './CardListComponent';
 import SearchInputComponent from './SearchInputComponent';
 
 const SearchCardSection = ({ onSelectCard, onSearchChange, cards, history }) => {
-
-  let searchInput;
-  let timeout;
+  const debouncedSearch = debounce(onSearchChange, 500);
 
   const onChange = value => {
-    searchInput = value;
-    clearTimeout(timeout);
-    setTimeout(() => {
-      timeout = null;
-      onSearchChange(searchInput);
-    }, 1000);
+    debouncedSearch(value);
   };
+
   const onCancel = () => {
     history.push("ticket-loaded", null);
     history.go(1);

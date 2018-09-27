@@ -23,15 +23,15 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@deskpro/apps-components-style@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@deskpro/apps-components-style/-/apps-components-style-0.8.2.tgz#60a05e5db67af5f92f889ccc761b4d7e49215329"
+"@deskpro/apps-components-style@^0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@deskpro/apps-components-style/-/apps-components-style-0.8.3.tgz#fa865c7032a9952fd72e06fbf6e431f6fd968d7f"
 
-"@deskpro/apps-components@0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@deskpro/apps-components/-/apps-components-0.8.2.tgz#f1f0ad778a2778526369d2c76fce4a3e306ecc53"
+"@deskpro/apps-components@0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@deskpro/apps-components/-/apps-components-0.8.3.tgz#4d3726b7424ffea17a4e53f235096b52d20c048a"
   dependencies:
-    "@deskpro/apps-components-style" "^0.8.2"
+    "@deskpro/apps-components-style" "^0.8.3"
     classnames "^2.2.6"
     react-custom-scrollbars "^4.2.1"
 
@@ -121,6 +121,10 @@
     post-robot "^7.0.8"
     query-string "^6.1.0"
     warning "^4.0.1"
+
+"@deskpro/js-utils@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@deskpro/js-utils/-/js-utils-1.0.6.tgz#5562440fb85284a1f4cf666a0b3a56f84e66e586"
 
 "@emotion/babel-utils@^0.6.4":
   version "0.6.9"

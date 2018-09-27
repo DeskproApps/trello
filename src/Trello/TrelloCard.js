@@ -8,10 +8,11 @@ class TrelloCard
    * @param {boolean} subscribed
    * @param {TrelloBoard} board
    * @param {TrelloList} list
+   * @param {Array<TrelloMember>} members
    * @param {Date|null} due
    * @param {Array<TrelloLabel>} labels
    * */
-  constructor({id, name, url, description, subscribed, board, list, due, labels}) {
+  constructor({id, name, url, description, subscribed, board, list, members, due, labels}) {
 
     this.props = {
       id,
@@ -21,6 +22,7 @@ class TrelloCard
       subscribed,
       board,
       list,
+      members,
       due,
       labels
     };
@@ -49,6 +51,8 @@ class TrelloCard
   get list() { return this.props.list; }
 
   get labels() { return this.props.labels; }
+
+  get members() { return this.props.members; }
 
   /**
    * @param {String} newUrl
