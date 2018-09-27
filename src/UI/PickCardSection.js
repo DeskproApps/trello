@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Action, ActionBar, Panel } from '@deskpro/apps-components';
+import { Panel } from '@deskpro/apps-components';
 
 import { Form, Select, required, Group } from '../Forms';
 import CardsListComponent from './CardListComponent';
@@ -23,20 +23,12 @@ const PickCardSection = ({ onSelectCard, onChange, model, boards, lists, cards, 
     }
   };
 
-  const onCancel = () => {
-    history.push("ticket-loaded", null);
-    history.go(1);
-  };
-
-  const board = model && model.board ? model.board : boards.length ? boards[0] : null;
+  const board = model && model.board ? model.board : null;
   const list = model && model.list ? model.list : lists.length ? lists[0] : null;
 
 
   return (
     <Panel className="dp-trello-container">
-      <ActionBar title="Pick a card">
-        <Action icon="close" onClick={onCancel} />
-      </ActionBar>
       <Form name="pick_card" initialValues={{
         board: JSON.stringify(board ? boardToOption('Personal Boards')(board): null),
         list: JSON.stringify(list ? listToOption(list) : null)
@@ -58,9 +50,11 @@ const PickCardSection = ({ onSelectCard, onChange, model, boards, lists, cards, 
           onChange= { onModelChange }
         />
 
-        <Group label="Cards" >
-          <CardsListComponent cards={cards || []} onSelectCard={onSelectCard} showCardLocation={false} showBorder={true} />
-        </Group>
+        {cards.length > 0 &&
+          <Group label="Cards" >
+            <CardsListComponent cards={cards || []} onSelectCard={onSelectCard} showCardLocation={false} showBorder={true} />
+          </Group>
+        }
       </Form>
     </Panel>
   );

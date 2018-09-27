@@ -6,15 +6,17 @@ import CardListComponent from './CardListComponent';
 
 const PageHome = ({ cards, onUnlinkCard, onSelectCard, loadBoards, history }) => {
   const openLink = () => {
-    loadBoards();
-    history.push("link", null);
-    history.go(1);
+    loadBoards().then(() => {
+      history.push("link", null);
+      history.go(1);
+    });
   };
 
   const openCreate = () => {
-    loadBoards();
-    history.push("create-card", null);
-    history.go(1);
+    loadBoards().then(() => {
+      history.push("create", null);
+      history.go(1);
+    });
   };
 
   return (

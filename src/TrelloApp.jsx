@@ -8,8 +8,7 @@ import { TrelloApiClient, TrelloServices, parseTrelloCardUrl } from './Trello';
 
 import AuthenticationRequiredError from './AuthenticationRequiredError';
 import {InstallError} from './InstallError';
-import { CreateCardSection, PageHome, PickCardSection, SearchCardSection, AuthenticationRequiredPage } from './UI';
-import PageLink from "./UI/PageLink";
+import { CreateCardSection, PageHome, PageLink, AuthenticationRequiredPage } from './UI';
 
 export default class TrelloApp extends React.Component {
 
@@ -52,8 +51,8 @@ export default class TrelloApp extends React.Component {
       authUser: null,
       authToken: null,
       authorizedUIState: null,
-      pickCards: null,
-      searchCards: null,
+      pickCards: [],
+      searchCards: [],
       boards: [],
       lists: [],
 
@@ -322,8 +321,7 @@ export default class TrelloApp extends React.Component {
    */
   sameUIStateTransition = (transition) =>
   {
-    const { uiState: nextUIState } = this.state;
-    return this.nextUIStateTransition(nextUIState, transition);
+    return this.nextUIStateTransition('', transition);
   };
 
   /**
@@ -334,12 +332,11 @@ export default class TrelloApp extends React.Component {
   {
     const { history } = this.props;
 
-    if (!nextUIState) {
-      throw new Error('missing next ui state');
+    if (nextUIState) {
+      history.push(nextUIState, null);
+      history.go(1);
     }
 
-    history.push(nextUIState, null);
-    history.go(1);
 
     const { dpapp } = this.props;
     const stateTransitionsCount = this.stateTransitionCount++;
@@ -434,9 +431,18 @@ export default class TrelloApp extends React.Component {
     const { trelloApiClient, trelloServices } = this;
 
     const executor = boards => {
-      if (boards.length === 0) { return { boards: [], lists: [], searchCards: [], pickCards: [] }; }
+      if (boards.length === 0) {
+        return this.setState({
+          boards: [],
+          lists: [],
+          searchCards: [],
+          pickCards: []
+        });
+      }
 
-      return this.loadBoardLists(boards[0]).then(data => ({ boards, ...data }));
+      this.setState({
+        boards
+      });
     };
 
     return trelloServices.getBoards(trelloApiClient).then(executor);
@@ -476,88 +482,6 @@ export default class TrelloApp extends React.Component {
       .then(setCardListExecutor)
       .then(executor)
       ;
-  };
-
-  renderPickCard = () =>
-  {
-    const { pickCardModel, boards, lists, pickCards } = this.state;
-    const { history } = this.props;
-    const { loadBoardLists, loadListCards } = this;
-
-    const onChange = (key, value, model) => {
-      let stateChangePromise;
-      const executor = data => ({ ...data, pickCardModel: model });
-
-      if (key === 'board' && value) {
-        stateChangePromise = loadBoardLists(model.board).then(executor );
-      } else if (key === 'list' && value) {
-        stateChangePromise = loadListCards(model.list).then(executor);
-      }
-
-      if (stateChangePromise) {
-        this.sameUIStateTransition(stateChangePromise);
-      }
-    };
-
-    /**
-     * @param {TrelloCard} card
-     */
-    const onSelectCard = (card) => {
-      this.nextUIStateTransition('ticket-loaded', this.onLinkTrelloCard(card));
-    };
-
-    return (
-      <PickCardSection
-        onSelectCard={onSelectCard}
-        onChange={onChange}
-        model={pickCardModel}
-        boards={boards || []}
-        lists={lists || []}
-        cards={pickCards}
-        history={history}
-      />
-    );
-  };
-
-  renderSearchCard = () =>
-  {
-    const { trelloApiClient, trelloServices } = this;
-    const { searchCards } = this.state;
-    const { history } = this.props;
-
-    const onSearchChange = query => {
-      const parsedCard = parseTrelloCardUrl(query);
-      let onSearchPromise = null;
-
-      if (parsedCard) {
-        const { shortLink } = parsedCard;
-        onSearchPromise = trelloServices.getCardList(trelloApiClient, [ shortLink ]).then(foundCards => ({ searchCards: foundCards, pickCards: [] }));
-      } else {
-        onSearchPromise = trelloServices.searchCards(trelloApiClient, query).then(foundCards => ({ searchCards: foundCards, pickCards: [] }));
-      }
-
-      if (onSearchPromise) {
-        this.sameUIStateTransition(onSearchPromise);
-      }
-
-    };
-
-    /**
-     * @param {TrelloCard} card
-     */
-    const onSelectCard = (card) => {
-      this.nextUIStateTransition('ticket-loaded', this.onLinkTrelloCard(card));
-    };
-
-
-    return (
-      <SearchCardSection
-        cards={searchCards}
-        onSelectCard={onSelectCard}
-        onSearchChange={onSearchChange}
-        history={history}
-      />
-    );
   };
 
   renderPageLink = () => {
@@ -654,10 +578,8 @@ export default class TrelloApp extends React.Component {
           <Route path="error" render={() => <p>The app encountered an error. Try re-opening the ticket. </p>} />
           <Route path="admin-install-required" render={() => <p>Your admin has not installed the app yet.</p>} />
           <Route path="authentication-required" render={this.renderAuthenticationRequired} />
-          <Route path="create-card" render={this.renderCreateCard} />
-          <Route path="pick-card" render={this.renderPickCard} />
+          <Route path="create" render={this.renderCreateCard} />
           <Route path="link" render={this.renderPageLink} />
-          <Route path="search-card" render={this.renderSearchCard} />
           <Route path="ticket-loaded" render={this.renderPageHome} />
           <Route render={() => <Loader />} />
         </Switch>

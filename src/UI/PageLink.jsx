@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SearchCardSection from "./SearchCardSection";
 import PickCardSection from "./PickCardSection";
+import { Separator } from '@deskpro/apps-components';
 
 const PageLink = ({ pickCards, searchCards, onSelectCard, onSearchChange, onChange, pickCardModel, boards, lists, history }) => {
   return [
@@ -11,6 +12,7 @@ const PageLink = ({ pickCards, searchCards, onSelectCard, onSearchChange, onChan
       onSearchChange={onSearchChange}
       history={history}
     />,
+    <Separator title="or" />,
     <PickCardSection
       onSelectCard={onSelectCard}
       onChange={onChange}

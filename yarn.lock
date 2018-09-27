@@ -23,15 +23,15 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@deskpro/apps-components-style@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@deskpro/apps-components-style/-/apps-components-style-0.8.0.tgz#b87027b3d11cdf9e2ae10b2a9fd34b7f1374acfc"
+"@deskpro/apps-components-style@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@deskpro/apps-components-style/-/apps-components-style-0.8.2.tgz#60a05e5db67af5f92f889ccc761b4d7e49215329"
 
-"@deskpro/apps-components@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@deskpro/apps-components/-/apps-components-0.8.0.tgz#8dbc8a0e8c1e86fddea571041b8bb97e734fc556"
+"@deskpro/apps-components@0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@deskpro/apps-components/-/apps-components-0.8.2.tgz#f1f0ad778a2778526369d2c76fce4a3e306ecc53"
   dependencies:
-    "@deskpro/apps-components-style" "^0.8.0"
+    "@deskpro/apps-components-style" "^0.8.2"
     classnames "^2.2.6"
     react-custom-scrollbars "^4.2.1"
 

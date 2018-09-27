@@ -45,7 +45,7 @@ class SearchInputComponent extends React.Component {
   };
 
   filterInputProps = (props) => {
-    const { onChange, value, icon, minCharacters, ...allowed } = props;
+    const { onChange, onSearch, value, icon, minCharacters, ...allowed } = props;
     return allowed;
   };
 

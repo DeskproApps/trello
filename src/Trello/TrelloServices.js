@@ -380,7 +380,7 @@ class TrelloServices
    */
   searchCards = (trelloApiClient, query) =>
   {
-    const args = { query, card_fields: 'id', cards_limit: 25, modelTypes: 'cards' };
+    const args = { query, card_fields: 'id', cards_limit: 10, modelTypes: 'cards' };
     return trelloApiClient.get('/1/search', args)
       .catch(handleTrelloApiErrors)
       .then(data => data.cards.map(card => card.id))
