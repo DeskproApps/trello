@@ -1,7 +1,7 @@
 {
-  "name": "@deskpro-apps/my_app",
-  "title": "My App",
-  "description": "My Deskpro app",
+  "name": "@deskpro-apps/trello",
+  "title": "Trello",
+  "description": "Deskpro Trello app",
   "version": "1.0.0",
   "scope": "agent",
   "isSingleInstall": false,
