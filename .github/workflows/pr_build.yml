@@ -64,12 +64,13 @@ jobs:
 
 
   deploy:
+    name: "Deploy: Review"
     uses: DeskproApps/app-template-vite/.github/workflows/subworkflow-deploy.yml@master
     secrets: inherit
     needs: [build]
 
   test:
-    name: Build
+    name: Test
     timeout-minutes: 30
     runs-on: ubuntu-20.04
     needs: [build]
