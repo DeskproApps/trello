@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  deskpro_app_test_and_build:
-    name: Test / Build
+  build:
+    name: Build
     timeout-minutes: 30
     runs-on: ubuntu-20.04
     steps:
@@ -61,11 +61,18 @@ jobs:
             dist/app.zip
             dist/manifest.json
           retention-days: 30
-          
-      - name: Run tests
-        run: yarn test:coverage
+
 
   deploy:
     uses: DeskproApps/app-template-vite/.github/workflows/subworkflow-deploy.yml@master
     secrets: inherit
-    needs: [deskpro_app_test_and_build]
+    needs: [build]
+
+  test:
+    name: Build
+    timeout-minutes: 30
+    runs-on: ubuntu-20.04
+    needs: [build]
+    steps:
+      - name: Run tests
+        run: yarn test:coverage
