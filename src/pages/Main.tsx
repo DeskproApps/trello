@@ -8,6 +8,7 @@ import {
 import { useStore } from "../context/StoreProvider/hooks";
 import { Home } from "./Home";
 import { LogIn } from "./LogIn";
+import { LinkCard } from "./LinkCard";
 import { ErrorBlock } from "../components/common";
 
 export const Main = () => {
@@ -41,11 +42,14 @@ export const Main = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.isAuth]);
 
+    return <LinkCard/>
+
     const page = !state.isAuth
         ? <LogIn />
         : match(state.page)
             .with("home", () => <Home />)
             .with("log_in", () => <LogIn />)
+            .with("link_card", () => <LinkCard />)
             .otherwise(() => <LogIn />);
 
     return (
