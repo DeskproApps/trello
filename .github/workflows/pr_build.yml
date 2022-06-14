@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  deskpro_app_test_and_build:
-    name: Test / Build
+  build:
+    name: Build
     timeout-minutes: 30
     runs-on: ubuntu-20.04
     steps:
@@ -44,15 +44,36 @@ jobs:
       - name: Type check
         run: yarn tsc --noemit
 
-      - name: Run tests
-        run: yarn test:coverage
-
       - name: Build
         run: yarn build
 
+      - name: Package app zip
+        working-directory: dist
+        run: |
+          zip -rq ../app.zip *
+          mv ../app.zip .
+
       - name: Upload package
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app-package
-          path: dist
+          path: |
+            dist/app.zip
+            dist/manifest.json
           retention-days: 30
+
+
+  deploy:
+    name: "Deploy: Review"
+    uses: DeskproApps/app-template-vite/.github/workflows/subworkflow-deploy.yml@master
+    secrets: inherit
+    needs: [build]
+
+  test:
+    name: Test
+    timeout-minutes: 30
+    runs-on: ubuntu-20.04
+    needs: [build]
+    steps:
+      - name: Run tests
+        run: yarn test:coverage
