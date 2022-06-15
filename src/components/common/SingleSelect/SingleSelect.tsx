@@ -4,12 +4,11 @@ import {
     faCaretDown,
     faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { Dropdown, InputWithDisplay } from "@deskpro/deskpro-ui";
+import { Dropdown, Input } from "@deskpro/deskpro-ui";
 import { Label } from "../Label";
 
 const SingleSelect: FC<{ options: any, label: any }> = ({ options, label }) => {
     const [input, setInput] = useState("");
-    const [isVisibleInput, setIsVisibleInput] = useState(false);
 
     return (
         <Dropdown
@@ -28,22 +27,13 @@ const SingleSelect: FC<{ options: any, label: any }> = ({ options, label }) => {
             hideIcons
         >
             {({ inputProps, inputRef }) => (
-                <Label
-                    required
-                    label={label}
-                    onBlur={() => {
-                        setIsVisibleInput(false);
-                    }}
-                    onClick={() => {
-                        setIsVisibleInput(true);
-                    }}
-                >
-                    <InputWithDisplay
+                <Label label={label}>
+                    <Input
                         ref={inputRef}
                         {...inputProps}
+                        variant="inline"
                         rightIcon={faCaretDown}
                         placeholder="Select Value"
-                        isVisibleInput={isVisibleInput}
                     />
                 </Label>
             )}

@@ -29,3 +29,9 @@ export type Action =
 export type Dispatch = (action: Action) => void;
 
 export type StoreReducer = Reducer<State, Action>;
+
+export type AppElementPayload = {
+    type: "changePage",
+    page: Page,
+    params?: PageParams,
+};

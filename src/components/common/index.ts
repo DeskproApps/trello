@@ -3,3 +3,8 @@ export { Loading } from "./Loading";
 export { Button, AnchorButton } from "./Button";
 export { Label } from "./Label";
 export { SingleSelect } from "./SingleSelect";
+export { InputSearch } from "./InputSearch";
+export { TextBlockWithLabel } from "./TextBlockWithLabel";
+export { OverflowText } from "./OverflowText";
+export { TrelloLink } from "./TrelloLink";
+import { TwoSider } from "./TwoSider";

@@ -1,0 +1,1 @@
+export { useSetAppTitle } from "./useSetAppTitle";

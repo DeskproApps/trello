@@ -1,6 +1,7 @@
-import { FC, useState } from "react";
-import { TabBar, TabBarItemType } from "@deskpro/deskpro-ui";
+import { FC, useEffect, useState } from "react";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { TabBar, TabBarItemType } from "@deskpro/deskpro-ui";
+import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { FindCard, CreateCard } from "../components/LinkCard";
 
 const tabs: TabBarItemType[] = [
@@ -15,7 +16,18 @@ const tabs: TabBarItemType[] = [
 ];
 
 const LinkCard: FC = () => {
-    const [activeIndex, setActiveIndex] = useState(1);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const { client } = useDeskproAppClient();
+
+    useEffect(() => {
+        if (!client) {
+            return;
+        }
+
+        client?.deregisterElement("trelloPlusButton");
+
+        client?.setTitle("Link Cards");
+    }, [client]);
 
     return (
         <>
@@ -23,6 +35,7 @@ const LinkCard: FC = () => {
                 type="tab"
                 tabs={tabs}
                 activeIndex={activeIndex}
+                style={{ marginBottom: 14 }}
                 onClickTab={(index) => setActiveIndex(index)}
             />
             <>

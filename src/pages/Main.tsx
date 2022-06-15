@@ -6,6 +6,7 @@ import {
     useDeskproAppEvents,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
+import { AppElementPayload } from "../context/StoreProvider/types";
 import { Home } from "./Home";
 import { LogIn } from "./LogIn";
 import { LinkCard } from "./LinkCard";
@@ -22,6 +23,13 @@ export const Main = () => {
     useDeskproAppEvents({
         onChange: (context: Context) => {
             context && dispatch({ type: "loadContext", context });
+        },
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        onElementEvent(id: string, type: string, payload?: AppElementPayload) {
+            if (payload?.type === "changePage") {
+                dispatch({ type: "changePage", page: payload.page, params: payload.params })
+            }
         },
     });
 
@@ -41,8 +49,6 @@ export const Main = () => {
         dispatch({ type: "changePage", page: !state.isAuth ? "log_in" : "home" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.isAuth]);
-
-    return <LinkCard/>
 
     const page = !state.isAuth
         ? <LogIn />
