@@ -557,7 +557,7 @@
     styled-components "5.3.3"
     tslib "2.3.1"
 
-"@deskpro/deskpro-ui@^2.3.5":
+"@deskpro/deskpro-ui@2.3.5", "@deskpro/deskpro-ui@^2.3.5":
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/@deskpro/deskpro-ui/-/deskpro-ui-2.3.5.tgz#32442b79052324ada513d9ca90153a473ced38df"
   integrity sha512-REjp5uDSUGlNkSuB/HWO2fE6k4rGum4Ymc0C3BA6UQw8RF5Ld1KEEcEDZSGMtN4O7Qvj/WZztN5Acwo1H0Nwfg==
@@ -4162,6 +4162,11 @@ ts-jest@^27.1.2:
     make-error "1.x"
     semver "7.x"
     yargs-parser "20.x"
+
+ts-pattern@^3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-3.3.5.tgz#9a4bde1d44f9afe7e82409820f68790232c2544c"
+  integrity sha512-LD+wFR/RNckk1DrKV0LTH4KIT9wRqnnOjtEf77ovhKcVi8gf83Uf6U7OdywEua6KD9SbHadUdfolayfIUiPxzw==
 
 ts-pattern@^4.0.1:
   version "4.0.2"
