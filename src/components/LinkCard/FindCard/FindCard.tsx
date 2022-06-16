@@ -12,9 +12,8 @@ import {
     InputSearch,
     SingleSelect,
 } from "../../common";
-import { baseRequest } from "../../../services/trello/baseRequest";
 import { setEntityCardService } from "../../../services/entityAssociation";
-import { getQueryParams } from "../../../utils";
+import { searchByCardService } from "../../../services/trello";
 
 const getFilteredCards = (cards: any[], boardId?: string) => {
     let filteredCards = [];
@@ -70,19 +69,7 @@ const FindCard: FC = () => {
 
         setLoading(true);
 
-        return baseRequest(
-            client,
-            `https://api.trello.com/1/search?${getQueryParams({
-                key: "__client_key__",
-                token: "[user[oauth2/token]]",
-                modelTypes: "cards",
-                card_board: true,
-                card_list: true,
-                card_members: true,
-                cards_limit: 1000,
-                query: q,
-            })}`,
-        )
+        searchByCardService(client, q)
             .then(({ cards }) => {
                 setCards(cards);
                 setBoardOptions(cards.reduce((acc: Record<any, any>, { board }: any) => {
@@ -98,9 +85,7 @@ const FindCard: FC = () => {
                     return acc;
                 }, {}));
             })
-            .catch((err) => {
-                console.log(">>> search:catch:", { err });
-            })
+            .catch(() => {})
             .finally(() => setLoading(false));
     }, 500);
 
