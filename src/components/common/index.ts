@@ -10,3 +10,4 @@ export { TrelloLink } from "./TrelloLink";
 export { TwoSider } from "./TwoSider";
 export { NoFound } from "./NoFound";
 export { Cards, Card, CardInfo } from "./Cards";
+export { LinkIcon } from "./LinkIcon";

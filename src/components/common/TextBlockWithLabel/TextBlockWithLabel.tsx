@@ -17,7 +17,7 @@ const TextBlockWithLabel: FC<Props> = ({ text, label, marginBottom = 10 }) => {
     if (typeof text === "string" || typeof text === "number") {
         textBlock = (<P5>{text}</P5>);
     } else if (isValidElement(text)) {
-        textBlock = (<Stack>{text}</Stack>)
+        textBlock = (<Stack gap={5} align="baseline">{text}</Stack>)
     }
 
     return (

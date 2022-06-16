@@ -2,26 +2,32 @@ import { FC } from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
 import { H3, P5, Stack } from "@deskpro/app-sdk";
+import { getDate } from "../../../utils/date";
 import { TrelloLink } from "../TrelloLink";
 import { TwoSider } from "../TwoSider";
 import { OverflowText } from "../OverflowText";
 import { NoFound } from "../NoFound";
 import { TextBlockWithLabel } from "../TextBlockWithLabel";
-import { getDate } from "../../../utils/date";
+import { LinkIcon } from "../LinkIcon";
 
-const Title: FC<any> = ({ name }) => (
+const Title: FC<any> = ({ name, shortUrl }) => (
     <Stack gap={6} style={{ marginBottom: 10 }}>
         <H3>
             <a href="#">{name}</a>
         </H3>
-        <TrelloLink href="https://trello.com/c/<board_code>/<card_title>" />
+        <TrelloLink href={shortUrl} />
     </Stack>
 );
 
 const Workspace: FC<any> = ({ board, list }) => (
     <TwoSider
-        leftLabel="Board"
-        leftText={<OverflowText>{board.name}</OverflowText>}
+        leftLabel={<>Board <LinkIcon size={10} href={board.url}/></>}
+        leftText={(
+            <>
+                <OverflowText>{board.name}</OverflowText>
+                <LinkIcon size={10} href={board.url}/>
+            </>
+        )}
         rightLabel="List"
         rightText={list.name}
     />

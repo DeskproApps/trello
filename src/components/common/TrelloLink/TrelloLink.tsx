@@ -10,7 +10,7 @@ import { TrelloLogo } from "./TrelloLogo";
 import { Props } from "./types";
 
 const Container = styled(Stack)`
-  align-items: center;
+  align-items: center; 
   padding: 2px;
 `;
 
