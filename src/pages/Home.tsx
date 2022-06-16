@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, Fragment, ChangeEvent } from "react";
+import { FC, useEffect, useState, Fragment } from "react";
 import {
     HorizontalDivider,
     useDeskproAppClient,
@@ -14,7 +14,12 @@ const getFilteredCards = (cards: any[], searchValue: string) => {
     if (!searchValue) {
         filteredCards = cards;
     } else {
-        filteredCards = cards.filter(({ name }) => name.toLowerCase().includes(searchValue.toLowerCase()))
+        filteredCards = cards.filter(({ id, name }) => {
+            const cardTitle = name.toLowerCase();
+            const search = searchValue.toLowerCase();
+
+            return cardTitle.includes(search) || id.includes(search);
+        })
     }
 
     return filteredCards;
@@ -65,9 +70,7 @@ const Home: FC = () => {
                 }
             })
             .then((cards) => setCards(cards))
-            .catch((error) => {
-                dispatch({ type: "error", error })
-            })
+            .catch((error) => dispatch({ type: "error", error }))
             .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, ticketId]);
