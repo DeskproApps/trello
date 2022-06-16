@@ -9,6 +9,7 @@ export type DateTime = string;
 export type RequestParams = {
     url: string,
     method?: ApiRequestMethod,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     content?: any,
     queryParams?: Record<string, string|number|boolean>
 };

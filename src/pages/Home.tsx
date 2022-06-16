@@ -9,6 +9,7 @@ import { getEntityCardListService } from "../services/entityAssociation";
 import { getCardService } from "../services/trello";
 import { Loading, CardInfo, NoFound, InputSearch } from "../components/common";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFilteredCards = (cards: any[], searchValue: string) => {
     let filteredCards = [];
     if (!searchValue) {
@@ -29,6 +30,7 @@ const Home: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [cards, setCards] = useState<any[]>([]);
     const [searchCard, setSearchCard] = useState<string>("");
     const ticketId = state.context?.data.ticket.id
@@ -59,6 +61,7 @@ const Home: FC = () => {
             .then((cardIds) => {
                 if (Array.isArray(cardIds)) {
                     if (cardIds.length > 0) {
+                        // ToDo: fix fetch in array
                         return Promise.all(cardIds.map((cardId) => {
                             return getCardService(client, cardId);
                         }))
@@ -69,6 +72,8 @@ const Home: FC = () => {
                     return Promise.reject(false);
                 }
             })
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             .then((cards) => setCards(cards))
             .catch((error) => dispatch({ type: "error", error }))
             .finally(() => setLoading(false));

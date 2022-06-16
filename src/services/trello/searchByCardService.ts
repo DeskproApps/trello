@@ -2,6 +2,7 @@ import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseRequest } from "./baseRequest";
 
 const searchByCardService = (client: IDeskproClient, query: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return baseRequest<{ cards: any }>(client, {
         url: "/search",
         queryParams: {

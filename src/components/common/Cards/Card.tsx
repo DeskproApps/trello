@@ -17,6 +17,7 @@ const CardBody = styled.div`
     width: calc(100% - 12px - 8px);
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Card: FC<any> = ({ checked, onChange, ...props }) => (
     <>
         <CardUI>

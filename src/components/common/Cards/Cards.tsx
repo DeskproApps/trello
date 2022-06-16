@@ -2,6 +2,7 @@ import { FC } from "react";
 import { NoFound } from "../NoFound";
 import { Card } from "./Card";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Cards: FC<any> = ({ onChange, cards, selectedCards }) => {
     if (!Array.isArray(cards)) {
         return <NoFound/>

@@ -10,6 +10,7 @@ import { NoFound } from "../NoFound";
 import { TextBlockWithLabel } from "../TextBlockWithLabel";
 import { LinkIcon } from "../LinkIcon";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Title: FC<any> = ({ name, shortUrl }) => (
     <Stack gap={6} style={{ marginBottom: 10 }}>
         <H3>
@@ -19,6 +20,7 @@ const Title: FC<any> = ({ name, shortUrl }) => (
     </Stack>
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Workspace: FC<any> = ({ board, list }) => (
     <TwoSider
         leftLabel={<>Board <LinkIcon size={10} href={board.url}/></>}
@@ -33,6 +35,7 @@ const Workspace: FC<any> = ({ board, list }) => (
     />
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Info: FC<any> = ({ due }) => (
     <TwoSider
         leftLabel="Deskpro Tickets"
@@ -42,6 +45,7 @@ const Info: FC<any> = ({ due }) => (
     />
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Members: FC<any> = ({ members }) => {
     let content = null;
 
@@ -54,6 +58,7 @@ const Members: FC<any> = ({ members }) => {
     }
 
     if (members.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         content = members.map(({ id, fullName }: any) => (
             <Stack gap={6} key={id}>
                 {/* ToDo: add avatar image */}

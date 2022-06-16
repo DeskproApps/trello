@@ -7,6 +7,7 @@ import {
 import { Dropdown, Input } from "@deskpro/deskpro-ui";
 import { Label } from "../Label";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SingleSelect: FC<any> = ({ options, label, onChange, value }) => {
     return (
         <Dropdown

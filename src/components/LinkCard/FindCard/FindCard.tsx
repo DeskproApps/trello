@@ -15,6 +15,7 @@ import {
 import { setEntityCardService } from "../../../services/entityAssociation";
 import { searchByCardService } from "../../../services/trello";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFilteredCards = (cards: any[], boardId?: string) => {
     let filteredCards = [];
     if (!boardId) {
@@ -31,6 +32,7 @@ const FindCard: FC = () => {
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(false);
     const [searchCard, setSearchCard] = useState<string>("");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [cards, setCards] = useState<any[]>([]);
     const [selectedCards, setSelectedCards] = useState<string[]>([]);
     const [selectedBoard, setSelectedBoard] = useState<{
@@ -72,6 +74,7 @@ const FindCard: FC = () => {
         searchByCardService(client, q)
             .then(({ cards }) => {
                 setCards(cards);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 setBoardOptions(cards.reduce((acc: Record<any, any>, { board }: any) => {
                     if (!acc[board.id]) {
                         acc[board.id] = {
@@ -97,7 +100,6 @@ const FindCard: FC = () => {
     const onSelectBoard = (option: object) => setSelectedBoard(option);
 
     const onLinkCard = () => {
-        console.log(">>> linkCards:", { selectedCards });
         if (!client || !ticketId) {
             return;
         }
