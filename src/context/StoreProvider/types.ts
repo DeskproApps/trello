@@ -17,6 +17,7 @@ export interface State {
     page?: Page;
     pageParams?: PageParams,
     context?: Context,
+    cards?: any[],
     _error?: ErrorType,
 }
 
@@ -24,7 +25,8 @@ export type Action =
     | { type: "changePage", page: Page, params?: PageParams }
     | { type: "loadContext", context: Context }
     | { type: "error", error: ErrorType }
-    | { type: "setAuth", isAuth: boolean };
+    | { type: "setAuth", isAuth: boolean }
+    | { type: "linkedTrelloCards", cards: any[] };
 
 export type Dispatch = (action: Action) => void;
 

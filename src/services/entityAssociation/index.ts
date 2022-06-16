@@ -1,2 +1,2 @@
 export { getEntityCardListService } from "./getEntityCardListService";
-export { checkIsLinkedCardsService } from "./checkIsLinkedCardsService";
+export { setEntityCardService } from "./setEntityCardService";

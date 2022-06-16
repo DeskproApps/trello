@@ -1,4 +1,4 @@
-import { useState, FC } from "react";
+import { FC } from "react";
 import {
     faCheck,
     faCaretDown,
@@ -7,9 +7,7 @@ import {
 import { Dropdown, Input } from "@deskpro/deskpro-ui";
 import { Label } from "../Label";
 
-const SingleSelect: FC<{ options: any, label: any }> = ({ options, label }) => {
-    const [input, setInput] = useState("");
-
+const SingleSelect: FC<any> = ({ options, label, onChange, value }) => {
     return (
         <Dropdown
             fetchMoreText={"Fetch more"}
@@ -17,13 +15,9 @@ const SingleSelect: FC<{ options: any, label: any }> = ({ options, label }) => {
             selectedIcon={faCheck}
             externalLinkIcon={faExternalLinkAlt}
             placement="bottom-start"
-            inputValue={input}
-            onInputChange={setInput}
+            inputValue={value}
             options={options}
-            onSelectOption={(option) => {
-                // @ts-ignore
-                option.value && setInput(option.value);
-            }}
+            onSelectOption={onChange}
             hideIcons
         >
             {({ inputProps, inputRef }) => (
