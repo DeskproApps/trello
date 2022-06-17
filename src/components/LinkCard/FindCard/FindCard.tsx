@@ -145,7 +145,7 @@ const FindCard: FC = () => {
             <Stack justify="space-between" style={{ paddingBottom: "4px" }}>
                 <Button
                     disabled={selectedCards.length === 0}
-                    text="Link Card"
+                    text="Link Cards"
                     onClick={onLinkCard}
                 />
                 <Button
