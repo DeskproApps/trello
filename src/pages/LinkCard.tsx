@@ -1,14 +1,14 @@
-import { FC, useEffect, useState } from "react";
-import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FC, useEffect/*, useState*/ } from "react";
+// import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import {
-    TwoButtonGroup,
-    TwoButtonGroupProps,
+    // TwoButtonGroup,
+    // TwoButtonGroupProps,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { FindCard, CreateCard } from "../components/LinkCard";
+import { FindCard/*, CreateCard*/ } from "../components/LinkCard";
 
 const LinkCard: FC = () => {
-    const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
+    // const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
     const { client } = useDeskproAppClient();
 
     useEffect(() => {
@@ -21,11 +21,11 @@ const LinkCard: FC = () => {
         client?.setTitle("Link Cards");
     }, [client]);
 
-    const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
+    // const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
 
     return (
         <>
-            <TwoButtonGroup
+            {/*<TwoButtonGroup
                 selected={selected}
                 oneIcon={faSearch}
                 oneLabel="Find Card"
@@ -37,7 +37,8 @@ const LinkCard: FC = () => {
             <>
                 {selected === "one" && <FindCard/>}
                 {selected === "two" && <CreateCard/>}
-            </>
+            </>*/}
+            <FindCard/>
         </>
     );
 };
