@@ -38,11 +38,9 @@ const Workspace: FC<any> = ({ board, list }) => (
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Info: FC<any> = ({ due }) => (
-    <TwoSider
-        leftLabel="Deskpro Tickets"
-        leftText={5}
-        rightLabel="Due date"
-        rightText={getDate(due)}
+    <TextBlockWithLabel
+        label="Due date"
+        text={getDate(due)}
     />
 );
 
