@@ -94,7 +94,7 @@ const Home: FC = () => {
                     ? (<NoFound/>)
                     : getFilteredCards(cards, searchCard).map(({ id, ...card }) => (
                         <Fragment key={id}>
-                            <CardInfo {...card} />
+                            <CardInfo {...({...card, id})} />
                             <HorizontalDivider style={{ marginBottom: 9 }}/>
                         </Fragment>
                     ))
