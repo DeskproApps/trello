@@ -16,6 +16,7 @@ const Title: FC<any> = ({ name, shortUrl }) => (
         <H3>
             <a href="#">{name}</a>
         </H3>
+        {/* ToDo: replace from `import { ExternalIconLink } from "@deskpro/app-sdk"` */}
         <TrelloLink href={shortUrl} />
     </Stack>
 );
@@ -71,7 +72,9 @@ const Members: FC<any> = ({ members }) => {
     return (
         <TextBlockWithLabel
             label="Members"
-            text={(<>{content}</>)}
+            text={(
+                <Stack gap={6} wrap="wrap">{content}</Stack>
+            )}
         />
     );
 }
