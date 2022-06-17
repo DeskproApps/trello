@@ -1,15 +1,15 @@
-import { FC } from "react";
+import {CSSProperties, FC} from "react";
 import { NoFound } from "../NoFound";
 import { Card } from "./Card";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Cards: FC<any> = ({ onChange, cards, selectedCards }) => {
     if (!Array.isArray(cards)) {
-        return <NoFound/>
+        return (<NoFound />);
     }
 
     if (cards.length === 0) {
-        return <NoFound/>
+        return (<NoFound text="No Trello cards found" />);
     }
 
     return (

@@ -29,7 +29,7 @@ const Card: FC<any> = ({ checked, onChange, ...props }) => (
                 />
             </CardMedia>
             <CardBody>
-                <CardInfo {...props} />
+                <CardInfo {...props} onTitleClick={onChange} />
             </CardBody>
         </CardUI>
         <HorizontalDivider style={{ marginBottom: 9 }} />

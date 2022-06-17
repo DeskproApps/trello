@@ -26,6 +26,7 @@ const SingleSelect: FC<any> = ({ options, label, onChange, value }) => {
                     <Input
                         ref={inputRef}
                         {...inputProps}
+                        style={{}}
                         variant="inline"
                         rightIcon={faCaretDown}
                         placeholder="Select Value"

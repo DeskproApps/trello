@@ -1,7 +1,7 @@
-import { FC } from "react";
+import {FC, useState} from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
-import { H3, P5, Stack } from "@deskpro/app-sdk";
+import {H3, P5, Stack, useDeskproAppTheme, useInitialisedDeskproAppClient} from "@deskpro/app-sdk";
 import { getDate } from "../../../utils/date";
 import { TwoSider } from "../TwoSider";
 import { OverflowText } from "../OverflowText";
@@ -11,14 +11,18 @@ import { LinkIcon } from "../LinkIcon";
 import { TrelloLink } from "../TrelloLink";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Title: FC<any> = ({ name, shortUrl }) => (
-    <Stack gap={6} style={{ marginBottom: 10 }}>
-        <H3>
-            <a href="#">{name}</a>
-        </H3>
-        <TrelloLink href={shortUrl} />
-    </Stack>
-);
+const Title: FC<any> = ({ name, shortUrl, onTitleClick, id  }) => {
+    const { theme } = useDeskproAppTheme();
+
+    return (
+        <Stack gap={6} style={{ marginBottom: "6px" }} align="center">
+            <H3>
+                <a href="#" style={{ color: theme.colors.cyan100, textDecoration: "none" }} onClick={() => onTitleClick && onTitleClick(id)}>{name}</a>
+            </H3>
+            <TrelloLink href={shortUrl} />
+        </Stack>
+    );
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Workspace: FC<any> = ({ board, list }) => (
@@ -36,12 +40,22 @@ const Workspace: FC<any> = ({ board, list }) => (
 );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Info: FC<any> = ({ due }) => (
-    <TextBlockWithLabel
-        label="Due date"
-        text={getDate(due)}
-    />
-);
+const Info: FC<any> = ({ id, due }) => {
+    const [ticketCount, setTicketCount] = useState<number>(0);
+
+    useInitialisedDeskproAppClient((client) => {
+        client.entityAssociationCountEntities("linkedTrelloCards", id).then(setTicketCount);
+    });
+
+    return (
+        <TwoSider
+            leftLabel={<>Deskpro Tickets</>}
+            leftText={ticketCount}
+            rightLabel={<>Due Date</>}
+            rightText={getDate(due)}
+        />
+    );
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Members: FC<any> = ({ members }) => {
@@ -78,7 +92,7 @@ const Members: FC<any> = ({ members }) => {
 
 const CardInfo: FC = (props) => (
     <>
-        <Title {...props} />
+        <Title {...props} onTitleClick={(id) => props?.onTitleClick && props.onTitleClick(id)} />
         <Workspace {...props} />
         <Info {...props} />
         <Members {...props} />

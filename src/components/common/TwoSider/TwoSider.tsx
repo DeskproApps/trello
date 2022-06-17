@@ -11,7 +11,7 @@ export type Props = {
 };
 
 const Container = styled.div`
-    margin-bottom: 10px;
+   margin-bottom: -1px;
 `;
 
 const Side = styled.div`
