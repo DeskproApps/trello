@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { faTrello } from "@fortawesome/free-brands-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
 import { H3, P5, Stack } from "@deskpro/app-sdk";
 import { getDate } from "../../../utils/date";

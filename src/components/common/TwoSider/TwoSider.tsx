@@ -1,6 +1,5 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { VerticalDivider } from "@deskpro/app-sdk";
 import { TextBlockWithLabel } from "../TextBlockWithLabel";
 import { Props as TextBlockWithLabelProps } from "../TextBlockWithLabel/types";
 
