@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faTrello } from "@fortawesome/free-brands-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
-import { H3, P5, Stack } from "@deskpro/app-sdk";
+import { H3, P5, Stack, ExternalIconLink } from "@deskpro/app-sdk";
 import { getDate } from "../../../utils/date";
-import { TrelloLink } from "../TrelloLink";
 import { TwoSider } from "../TwoSider";
 import { OverflowText } from "../OverflowText";
 import { NoFound } from "../NoFound";
@@ -16,8 +16,7 @@ const Title: FC<any> = ({ name, shortUrl }) => (
         <H3>
             <a href="#">{name}</a>
         </H3>
-        {/* ToDo: replace from `import { ExternalIconLink } from "@deskpro/app-sdk"` */}
-        <TrelloLink href={shortUrl} />
+        <ExternalIconLink icon={faTrello} href={shortUrl}/>
     </Stack>
 );
 
