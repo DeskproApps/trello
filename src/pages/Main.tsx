@@ -10,6 +10,7 @@ import { AppElementPayload } from "../context/StoreProvider/types";
 import { Home } from "./Home";
 import { LogIn } from "./LogIn";
 import { LinkCard } from "./LinkCard";
+import { ViewCard } from "./ViewCard";
 import { ErrorBlock } from "../components/common";
 
 export const Main = () => {
@@ -56,6 +57,7 @@ export const Main = () => {
             .with("home", () => <Home />)
             .with("log_in", () => <LogIn />)
             .with("link_card", () => <LinkCard />)
+            .with("view_card", () => <ViewCard />)
             .otherwise(() => <LogIn />);
 
     return (

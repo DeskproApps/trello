@@ -3,6 +3,7 @@ import { State, Action, StoreReducer } from "./types";
 
 export const initialState: State = {
     isAuth: false,
+    cards: [],
     _error: undefined,
 };
 

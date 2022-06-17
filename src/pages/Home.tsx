@@ -74,11 +74,19 @@ const Home: FC = () => {
             })
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            .then((cards) => setCards(cards))
+            .then((cards) => dispatch({ type: "linkedTrelloCards", cards }))
             .catch((error) => dispatch({ type: "error", error }))
             .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, ticketId]);
+
+    const onPageChangeToViewCard = (cardId: string) => {
+        dispatch({
+            type: "changePage",
+            page: "view_card",
+            params: { cardId }
+        });
+    };
 
     return loading
         ? (<Loading/>)
@@ -90,11 +98,11 @@ const Home: FC = () => {
                     onChange={(e) => setSearchCard(e.target.value)}
                 />
                 <HorizontalDivider style={{ marginBottom: 9 }}/>
-                {cards.length === 0
+                {state.cards.length === 0
                     ? (<NoFound/>)
-                    : getFilteredCards(cards, searchCard).map(({ id, ...card }) => (
+                    : getFilteredCards(state.cards, searchCard).map(({ id, ...card }) => (
                         <Fragment key={id}>
-                            <CardInfo {...card} />
+                            <CardInfo onPageChange={() => onPageChangeToViewCard(id)} {...card} />
                             <HorizontalDivider style={{ marginBottom: 9 }}/>
                         </Fragment>
                     ))

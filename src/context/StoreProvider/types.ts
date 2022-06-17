@@ -6,10 +6,12 @@ export type ErrorType = Error | string | unknown;
 export type Page =
     | "home"
     | "log_in"
-    | "link_card";
+    | "link_card"
+    | "view_card";
 
 export type PageParams = {
     activeTab?: "find" | "create",
+    cardId?: string,
 };
 
 export interface State {
@@ -18,7 +20,7 @@ export interface State {
     pageParams?: PageParams,
     context?: Context,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cards?: any[],
+    cards: any[],
     _error?: ErrorType,
 }
 
