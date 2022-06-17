@@ -2,13 +2,14 @@ import { FC } from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faTrello } from "@fortawesome/free-brands-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
-import { H3, P5, Stack, ExternalIconLink } from "@deskpro/app-sdk";
+import { H3, P5, Stack } from "@deskpro/app-sdk";
 import { getDate } from "../../../utils/date";
 import { TwoSider } from "../TwoSider";
 import { OverflowText } from "../OverflowText";
 import { NoFound } from "../NoFound";
 import { TextBlockWithLabel } from "../TextBlockWithLabel";
 import { LinkIcon } from "../LinkIcon";
+import { TrelloLink } from "../TrelloLink";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Title: FC<any> = ({ name, shortUrl }) => (
@@ -16,7 +17,7 @@ const Title: FC<any> = ({ name, shortUrl }) => (
         <H3>
             <a href="#">{name}</a>
         </H3>
-        <ExternalIconLink icon={faTrello} href={shortUrl}/>
+        <TrelloLink href={shortUrl} />
     </Stack>
 );
 
@@ -31,7 +32,7 @@ const Workspace: FC<any> = ({ board, list }) => (
             </>
         )}
         rightLabel="List"
-        rightText={list.name}
+        rightText={<OverflowText>{list.name}</OverflowText>}
     />
 );
 
