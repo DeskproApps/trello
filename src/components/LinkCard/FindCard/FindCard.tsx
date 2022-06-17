@@ -1,7 +1,7 @@
 import { useState, FC, ChangeEvent } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import {
-    HorizontalDivider,
+    HorizontalDivider, Stack,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../../../context/StoreProvider/hooks";
@@ -142,13 +142,18 @@ const FindCard: FC = () => {
                 />
             )}
 
-            <div style={{ paddingBottom: "4px" }}>
+            <Stack justify="space-between" style={{ paddingBottom: "4px" }}>
                 <Button
                     disabled={selectedCards.length === 0}
                     text="Link Card"
                     onClick={onLinkCard}
                 />
-            </div>
+                <Button
+                    text="Cancel"
+                    onClick={() => dispatch({ type: "changePage", page: "home" })}
+                    intent="secondary"
+                />
+            </Stack>
 
             <HorizontalDivider style={{ marginBottom: "10px" }} />
 
