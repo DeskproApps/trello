@@ -1,4 +1,4 @@
-import {FC, useState} from "react";
+import {FC, PropsWithChildren, useState} from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
 import {H3, P5, Stack, useDeskproAppTheme, useInitialisedDeskproAppClient} from "@deskpro/app-sdk";
@@ -90,9 +90,10 @@ const Members: FC<any> = ({ members }) => {
     );
 }
 
-const CardInfo: FC = (props) => (
+const CardInfo: FC = (props: PropsWithChildren<{}> & { onTitleClick?: (id: any) => void }) => (
     <>
-        <Title {...props} onTitleClick={(id) => props?.onTitleClick && props.onTitleClick(id)} />
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        <Title {...props} onTitleClick={(id: any) => props?.onTitleClick && props.onTitleClick(id)} />
         <Workspace {...props} />
         <Info {...props} />
         <Members {...props} />
