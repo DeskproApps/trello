@@ -1,4 +1,4 @@
-import {CSSProperties, FC} from "react";
+import { FC } from "react";
 import { NoFound } from "../NoFound";
 import { Card } from "./Card";
 

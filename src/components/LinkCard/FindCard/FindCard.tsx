@@ -85,7 +85,9 @@ const FindCard: FC = () => {
 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 setBoardOptions({
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...options,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...cards.reduce((acc: Record<any, any>, { board }: any) => {
                         if (!acc[board.id]) {
                             acc[board.id] = {

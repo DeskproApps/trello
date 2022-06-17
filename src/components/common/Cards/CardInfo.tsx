@@ -90,6 +90,7 @@ const Members: FC<any> = ({ members }) => {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
 const CardInfo: FC = (props: PropsWithChildren<{}> & { onTitleClick?: (id: any) => void }) => (
     <>
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
