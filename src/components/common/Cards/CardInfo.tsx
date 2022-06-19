@@ -88,4 +88,4 @@ const CardInfo: FC = (props) => (
     </>
 );
 
-export { CardInfo }
+export { CardInfo, Members }

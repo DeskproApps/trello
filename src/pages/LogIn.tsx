@@ -19,7 +19,7 @@ const LogInError = styled(P5)`
     color: ${({ theme }) => theme.colors.scarlett100};
 `;
 
-const LogIn: FC = () => {
+const LogInPage: FC = () => {
     const { client } = useDeskproAppClient();
     const { callback } = useDeskproOAuth2Auth("token", /#token=(?<token>[0-9a-f]+)$/);
     const [state, dispatch] = useStore();
@@ -75,4 +75,4 @@ const LogIn: FC = () => {
         );
 }
 
-export { LogIn };
+export { LogInPage };

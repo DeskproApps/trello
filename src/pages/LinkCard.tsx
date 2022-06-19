@@ -7,7 +7,7 @@ import {
 } from "@deskpro/app-sdk";
 import { FindCard/*, CreateCard*/ } from "../components/LinkCard";
 
-const LinkCard: FC = () => {
+const LinkCardPage: FC = () => {
     // const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
     const { client } = useDeskproAppClient();
 
@@ -43,4 +43,4 @@ const LinkCard: FC = () => {
     );
 };
 
-export { LinkCard };
+export { LinkCardPage };

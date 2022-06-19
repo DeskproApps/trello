@@ -104,6 +104,9 @@ const FindCard: FC = () => {
             return;
         }
 
+        /* ToDo: it is necessary to be able to link several entities with one request
+            example: client.getEntityAssociation(TRELLO_ENTITY, ticketId).set([cardId_1, cardId_2, ...])
+         */
         Promise.all(selectedCards.map(
             (cardId) => setEntityCardService(client, ticketId, cardId)
         ))
