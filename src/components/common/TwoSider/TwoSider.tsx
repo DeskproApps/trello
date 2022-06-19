@@ -1,6 +1,5 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Stack, VerticalDivider } from "@deskpro/app-sdk";
 import { TextBlockWithLabel } from "../TextBlockWithLabel";
 import { Props as TextBlockWithLabelProps } from "../TextBlockWithLabel/types";
 
@@ -11,24 +10,40 @@ export type Props = {
     rightText: TextBlockWithLabelProps["text"],
 };
 
-const Side = styled.div``;
+const Container = styled.div`
+    margin-bottom: 10px;
+`;
+
+const Side = styled.div`
+    display: inline-block;
+    width: calc(49% - 6px);
+`;
+
+const Divider = styled.div`
+    display: inline-block;
+    width: 1px;
+    height: 2em;
+    background-color: ${({ theme }) => theme.colors.grey20};
+    margin: 0 6px;
+`;
+
 
 const TwoSider: FC<Props> = ({ leftLabel, leftText, rightLabel, rightText }) => (
-    <Stack wrap="nowrap" align="stretch" gap={6} style={{ marginBottom: 10 }}>
-        <Side style={{ width: "50%" }}>
+    <Container>
+        <Side>
             <TextBlockWithLabel
                 label={leftLabel}
                 text={leftText}
             />
         </Side>
-        <VerticalDivider width={1} />
+        <Divider />
         <Side>
             <TextBlockWithLabel
                 label={rightLabel}
                 text={rightText}
             />
         </Side>
-    </Stack>
+    </Container>
 );
 
 export { TwoSider };

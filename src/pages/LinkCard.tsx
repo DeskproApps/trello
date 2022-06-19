@@ -1,22 +1,14 @@
-import { FC, useEffect, useState } from "react";
-import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { TabBar, TabBarItemType } from "@deskpro/deskpro-ui";
-import { useDeskproAppClient } from "@deskpro/app-sdk";
-import { FindCard, CreateCard } from "../components/LinkCard";
-
-const tabs: TabBarItemType[] = [
-    {
-        label: "Find Card",
-        icon: faSearch,
-    },
-    {
-        label: "Crete Card",
-        icon: faPlus,
-    },
-];
+import { FC, useEffect/*, useState*/ } from "react";
+// import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+    // TwoButtonGroup,
+    // TwoButtonGroupProps,
+    useDeskproAppClient,
+} from "@deskpro/app-sdk";
+import { FindCard/*, CreateCard*/ } from "../components/LinkCard";
 
 const LinkCard: FC = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
+    // const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
     const { client } = useDeskproAppClient();
 
     useEffect(() => {
@@ -29,19 +21,24 @@ const LinkCard: FC = () => {
         client?.setTitle("Link Cards");
     }, [client]);
 
+    // const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
+
     return (
         <>
-            <TabBar
-                type="tab"
-                tabs={tabs}
-                activeIndex={activeIndex}
-                style={{ marginBottom: 14 }}
-                onClickTab={(index) => setActiveIndex(index)}
+            {/*<TwoButtonGroup
+                selected={selected}
+                oneIcon={faSearch}
+                oneLabel="Find Card"
+                oneOnClick={onChangeSelected("one")}
+                twoIcon={faPlus}
+                twoLabel="Create Card"
+                twoOnClick={onChangeSelected("two")}
             />
             <>
-                {activeIndex === 0 && <FindCard/>}
-                {activeIndex === 1 && <CreateCard/>}
-            </>
+                {selected === "one" && <FindCard/>}
+                {selected === "two" && <CreateCard/>}
+            </>*/}
+            <FindCard/>
         </>
     );
 };

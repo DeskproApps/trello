@@ -18,7 +18,7 @@ const Link = styled.a`
     color: ${({ theme }) => (theme.colors.brandShade100)}
 `;
 
-const TrelloIcon = styled(Icon)`
+export const TrelloIcon = styled(Icon)`
     display: inline-block !important;
     width: 12px;
     height: 12px;

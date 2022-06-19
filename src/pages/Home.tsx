@@ -29,7 +29,7 @@ const getFilteredCards = (cards: any[], searchValue: string) => {
 const Home: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [cards, setCards] = useState<any[]>([]);
     const [searchCard, setSearchCard] = useState<string>("");

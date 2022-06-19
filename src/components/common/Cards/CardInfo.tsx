@@ -3,12 +3,12 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
 import { H3, P5, Stack } from "@deskpro/app-sdk";
 import { getDate } from "../../../utils/date";
-import { TrelloLink } from "../TrelloLink";
 import { TwoSider } from "../TwoSider";
 import { OverflowText } from "../OverflowText";
 import { NoFound } from "../NoFound";
 import { TextBlockWithLabel } from "../TextBlockWithLabel";
 import { LinkIcon } from "../LinkIcon";
+import { TrelloLink } from "../TrelloLink";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Title: FC<any> = ({ name, shortUrl, onPageChange }) => (
@@ -34,17 +34,15 @@ const Workspace: FC<any> = ({ board, list }) => (
             </>
         )}
         rightLabel="List"
-        rightText={list.name}
+        rightText={<OverflowText>{list.name}</OverflowText>}
     />
 );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Info: FC<any> = ({ due }) => (
-    <TwoSider
-        leftLabel="Deskpro Tickets"
-        leftText={5}
-        rightLabel="Due date"
-        rightText={getDate(due)}
+    <TextBlockWithLabel
+        label="Due date"
+        text={getDate(due)}
     />
 );
 
@@ -75,7 +73,7 @@ const Members: FC<any> = ({ members }) => {
         <TextBlockWithLabel
             label="Members"
             text={(
-                <Stack wrap="wrap" gap={6}>{content}</Stack>
+                <Stack gap={6} wrap="wrap">{content}</Stack>
             )}
         />
     );
