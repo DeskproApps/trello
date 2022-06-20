@@ -7,16 +7,45 @@ import { ViewCard } from "../components/ViewCard";
 import { Loading, NoFound } from "../components/common";
 
 const ViewCardPage: FC = () => {
-    const [state, dispatch] = useStore();
+    const [state] = useStore();
     const { client } = useDeskproAppClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [card, setCard] = useState<any | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        if (!client || !card?.shortLink) {
+            return;
+        }
+
+        client.setTitle(card.shortLink)
+    }, [client, card?.shortLink]);
 
     useEffect(() => {
         if (!client) {
             return;
         }
+
+        client.deregisterElement("trelloPlusButton");
+        client?.registerElement("trelloHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
     }, [client]);
+
+    useEffect(() => {
+        if (!client) {
+            return;
+        }
+
+        if (card?.shortUrl) {
+            client?.registerElement("trelloExternalCtaLink", {
+                type: "cta_external_link",
+                url: card.shortUrl,
+                hasIcon: true,
+            });
+        }
+    }, [client, card?.shortUrl]);
 
     useEffect(() => {
         if (!client || !state?.pageParams?.cardId) {
@@ -33,9 +62,8 @@ const ViewCardPage: FC = () => {
                 .then((card) => setCard(card))
                 .finally(() => setLoading(false));
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state?.pageParams?.cardId]);
-
-    console.log(">>> view:", card);
 
     if (!loading && !card) {
         return (<NoFound/>);

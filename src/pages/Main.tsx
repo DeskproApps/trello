@@ -40,6 +40,9 @@ export const Main = () => {
         }
 
         client?.deregisterElement("trelloRefreshButton");
+        client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloHomeButton");
+        client?.deregisterElement("trelloExternalCtaLink");
 
         client?.registerElement("trelloRefreshButton", {
             type: "refresh_button"

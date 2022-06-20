@@ -3,7 +3,6 @@ import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import {
     H1,
     H3,
-    P1,
     P5,
     Pill,
     Icon,
@@ -20,6 +19,7 @@ import {
 } from "../common";
 import { Members } from "../common/Cards";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ViewCard: FC<any> = ({
     name, desc, board, list, labels, due, members, checklists
 }) => {
@@ -51,13 +51,16 @@ const ViewCard: FC<any> = ({
                     ? "-"
                     : (
                         <Stack wrap="wrap" gap={6}>
-                            {labels.map(({ id, name, color }: any) => (
-                                <Pill
-                                    key={id}
-                                    label={!name ? "None" : name}
-                                    {...getLabelColor(theme, color)}
-                                />
-                            ))}
+                            {
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                labels.map(({ id, name, color }: any) => (
+                                    <Pill
+                                        key={id}
+                                        label={!name ? "None" : name}
+                                        {...getLabelColor(theme, color)}
+                                    />
+                                ))
+                            }
                         </Stack>
                     )
                 }
@@ -66,10 +69,9 @@ const ViewCard: FC<any> = ({
                 label="Due date"
                 text={(
                     <P5>
-                        <Icon
-                            icon={faCalendarDays}
-                            style={{ color: theme.colors.grey40 }}
-                        />&nbsp;
+                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                        {/* @ts-ignore */}
+                        <Icon icon={faCalendarDays} style={{ color: theme.colors.grey40 }}/>&nbsp;
                         {!due ? "-" : getDate(due)}
                     </P5>
                 )}
@@ -85,16 +87,19 @@ const ViewCard: FC<any> = ({
                     {checklists.map(({ id, name, checkItems }) => (
                         <Stack key={id} vertical style={{ marginBottom: 10 }}>
                             <H3 style={{ marginBottom: 10 }}>{name}</H3>
-                            {checkItems.map(({ id, name, state }) => (
-                                <Checkbox
-                                    id={id}
-                                    key={id}
-                                    checked={state === "complete"}
-                                    label={name}
-                                    onChange={() => {}}
-                                    labelProps={{ style: { alignItems: "baseline" }}}
-                                />
-                            ))}
+                            {
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                checkItems.map(({ id, name, state }: any) => (
+                                    <Checkbox
+                                        id={id}
+                                        key={id}
+                                        checked={state === "complete"}
+                                        label={name}
+                                        onChange={() => {}}
+                                        labelProps={{ style: { alignItems: "baseline" }}}
+                                    />
+                                ))
+                            }
                         </Stack>
                     ))}
                 </>

@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, Fragment } from "react";
+import isEmpty from "lodash/isEmpty";
 import {
     HorizontalDivider,
     useDeskproAppClient,
@@ -41,6 +42,8 @@ const HomePage: FC = () => {
         }
 
         client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloHomeButton");
+        client?.deregisterElement("trelloExternalCtaLink");
 
         client?.registerElement("trelloPlusButton", {
             type: "plus_button",
@@ -53,28 +56,33 @@ const HomePage: FC = () => {
             return;
         }
 
-        setLoading(true);
 
-        getEntityCardListService(client, ticketId)
-            .then((cardIds) => {
-                if (Array.isArray(cardIds)) {
-                    if (cardIds.length > 0) {
-                        // ToDo: fix fetch in array
-                        return Promise.all(cardIds.map((cardId) => {
-                            return getCardService(client, cardId);
-                        }))
+        if (!isEmpty(state?.cards)) {
+            setLoading(false);
+        } else {
+            setLoading(true);
+
+            getEntityCardListService(client, ticketId)
+                .then((cardIds) => {
+                    if (Array.isArray(cardIds)) {
+                        if (cardIds.length > 0) {
+                            // ToDo: fix fetch in array
+                            return Promise.all(cardIds.map((cardId) => {
+                                return getCardService(client, cardId);
+                            }))
+                        } else {
+                            dispatch({ type: "changePage", page: "link_card" });
+                        }
                     } else {
-                        dispatch({ type: "changePage", page: "link_card" });
+                        return Promise.reject(false);
                     }
-                } else {
-                    return Promise.reject(false);
-                }
-            })
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            .then((cards) => dispatch({ type: "linkedTrelloCards", cards }))
-            .catch((error) => dispatch({ type: "error", error }))
-            .finally(() => setLoading(false));
+                })
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                .then((cards) => dispatch({ type: "linkedTrelloCards", cards }))
+                .catch((error) => dispatch({ type: "error", error }))
+                .finally(() => setLoading(false));
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, ticketId]);
 
