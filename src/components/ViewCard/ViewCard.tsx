@@ -1,4 +1,5 @@
 import { FC } from "react";
+import styled from "styled-components";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import {
     H1,
@@ -18,6 +19,12 @@ import {
     TextBlockWithLabel,
 } from "../common";
 import { Members } from "../common/Cards";
+
+const EmptyLabel = styled.span`
+    display: inline-block;
+    min-width: 20px;
+    content: " ";
+`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ViewCard: FC<any> = ({
@@ -56,7 +63,7 @@ const ViewCard: FC<any> = ({
                                 labels.map(({ id, name, color }: any) => (
                                     <Pill
                                         key={id}
-                                        label={!name ? "None" : name}
+                                        label={name ? name : <EmptyLabel/>}
                                         {...getLabelColor(theme, color)}
                                     />
                                 ))
@@ -106,9 +113,6 @@ const ViewCard: FC<any> = ({
             )}
 
             <HorizontalDivider style={{ marginBottom: 10 }} />
-            <H3 style={{ marginBottom: 10 }}>Comments  (1)</H3>
-
-            <HorizontalDivider/>
         </>
     );
 };
