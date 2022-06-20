@@ -63,7 +63,7 @@ const ViewCardPage: FC = () => {
                 .finally(() => setLoading(false));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state?.pageParams?.cardId]);
+    }, [client, state?.pageParams?.cardId]);
 
     if (!loading && !card) {
         return (<NoFound/>);

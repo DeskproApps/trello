@@ -1,4 +1,4 @@
-import {FC, PropsWithChildren, useState} from "react";
+import { FC, useState } from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
 import {H3, P5, Stack, useDeskproAppTheme, useInitialisedDeskproAppClient} from "@deskpro/app-sdk";
@@ -11,7 +11,7 @@ import { LinkIcon } from "../LinkIcon";
 import { TrelloLink } from "../TrelloLink";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Title: FC<any> = ({ name, shortUrl, onTitleClick, id  }) => {
+const Title: FC<any> = ({ name, shortUrl, onClick }) => {
     const { theme } = useDeskproAppTheme();
 
     return (
@@ -20,7 +20,7 @@ const Title: FC<any> = ({ name, shortUrl, onTitleClick, id  }) => {
                 <a
                     href="#"
                     style={{ color: theme.colors.cyan100, textDecoration: "none" }}
-                    onClick={() => onTitleClick && onTitleClick(id)}
+                    onClick={onClick}
                 >{name}</a>
             </H3>
             <TrelloLink href={shortUrl} />
@@ -95,12 +95,12 @@ const Members: FC<any> = ({ members }) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
-const CardInfo: FC = (props: PropsWithChildren<{}> & { onTitleClick?: (id: any) => void }) => (
+const CardInfo: FC<any> = (props) => (
     <>
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <Title
             {...props}
-            onTitleClick={(id: any) => props?.onTitleClick && props.onTitleClick(id)}
+            onClick={props.onTitleClick}
         />
         <Workspace {...props} />
         <Info {...props} />
