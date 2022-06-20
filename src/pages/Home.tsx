@@ -108,7 +108,11 @@ const HomePage: FC = () => {
                     ? (<NoFound/>)
                     : getFilteredCards(state.cards, searchCard).map(({ id, ...card }) => (
                         <Fragment key={id}>
-                            <CardInfo onPageChange={() => onPageChangeToViewCard(id)} {...card} />
+                            <CardInfo
+                                id={id}
+                                onPageChange={() => onPageChangeToViewCard(id)}
+                                {...card}
+                            />
                             <HorizontalDivider style={{ marginBottom: 9 }}/>
                         </Fragment>
                     ))

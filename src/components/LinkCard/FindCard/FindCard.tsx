@@ -1,7 +1,7 @@
 import { useState, FC, ChangeEvent } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import {
-    HorizontalDivider,
+    HorizontalDivider, Stack,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../../../context/StoreProvider/hooks";
@@ -18,7 +18,7 @@ import { searchByCardService } from "../../../services/trello";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getFilteredCards = (cards: any[], boardId?: string) => {
     let filteredCards = [];
-    if (!boardId) {
+    if (!boardId || boardId === "any") {
         filteredCards = cards;
     } else {
         filteredCards = cards.filter(({ board }) => board.id === boardId)
@@ -74,19 +74,33 @@ const FindCard: FC = () => {
         searchByCardService(client, q)
             .then(({ cards }) => {
                 setCards(cards);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                setBoardOptions(cards.reduce((acc: Record<any, any>, { board }: any) => {
-                    if (!acc[board.id]) {
-                        acc[board.id] = {
-                            key: board.id,
-                            label: board.name,
-                            type: "value",
-                            value: board.id,
-                        };
+                const options = {
+                    any: {
+                        key: "any",
+                        label: "Any",
+                        type: "value",
+                        value: "any",
                     }
+                };
 
-                    return acc;
-                }, {}));
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                setBoardOptions({
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...options,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...cards.reduce((acc: Record<any, any>, { board }: any) => {
+                        if (!acc[board.id]) {
+                            acc[board.id] = {
+                                key: board.id,
+                                label: board.name,
+                                type: "value",
+                                value: board.id,
+                            };
+                        }
+
+                        return acc;
+                    }, {})
+                });
             })
             .catch(() => {})
             .finally(() => setLoading(false));
@@ -97,7 +111,9 @@ const FindCard: FC = () => {
         searchInTrello(q);
     };
 
-    const onSelectBoard = (option: object) => setSelectedBoard(option);
+    const onSelectBoard = (option: object) => {
+        setSelectedBoard(option);
+    };
 
     const onLinkCard = () => {
         if (!client || !ticketId) {
@@ -122,14 +138,29 @@ const FindCard: FC = () => {
                 onChange={onChangeSearch}
             />
 
-            <SingleSelect
-                label="Board"
-                value={selectedBoard?.label}
-                onChange={onSelectBoard}
-                options={Object.values(boardOptions)}
-            />
+            {(cards && cards.length > 0) && (
+                <SingleSelect
+                    label="Board"
+                    value={selectedBoard?.label}
+                    onChange={onSelectBoard}
+                    options={Object.values(boardOptions)}
+                />
+            )}
 
-            <HorizontalDivider style={{ marginBottom: 10 }} />
+            <Stack justify="space-between" style={{ paddingBottom: "4px" }}>
+                <Button
+                    disabled={selectedCards.length === 0}
+                    text="Link Cards"
+                    onClick={onLinkCard}
+                />
+                <Button
+                    text="Cancel"
+                    onClick={() => dispatch({ type: "changePage", page: "home" })}
+                    intent="secondary"
+                />
+            </Stack>
+
+            <HorizontalDivider style={{ marginBottom: "10px" }} />
 
             {loading
                 ? (<Loading/>)
@@ -140,12 +171,6 @@ const FindCard: FC = () => {
                         onChange={onChangeSelectedCard}
                     />
                 )}
-
-            <Button
-                disabled={selectedCards.length === 0}
-                text="Link Card"
-                onClick={onLinkCard}
-            />
         </>
     );
 };
