@@ -8,6 +8,7 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { checkIsAliveService } from "../services/trello";
+import { CustomError } from "../services/trello/types";
 import { useSetAppTitle } from "../hooks";
 import {
     Loading,
@@ -54,7 +55,9 @@ const LogInPage: FC = () => {
                     return checkIsAliveService(client);
                 }
             })
-            .then((data) => {
+            .then((data: CustomError | { isAlive: boolean } | undefined) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 if (data?.isAlive) {
                     dispatch({ type: "setAuth", isAuth: true });
                 }

@@ -1,11 +1,12 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { getCurrentMemberService } from "./getCurrentMember";
+import { CustomError } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIsAliveService = (client: IDeskproClient): Promise<{ isAlive: true } | any> => {
+const checkIsAliveService = (
+    client: IDeskproClient,
+): Promise<CustomError | { isAlive: true }> => {
     return getCurrentMemberService(client)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((data: any) => {
+        .then((data) => {
             if (data?.error) {
                 return data;
             } else {

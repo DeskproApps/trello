@@ -1,9 +1,9 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseRequest } from "./baseRequest";
+import { CardType } from "./types";
 
 const searchByCardService = (client: IDeskproClient, query: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return baseRequest<{ cards: any }>(client, {
+    return baseRequest<{ cards: CardType[] }>(client, {
         url: "/search",
         queryParams: {
             modelTypes: "cards",

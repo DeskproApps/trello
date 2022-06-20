@@ -12,6 +12,7 @@ import {
     HorizontalDivider,
     useDeskproAppTheme
 } from "@deskpro/app-sdk";
+import { CardType } from "../../services/trello/types";
 import { getDate } from "../../utils/date";
 import { getLabelColor } from "../../utils";
 import {
@@ -26,8 +27,7 @@ const EmptyLabel = styled.span`
     content: " ";
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ViewCard: FC<any> = ({
+const ViewCard: FC<CardType> = ({
     name, desc, board, list, labels, due, members, checklists
 }) => {
     const { theme } = useDeskproAppTheme();

@@ -1,7 +1,14 @@
 import { FC, useState } from "react";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
-import {H3, P5, Stack, useDeskproAppTheme, useInitialisedDeskproAppClient} from "@deskpro/app-sdk";
+import {
+    H3,
+    P5,
+    Stack,
+    useDeskproAppTheme,
+    useInitialisedDeskproAppClient,
+} from "@deskpro/app-sdk";
+import { CardType } from "../../../services/trello/types";
 import { getDate } from "../../../utils/date";
 import { TwoSider } from "../TwoSider";
 import { OverflowText } from "../OverflowText";
@@ -10,8 +17,7 @@ import { TextBlockWithLabel } from "../TextBlockWithLabel";
 import { LinkIcon } from "../LinkIcon";
 import { TrelloLink } from "../TrelloLink";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Title: FC<any> = ({ name, shortUrl, onClick }) => {
+const Title: FC<CardType & { onClick?: () => void }> = ({ name, shortUrl, onClick }) => {
     const { theme } = useDeskproAppTheme();
 
     return (
@@ -28,8 +34,7 @@ const Title: FC<any> = ({ name, shortUrl, onClick }) => {
     );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Workspace: FC<any> = ({ board, list }) => (
+const Workspace: FC<CardType> = ({ board, list }) => (
     <TwoSider
         leftLabel={<>Board <LinkIcon size={10} href={board.url}/></>}
         leftText={(
@@ -43,8 +48,7 @@ const Workspace: FC<any> = ({ board, list }) => (
     />
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Info: FC<any> = ({ id, due }) => {
+const Info: FC<CardType> = ({ id, due }) => {
     const [ticketCount, setTicketCount] = useState<number>(0);
 
     useInitialisedDeskproAppClient((client) => {
@@ -53,16 +57,15 @@ const Info: FC<any> = ({ id, due }) => {
 
     return (
         <TwoSider
-            leftLabel={<>Deskpro Tickets</>}
+            leftLabel="Deskpro Tickets"
             leftText={ticketCount}
-            rightLabel={<>Due Date</>}
+            rightLabel="Due Date"
             rightText={getDate(due)}
         />
     );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Members: FC<any> = ({ members }) => {
+const Members: FC<{ members: CardType["members"] }> = ({ members }) => {
     let content = null;
 
     if (!Array.isArray(members)) {
@@ -94,10 +97,8 @@ const Members: FC<any> = ({ members }) => {
     );
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
-const CardInfo: FC<any> = (props) => (
+const CardInfo: FC<CardType & { onTitleClick?: () => void }> = (props) => (
     <>
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <Title
             {...props}
             onClick={props.onTitleClick}
