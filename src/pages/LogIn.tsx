@@ -8,7 +8,11 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { checkIsAliveService } from "../services/trello";
-import { Loading, AnchorButton } from "../components/common";
+import { useSetAppTitle } from "../hooks";
+import {
+    Loading,
+    AnchorButton,
+} from "../components/common";
 
 const LogInError = styled(P5)`
     margin-bottom: 8px;
@@ -19,9 +23,9 @@ const LogIn: FC = () => {
     const { client } = useDeskproAppClient();
     const { callback } = useDeskproOAuth2Auth("token", /#token=(?<token>[0-9a-f]+)$/);
     const [state, dispatch] = useStore();
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const authUrl = `https://trello.com/1/authorize?expiration=1day&name=MyPersonalToken&scope=read&response_type=token&key=${state?.context?.settings.client_key}&redirect_uri=${callback?.callbackUrl}`
+    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Deskpro&scope=read&response_type=token&key=${state?.context?.settings.client_key}&redirect_uri=${callback?.callbackUrl}`
 
     if (error) {
         console.error(`Trello: ${error}`);
@@ -33,6 +37,8 @@ const LogIn: FC = () => {
             .catch((error) => dispatch({ type: "error", error }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [callback]);
+
+    useSetAppTitle("Trello");
 
     useEffect(() => {
         if (!client || !callback?.hasToken) {
@@ -51,7 +57,6 @@ const LogIn: FC = () => {
             .then((data) => {
                 if (data?.isAlive) {
                     dispatch({ type: "setAuth", isAuth: true });
-                    dispatch({ type: "changePage", page: "home" })
                 }
             })
             .catch((error) => setError(error))

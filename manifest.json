@@ -1,7 +1,7 @@
 {
   "name": "@deskpro-apps/trello",
   "title": "Trello",
-  "description": "Deskpro Trello app",
+  "description": "Integrate Trello with your helpdesk to improve your management of your tasks",
   "version": "1.0.0",
   "scope": "agent",
   "isSingleInstall": false,

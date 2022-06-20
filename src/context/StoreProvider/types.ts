@@ -5,10 +5,11 @@ export type ErrorType = Error | string | unknown;
 
 export type Page =
     | "home"
-    | "log_in";
+    | "log_in"
+    | "link_card";
 
 export type PageParams = {
-    //...
+    activeTab?: "find" | "create",
 };
 
 export interface State {
@@ -16,6 +17,8 @@ export interface State {
     page?: Page;
     pageParams?: PageParams,
     context?: Context,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cards?: any[],
     _error?: ErrorType,
 }
 
@@ -23,8 +26,16 @@ export type Action =
     | { type: "changePage", page: Page, params?: PageParams }
     | { type: "loadContext", context: Context }
     | { type: "error", error: ErrorType }
-    | { type: "setAuth", isAuth: boolean };
+    | { type: "setAuth", isAuth: boolean }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | { type: "linkedTrelloCards", cards: any[] };
 
 export type Dispatch = (action: Action) => void;
 
 export type StoreReducer = Reducer<State, Action>;
+
+export type AppElementPayload = {
+    type: "changePage",
+    page: Page,
+    params?: PageParams,
+};
