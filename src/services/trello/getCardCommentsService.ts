@@ -6,14 +6,11 @@ const getCardService = (
     client: IDeskproClient,
     cardId: CardType["id"],
 ) => {
-    return baseRequest<CardType>(client, {
-        url: `/cards/${cardId}`,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return baseRequest<Record<string, any>>(client, {
+        url: `/cards/${cardId}/actions`,
         queryParams: {
-            members: true,
-            board: true,
-            list: true,
-            checklists: "all",
-            fields: "all",
+            filter: "commentCard",
         },
     });
 };

@@ -26,12 +26,10 @@ const getFilteredCards = (cards: any[], searchValue: string) => {
     return filteredCards;
 };
 
-const Home: FC = () => {
+const HomePage: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [cards, setCards] = useState<any[]>([]);
     const [searchCard, setSearchCard] = useState<string>("");
     const ticketId = state.context?.data.ticket.id
 
@@ -43,6 +41,8 @@ const Home: FC = () => {
         }
 
         client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloHomeButton");
+        client?.deregisterElement("trelloExternalCtaLink");
 
         client?.registerElement("trelloPlusButton", {
             type: "plus_button",
@@ -74,11 +74,20 @@ const Home: FC = () => {
             })
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            .then((cards) => setCards(cards))
+            .then((cards) => dispatch({ type: "linkedTrelloCards", cards }))
             .catch((error) => dispatch({ type: "error", error }))
             .finally(() => setLoading(false));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, ticketId]);
+
+    const onPageChangeToViewCard = (cardId: string) => {
+        dispatch({
+            type: "changePage",
+            page: "view_card",
+            params: { cardId }
+        });
+    };
 
     return loading
         ? (<Loading/>)
@@ -90,11 +99,15 @@ const Home: FC = () => {
                     onChange={(e) => setSearchCard(e.target.value)}
                 />
                 <HorizontalDivider style={{ marginBottom: 9 }}/>
-                {cards.length === 0
+                {state.cards.length === 0
                     ? (<NoFound/>)
-                    : getFilteredCards(cards, searchCard).map(({ id, ...card }) => (
+                    : getFilteredCards(state.cards, searchCard).map(({ id, ...card }) => (
                         <Fragment key={id}>
-                            <CardInfo {...({...card, id})} />
+                            <CardInfo
+                                id={id}
+                                onTitleClick={() => onPageChangeToViewCard(id)}
+                                {...card}
+                            />
                             <HorizontalDivider style={{ marginBottom: 9 }}/>
                         </Fragment>
                     ))
@@ -103,4 +116,4 @@ const Home: FC = () => {
         )
 };
 
-export { Home };
+export { HomePage };

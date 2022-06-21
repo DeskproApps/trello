@@ -14,10 +14,11 @@ import {
 } from "../../common";
 import { setEntityCardService } from "../../../services/entityAssociation";
 import { searchByCardService } from "../../../services/trello";
+import { CardType, Board } from "../../../services/trello/types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getFilteredCards = (cards: any[], boardId?: string) => {
+const getFilteredCards = (cards: CardType[], boardId?: Board["id"]) => {
     let filteredCards = [];
+
     if (!boardId || boardId === "any") {
         filteredCards = cards;
     } else {
@@ -27,13 +28,21 @@ const getFilteredCards = (cards: any[], boardId?: string) => {
     return filteredCards;
 };
 
+type Option = {
+    key: "any" | string,
+    label: "Any" | string,
+    type: "value",
+    value: "any" | string,
+};
+
+type ObjectOptions = Record<"any" | Board["id"], Option>
+
 const FindCard: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(false);
     const [searchCard, setSearchCard] = useState<string>("");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [cards, setCards] = useState<any[]>([]);
+    const [cards, setCards] = useState<CardType[]>([]);
     const [selectedCards, setSelectedCards] = useState<string[]>([]);
     const [selectedBoard, setSelectedBoard] = useState<{
         key?: string,
@@ -41,7 +50,7 @@ const FindCard: FC = () => {
         type?: string,
         value?: string,
     }>({});
-    const [boardOptions, setBoardOptions] = useState([]);
+    const [boardOptions, setBoardOptions] = useState<ObjectOptions>({});
     const ticketId = state.context?.data.ticket.id;
 
     const onClearSearch = () => {
@@ -74,7 +83,7 @@ const FindCard: FC = () => {
         searchByCardService(client, q)
             .then(({ cards }) => {
                 setCards(cards);
-                const options = {
+                const options: ObjectOptions = {
                     any: {
                         key: "any",
                         label: "Any",
@@ -83,12 +92,9 @@ const FindCard: FC = () => {
                     }
                 };
 
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 setBoardOptions({
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...options,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    ...cards.reduce((acc: Record<any, any>, { board }: any) => {
+                    ...cards.reduce((acc: ObjectOptions, { board }: CardType): ObjectOptions => {
                         if (!acc[board.id]) {
                             acc[board.id] = {
                                 key: board.id,
@@ -120,6 +126,9 @@ const FindCard: FC = () => {
             return;
         }
 
+        /* ToDo: it is necessary to be able to link several entities with one request
+            example: client.getEntityAssociation(TRELLO_ENTITY, ticketId).set([cardId_1, cardId_2, ...])
+         */
         Promise.all(selectedCards.map(
             (cardId) => setEntityCardService(client, ticketId, cardId)
         ))

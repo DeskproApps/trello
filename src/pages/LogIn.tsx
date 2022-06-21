@@ -8,6 +8,7 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { checkIsAliveService } from "../services/trello";
+import { CustomError } from "../services/trello/types";
 import { useSetAppTitle } from "../hooks";
 import {
     Loading,
@@ -19,7 +20,7 @@ const LogInError = styled(P5)`
     color: ${({ theme }) => theme.colors.scarlett100};
 `;
 
-const LogIn: FC = () => {
+const LogInPage: FC = () => {
     const { client } = useDeskproAppClient();
     const { callback } = useDeskproOAuth2Auth("token", /#token=(?<token>[0-9a-f]+)$/);
     const [state, dispatch] = useStore();
@@ -54,7 +55,9 @@ const LogIn: FC = () => {
                     return checkIsAliveService(client);
                 }
             })
-            .then((data) => {
+            .then((data: CustomError | { isAlive: boolean } | undefined) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 if (data?.isAlive) {
                     dispatch({ type: "setAuth", isAuth: true });
                 }
@@ -75,4 +78,4 @@ const LogIn: FC = () => {
         );
 }
 
-export { LogIn };
+export { LogInPage };

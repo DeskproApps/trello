@@ -7,7 +7,7 @@ import {
 } from "@deskpro/app-sdk";
 import { FindCard/*, CreateCard*/ } from "../components/LinkCard";
 
-const LinkCard: FC = () => {
+const LinkCardPage: FC = () => {
     // const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
     const { client } = useDeskproAppClient();
 
@@ -17,6 +17,8 @@ const LinkCard: FC = () => {
         }
 
         client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloHomeButton");
+        client?.deregisterElement("trelloExternalCtaLink");
 
         client?.setTitle("Link Cards");
     }, [client]);
@@ -43,4 +45,4 @@ const LinkCard: FC = () => {
     );
 };
 
-export { LinkCard };
+export { LinkCardPage };

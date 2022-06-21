@@ -7,9 +7,11 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload } from "../context/StoreProvider/types";
-import { Home } from "./Home";
-import { LogIn } from "./LogIn";
-import { LinkCard } from "./LinkCard";
+import { useSetBadgeCount } from "../hooks/useSetBadgeCount";
+import { HomePage } from "./Home";
+import { LogInPage } from "./LogIn";
+import { LinkCardPage } from "./LinkCard";
+import { ViewCardPage } from "./ViewCard";
 import { ErrorBlock } from "../components/common";
 
 export const Main = () => {
@@ -19,6 +21,8 @@ export const Main = () => {
     if (state._error) {
         console.error(`Trello: ${state._error}`);
     }
+
+    useSetBadgeCount();
 
     useDeskproAppEvents({
         onChange: (context: Context) => {
@@ -39,6 +43,9 @@ export const Main = () => {
         }
 
         client?.deregisterElement("trelloRefreshButton");
+        client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloHomeButton");
+        client?.deregisterElement("trelloExternalCtaLink");
 
         client?.registerElement("trelloRefreshButton", {
             type: "refresh_button"
@@ -51,12 +58,13 @@ export const Main = () => {
     }, [state.isAuth]);
 
     const page = !state.isAuth
-        ? <LogIn />
+        ? <LogInPage />
         : match(state.page)
-            .with("home", () => <Home />)
-            .with("log_in", () => <LogIn />)
-            .with("link_card", () => <LinkCard />)
-            .otherwise(() => <LogIn />);
+            .with("home", () => <HomePage />)
+            .with("log_in", () => <LogInPage />)
+            .with("link_card", () => <LinkCardPage />)
+            .with("view_card", () => <ViewCardPage />)
+            .otherwise(() => <LogInPage />);
 
     return (
         <>
