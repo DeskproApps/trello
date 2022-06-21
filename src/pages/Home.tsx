@@ -43,6 +43,7 @@ const HomePage: FC = () => {
         client?.deregisterElement("trelloPlusButton");
         client?.deregisterElement("trelloHomeButton");
         client?.deregisterElement("trelloExternalCtaLink");
+        client?.deregisterElement("trelloMenu");
 
         client?.registerElement("trelloPlusButton", {
             type: "plus_button",

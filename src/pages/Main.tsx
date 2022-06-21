@@ -8,6 +8,7 @@ import {
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload } from "../context/StoreProvider/types";
 import { deleteEntityCardService } from "../services/entityAssociation";
+import { useSetBadgeCount } from "../hooks";
 import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
 import { LinkCardPage } from "./LinkCard";
@@ -21,6 +22,8 @@ export const Main = () => {
     if (state._error) {
         console.error(`Trello: ${state._error}`);
     }
+
+    useSetBadgeCount();
 
     useDeskproAppEvents({
         onChange: (context: Context) => {
@@ -53,6 +56,7 @@ export const Main = () => {
         client?.deregisterElement("trelloPlusButton");
         client?.deregisterElement("trelloHomeButton");
         client?.deregisterElement("trelloExternalCtaLink");
+        client?.deregisterElement("trelloMenu");
 
         client?.registerElement("trelloRefreshButton", {
             type: "refresh_button"

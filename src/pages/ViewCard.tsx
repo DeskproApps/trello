@@ -27,6 +27,7 @@ const ViewCardPage: FC = () => {
         }
 
         client.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloMenu");
         client?.registerElement("trelloHomeButton", {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
