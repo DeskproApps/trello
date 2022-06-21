@@ -7,6 +7,7 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload } from "../context/StoreProvider/types";
+import { useSetBadgeCount } from "../hooks/useSetBadgeCount";
 import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
 import { LinkCardPage } from "./LinkCard";
@@ -20,6 +21,8 @@ export const Main = () => {
     if (state._error) {
         console.error(`Trello: ${state._error}`);
     }
+
+    useSetBadgeCount();
 
     useDeskproAppEvents({
         onChange: (context: Context) => {
