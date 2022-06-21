@@ -1,5 +1,5 @@
 import { Reducer } from "react";
-import { Context, IDeskproClient } from "@deskpro/app-sdk";
+import { Context } from "@deskpro/app-sdk";
 import { CardType } from "../../services/trello/types";
 
 export type ErrorType = Error | string | unknown;
