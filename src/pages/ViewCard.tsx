@@ -34,6 +34,23 @@ const ViewCardPage: FC = () => {
     }, [client]);
 
     useEffect(() => {
+        if (!client || !state?.pageParams?.cardId) {
+            return;
+        }
+
+        client?.registerElement("trelloMenu", {
+            type: "menu",
+            items: [{
+                title: "Unlink Ticket",
+                payload: {
+                    type: "unlinkTicket",
+                    cardId: state.pageParams.cardId
+                },
+            }],
+        });
+    }, [client, state?.pageParams?.cardId]);
+
+    useEffect(() => {
         if (!client) {
             return;
         }

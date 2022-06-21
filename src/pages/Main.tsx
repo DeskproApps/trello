@@ -7,6 +7,7 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload } from "../context/StoreProvider/types";
+import { deleteEntityCardService } from "../services/entityAssociation";
 import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
 import { LinkCardPage } from "./LinkCard";
@@ -30,6 +31,15 @@ export const Main = () => {
         onElementEvent(id: string, type: string, payload?: AppElementPayload) {
             if (payload?.type === "changePage") {
                 dispatch({ type: "changePage", page: payload.page, params: payload.params })
+            } else if (payload?.type === "unlinkTicket") {
+                const ticketId = state.context?.data.ticket.id;
+
+                if (client && ticketId) {
+                    deleteEntityCardService(client, ticketId, payload.cardId)
+                        .then(() => {
+                            dispatch({ type: "changePage", page: "home" });
+                        })
+                }
             }
         },
     });
