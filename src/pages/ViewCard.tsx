@@ -27,11 +27,30 @@ const ViewCardPage: FC = () => {
         }
 
         client.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloMenu");
         client?.registerElement("trelloHomeButton", {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
         });
     }, [client]);
+
+    useEffect(() => {
+        if (!client || !state?.pageParams?.cardId || !state.context?.data.ticket.id) {
+            return;
+        }
+
+        client?.registerElement("trelloMenu", {
+            type: "menu",
+            items: [{
+                title: "Unlink Ticket",
+                payload: {
+                    type: "unlinkTicket",
+                    cardId: state.pageParams.cardId,
+                    ticketId: state.context.data.ticket.id,
+                },
+            }],
+        });
+    }, [client, state?.pageParams?.cardId, state.context?.data.ticket.id]);
 
     useEffect(() => {
         if (!client) {

@@ -1,5 +1,6 @@
 import { Reducer } from "react";
 import { Context } from "@deskpro/app-sdk";
+import { CardType } from "../../services/trello/types";
 
 export type ErrorType = Error | string | unknown;
 
@@ -29,15 +30,12 @@ export type Action =
     | { type: "loadContext", context: Context }
     | { type: "error", error: ErrorType }
     | { type: "setAuth", isAuth: boolean }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    | { type: "linkedTrelloCards", cards: any[] };
+    | { type: "linkedTrelloCards", cards: CardType[] };
 
 export type Dispatch = (action: Action) => void;
 
 export type StoreReducer = Reducer<State, Action>;
 
-export type AppElementPayload = {
-    type: "changePage",
-    page: Page,
-    params?: PageParams,
-};
+export type AppElementPayload =
+    | { type: "changePage", page: Page, params?: PageParams }
+    | { type: "unlinkTicket", cardId: CardType["id"], ticketId: string };

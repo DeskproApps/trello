@@ -7,7 +7,8 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload } from "../context/StoreProvider/types";
-import { useSetBadgeCount } from "../hooks/useSetBadgeCount";
+import { deleteEntityCardService } from "../services/entityAssociation";
+import { useSetBadgeCount } from "../hooks";
 import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
 import { LinkCardPage } from "./LinkCard";
@@ -33,9 +34,16 @@ export const Main = () => {
         onElementEvent(id: string, type: string, payload?: AppElementPayload) {
             if (payload?.type === "changePage") {
                 dispatch({ type: "changePage", page: payload.page, params: payload.params })
+            } else if (payload?.type === "unlinkTicket") {
+                if (client) {
+                    deleteEntityCardService(client, payload.ticketId, payload.cardId)
+                        .then(() => {
+                            dispatch({ type: "changePage", page: "home" });
+                        })
+                }
             }
         },
-    });
+    }, [client]);
 
     useEffect(() => {
         if (!client) {
@@ -46,6 +54,7 @@ export const Main = () => {
         client?.deregisterElement("trelloPlusButton");
         client?.deregisterElement("trelloHomeButton");
         client?.deregisterElement("trelloExternalCtaLink");
+        client?.deregisterElement("trelloMenu");
 
         client?.registerElement("trelloRefreshButton", {
             type: "refresh_button"
