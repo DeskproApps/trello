@@ -35,7 +35,7 @@ const ViewCardPage: FC = () => {
     }, [client]);
 
     useEffect(() => {
-        if (!client || !state?.pageParams?.cardId) {
+        if (!client || !state?.pageParams?.cardId || !state.context?.data.ticket.id) {
             return;
         }
 
@@ -45,11 +45,12 @@ const ViewCardPage: FC = () => {
                 title: "Unlink Ticket",
                 payload: {
                     type: "unlinkTicket",
-                    cardId: state.pageParams.cardId
+                    cardId: state.pageParams.cardId,
+                    ticketId: state.context.data.ticket.id,
                 },
             }],
         });
-    }, [client, state?.pageParams?.cardId]);
+    }, [client, state?.pageParams?.cardId, state.context?.data.ticket.id]);
 
     useEffect(() => {
         if (!client) {

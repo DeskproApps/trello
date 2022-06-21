@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { match } from "ts-pattern";
 import {
     Context,
@@ -35,17 +35,15 @@ export const Main = () => {
             if (payload?.type === "changePage") {
                 dispatch({ type: "changePage", page: payload.page, params: payload.params })
             } else if (payload?.type === "unlinkTicket") {
-                const ticketId = state.context?.data.ticket.id;
-
-                if (client && ticketId) {
-                    deleteEntityCardService(client, ticketId, payload.cardId)
+                if (client) {
+                    deleteEntityCardService(client, payload.ticketId, payload.cardId)
                         .then(() => {
                             dispatch({ type: "changePage", page: "home" });
                         })
                 }
             }
         },
-    });
+    }, [client]);
 
     useEffect(() => {
         if (!client) {

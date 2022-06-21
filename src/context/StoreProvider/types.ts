@@ -1,5 +1,5 @@
 import { Reducer } from "react";
-import { Context } from "@deskpro/app-sdk";
+import { Context, IDeskproClient } from "@deskpro/app-sdk";
 import { CardType } from "../../services/trello/types";
 
 export type ErrorType = Error | string | unknown;
@@ -38,4 +38,4 @@ export type StoreReducer = Reducer<State, Action>;
 
 export type AppElementPayload =
     | { type: "changePage", page: Page, params?: PageParams }
-    | { type: "unlinkTicket", cardId: CardType["id"] };
+    | { type: "unlinkTicket", cardId: CardType["id"], ticketId: string };
