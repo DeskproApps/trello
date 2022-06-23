@@ -6,7 +6,7 @@ export type RequestParams = {
     url: string,
     method?: ApiRequestMethod,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    content?: any,
+    data?: any,
     queryParams?: Record<string, string|number|boolean>
 };
 
@@ -40,6 +40,8 @@ export type Member = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     nonPublicAvailable: any,
     username: string,
+    organizations?: Organization[],
+    boards?: Board[],
 };
 
 export type ChecklistItem = {
@@ -66,6 +68,19 @@ export type Checklist = {
 
 export type Organization = {
     id: string,
+    desc: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    descData: any,
+    displayName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    domainName: any,
+    idBoards: Array<Board["id"]>,
+    idMemberCreator: Member["id"],
+    logoHash: string,
+    logoUrl: string,
+    name: string,
+    url: string,
+    website: string|null,
 };
 
 export type Board = {
@@ -82,6 +97,7 @@ export type Board = {
     url: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     prefs: any,
+    lists?: List[],
 };
 
 export type LabelColor =

@@ -26,7 +26,7 @@ const LogInPage: FC = () => {
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Deskpro&scope=read&response_type=token&key=${state?.context?.settings.client_key}&redirect_uri=${callback?.callbackUrl}`
+    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Deskpro&scope=read,write&response_type=token&key=${state?.context?.settings.client_key}&redirect_uri=${callback?.callbackUrl}`
 
     if (error) {
         console.error(`Trello: ${error}`);
