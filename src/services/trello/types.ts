@@ -120,6 +120,8 @@ export type Label = {
     color: LabelColor,
 };
 
+export type Labels = Label[];
+
 export type List = {
     id: string,
     name: string,

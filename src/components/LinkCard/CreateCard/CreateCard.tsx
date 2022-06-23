@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, ReactNode } from "react";
 import styled from "styled-components";
 import concat from "lodash/concat";
 import isEmpty from "lodash/isEmpty";
@@ -6,30 +6,45 @@ import parseDate from "date-fns/parse";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import {
+    faPlus,
+    faCheck,
     faCalendarDays,
+    faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-    Stack,
     InputWithDisplay,
     TextAreaWithDisplay,
 } from "@deskpro/deskpro-ui";
-import { useDeskproAppTheme, useDeskproAppClient } from "@deskpro/app-sdk";
+import {
+    Pill,
+    Stack,
+    Dropdown,
+    DropdownValueType,
+    Label as LabelUI,
+    Button as ButtonUI,
+    useDeskproAppTheme,
+    useDeskproAppClient,
+} from "@deskpro/app-sdk";
 import { useStore } from "../../../context/StoreProvider/hooks";
 import {
     createCardService,
     getCurrentMemberService,
+    getLabelsOnBoardService,
+    getMembersOfOrganizationService,
 } from "../../../services/trello";
 import { setEntityCardService } from "../../../services/entityAssociation";
 import { Member, Board, List, Organization } from "../../../services/trello/types";
 import { parseDateTime } from "../../../utils/date";
-import { Label, SingleSelect, Button, Loading } from "../../common";
+import {
+    Label,
+    Button,
+    Loading,
+    SingleSelect,
+    EmptyInlineBlock,
+} from "../../common";
+import { getLabelColor } from "../../../utils";
 
-type Option = {
-    key: string,
-    label: string,
-    value: string,
-    type: "value",
-};
+type Option = DropdownValueType<string>;
 
 type Options = Option[];
 
@@ -73,7 +88,7 @@ const getInitValues = () => ({
     board: { key: "", label: "", value: "", type: "value" },
     list: { key: "", label: "", value: "", type: "value" },
     description: "",
-    labels: "",
+    labels: [],
     dueDate: "",
     members: "",
 });
@@ -89,6 +104,7 @@ const CreateCard: FC = () => {
     const [organizations, setOrganizations] = useState<Options>([]);
     const [boards, setBoards] = useState<Options>([]);
     const [lists, setLists] = useState<Options>([]);
+    const [labels, setLabels] = useState<Options>([]);
 
     const {
         values,
@@ -111,7 +127,10 @@ const CreateCard: FC = () => {
                 name: values.title,
                 desc: values.description,
                 idList: values.list.value,
-                due: parseDateTime(parseDate(values.dueDate, "dd/MM/yyyy", new Date())),
+                due: !values.dueDate
+                    ? ""
+                    : parseDateTime(parseDate(values.dueDate, "dd/MM/yyyy", new Date())),
+                idLabels: values.labels,
             };
 
             await createCardService(client, newCard)
@@ -210,6 +229,53 @@ const CreateCard: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.workspace]);
 
+    useEffect(() => {
+        if (!client || !values.board.value) {
+            return;
+        }
+
+        const board = member?.boards?.find(({ id }) => id === values.board.value) as Board;
+
+        setLists(
+            board.lists?.map(({ id, name }): Option => ({
+                key: id,
+                value: id,
+                label: name,
+                type: "value",
+                selected: false,
+            })) as Options
+        );
+
+        getLabelsOnBoardService(client, values.board.value)
+            .then((labels) => {
+                if (!isEmpty(labels)) {
+                    setLabels(labels.map(({ id, name, color }): Option => ({
+                        key: id,
+                        value: id,
+                        type: "value",
+                        label: (
+                            <Pill
+                                label={name ? name : <EmptyInlineBlock/>}
+                                {...getLabelColor(theme, color)}
+                            />
+                        ),
+                    })));
+                }
+                console.log(">>> effect:board:then:", labels);
+            })
+            .catch((error) => {
+                console.log(">>> effect:board:catch:", error);
+            });
+
+    }, [values.board.value]);
+
+    useEffect(() => {
+        setLabels(labels.map((label) => ({
+            ...label,
+            selected: values.labels.includes(label.value as never),
+        })));
+    }, [values.labels]);
+
     if (loading) {
         return <Loading/>
     }
@@ -279,6 +345,38 @@ const CreateCard: FC = () => {
                 />
             </LabelDueDate>
 
+            <LabelUI htmlFor="labels" label="Labels"/>
+            <Dropdown
+                fetchMoreText={"Fetch more"}
+                autoscrollText={"Autoscroll"}
+                selectedIcon={faCheck}
+                externalLinkIcon={faExternalLinkAlt}
+                placement="bottom-start"
+                options={labels}
+                onSelectOption={(option) => {
+                    if (option.value) {
+                        const newValue = values.labels.includes(option.value as never)
+                            ? values.labels.filter((labelId) => labelId !== option.value)
+                            : [...values.labels, option.value]
+
+                        setFieldValue("labels", newValue);
+                    }
+                }}
+                closeOnSelect={false}
+            >
+                {({ active, targetProps, targetRef }) => (
+                    <ButtonUI
+                        id="labels"
+                        ref={targetRef}
+                        {...targetProps}
+                        active={active}
+                        text="Add"
+                        icon={faPlus}
+                        minimal
+                        style={{ marginBottom: 10 }}
+                    />
+                )}
+            </Dropdown>
             <Stack justify="space-between">
                 <Button
                     type="submit"
