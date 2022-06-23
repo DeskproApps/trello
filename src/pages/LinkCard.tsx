@@ -22,6 +22,10 @@ const LinkCardPage: FC = () => {
         client?.deregisterElement("trelloMenu");
 
         client?.setTitle("Link Cards");
+        client?.registerElement("trelloHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
     }, [client]);
 
     const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
