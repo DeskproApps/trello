@@ -6,18 +6,12 @@ import parseDate from "date-fns/parse";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import {
-    // faPlus,
-    // faCheck,
     faCalendarDays,
-    // faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     Stack,
-    // Dropdown,
     InputWithDisplay,
     TextAreaWithDisplay,
-    // Label as LabelUI,
-    // Button as ButtonUI,
 } from "@deskpro/deskpro-ui";
 import { useDeskproAppTheme, useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../../../context/StoreProvider/hooks";
@@ -28,7 +22,6 @@ import {
 import { setEntityCardService } from "../../../services/entityAssociation";
 import { Member, Board, List, Organization } from "../../../services/trello/types";
 import { parseDateTime } from "../../../utils/date";
-// import { Members } from "./Members";
 import { Label, SingleSelect, Button, Loading } from "../../common";
 
 type Option = {
@@ -119,8 +112,6 @@ const CreateCard: FC = () => {
                 desc: values.description,
                 idList: values.list.value,
                 due: parseDateTime(parseDate(values.dueDate, "dd/MM/yyyy", new Date())),
-                // labels: "",
-                // members: "",
             };
 
             await createCardService(client, newCard)
@@ -131,30 +122,6 @@ const CreateCard: FC = () => {
                 .catch((error) => dispatch({ type: "error", error }))
         }
     });
-
-    /*const labelsOptions = [
-        {
-            key: "1",
-            label: "Label 1",
-            type: "value",
-            value: "label1",
-            selected:  selected.includes("label1"),
-        },
-        {
-            key: "2",
-            label: "Label 2",
-            type: "value",
-            value: "label2",
-            selected:  selected.includes("label2"),
-        },
-        {
-            key: "3",
-            label: "Label 3",
-            type: "value",
-            value: "label3",
-            selected:  selected.includes("label3"),
-        },
-    ];*/
 
     useEffect(() => {
         if (!client) {
@@ -297,31 +264,6 @@ const CreateCard: FC = () => {
                 />
             </Label>
 
-            {/*<LabelUI htmlFor="labels" label="Labels"/>
-            <Dropdown fetchMoreText={"Fetch more"} autoscrollText={"Autoscroll"} selectedIcon={faCheck} externalLinkIcon={faExternalLinkAlt} placement="bottom-start" options={labelsOptions}
-                onSelectOption={(option) => {
-                    if (option.value) {
-                        selected.includes(option.value)
-                            ? setSelected(selected.filter((s) => s !== option.value))
-                            : setSelected([...selected, option.value]);
-                    }
-                }}
-                closeOnSelect={false}
-            >
-                {({ active, targetProps, targetRef }) => (
-                    <ButtonUI
-                        id="labels"
-                        ref={targetRef}
-                        {...targetProps}
-                        active={active}
-                        text="Add"
-                        icon={faPlus}
-                        minimal
-                        style={{ marginBottom: 10 }}
-                    />
-                )}
-            </Dropdown>*/}
-
             <LabelDueDate htmlFor="dueDate" label="Due date">
                 <InputWithDisplay
                     type="text"
@@ -336,8 +278,6 @@ const CreateCard: FC = () => {
                     }}
                 />
             </LabelDueDate>
-
-            {/*<Members />*/}
 
             <Stack justify="space-between">
                 <Button
