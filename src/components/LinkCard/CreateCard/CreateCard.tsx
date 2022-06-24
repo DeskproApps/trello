@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, ReactNode } from "react";
+import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import concat from "lodash/concat";
 import isEmpty from "lodash/isEmpty";
@@ -6,16 +6,22 @@ import parseDate from "date-fns/parse";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import {
+    faUser,
     faPlus,
     faCheck,
     faCalendarDays,
     faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
+    TSpan,
+    Avatar,
     InputWithDisplay,
+    DropdownTargetProps,
     TextAreaWithDisplay,
+    DivAsInputWithDisplay,
 } from "@deskpro/deskpro-ui";
 import {
+    P5,
     Pill,
     Stack,
     Dropdown,
@@ -41,6 +47,7 @@ import {
     Loading,
     SingleSelect,
     EmptyInlineBlock,
+    TextBlockWithLabel,
 } from "../../common";
 import { getLabelColor } from "../../../utils";
 
@@ -74,10 +81,9 @@ const validationSchema = yup.object().shape({
     }),
     description: yup.string(),
     labels: yup.array(yup.string()),
+    members: yup.array(yup.string()),
     // ToDo: update to date
     dueDate: yup.string().matches(/\d{2}\/\d{2}\/\d{4}/).length(10),
-    // ToDo: check is string[] or number[]
-    members: yup.array(yup.number()),
 });
 
 const resetValue = { key: "", label: "", value: "", type: "value" };
@@ -90,7 +96,7 @@ const getInitValues = () => ({
     description: "",
     labels: [],
     dueDate: "",
-    members: "",
+    members: [],
 });
 
 const CreateCard: FC = () => {
@@ -105,6 +111,7 @@ const CreateCard: FC = () => {
     const [boards, setBoards] = useState<Options>([]);
     const [lists, setLists] = useState<Options>([]);
     const [labels, setLabels] = useState<Options>([]);
+    const [members, setMembers] = useState<Options>([]);
 
     const {
         values,
@@ -118,7 +125,6 @@ const CreateCard: FC = () => {
         initialValues: getInitValues(),
         validationSchema,
         onSubmit: async (values) => {
-
             if (!client || !ticketId) {
                 return
             }
@@ -131,6 +137,7 @@ const CreateCard: FC = () => {
                     ? ""
                     : parseDateTime(parseDate(values.dueDate, "dd/MM/yyyy", new Date())),
                 idLabels: values.labels,
+                idMembers: values.members,
             };
 
             await createCardService(client, newCard)
@@ -159,6 +166,36 @@ const CreateCard: FC = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client]);
+
+    useEffect(() => {
+        if (!client || !values.workspace.value) {
+            return;
+        }
+
+        getMembersOfOrganizationService(client, values.workspace.value)
+            .then((members) => {
+                setMembers(members.map(({ id, fullName }) => ({
+                    key: id,
+                    value: id,
+                    type: "value",
+                    selected: false,
+                    label: (
+                        <Stack gap={6}>
+                            <Avatar size={18} name={fullName} backupIcon={faUser} />
+                            <P5>{fullName}</P5>
+                        </Stack>
+                    ),
+                })));
+            });
+    }, [client, values.workspace.value]);
+
+    useEffect(() => {
+        setMembers(members.map((member) => ({
+            ...member,
+            selected: values.members.includes(member.value as never)
+        })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values.members])
 
     useEffect(() => {
         if (!isEmpty(member?.organizations)) {
@@ -223,8 +260,8 @@ const CreateCard: FC = () => {
             }, []);
 
             setLists(lists);
-            setFieldValue("board", resetValue)
-            setFieldValue("list", resetValue)
+            setFieldValue("board", resetValue);
+            setFieldValue("list", resetValue);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.workspace]);
@@ -261,12 +298,9 @@ const CreateCard: FC = () => {
                         ),
                     })));
                 }
-                console.log(">>> effect:board:then:", labels);
             })
-            .catch((error) => {
-                console.log(">>> effect:board:catch:", error);
-            });
-
+            .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.board.value]);
 
     useEffect(() => {
@@ -274,6 +308,7 @@ const CreateCard: FC = () => {
             ...label,
             selected: values.labels.includes(label.value as never),
         })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.labels]);
 
     if (loading) {
@@ -377,6 +412,56 @@ const CreateCard: FC = () => {
                     />
                 )}
             </Dropdown>
+
+            <Dropdown
+                fetchMoreText="Fetch more"
+                autoscrollText="Autoscroll"
+                selectedIcon={faCheck}
+                externalLinkIcon={faExternalLinkAlt}
+                placement="bottom-start"
+                searchPlaceholder="Select value"
+                options={members}
+                onSelectOption={(option) => {
+                    if (option.value) {
+                        const newValue = values.members.includes(option.value as never)
+                            ? values.members.filter((labelId) => labelId !== option.value)
+                            : [...values.members, option.value]
+
+                        setFieldValue("members", newValue);
+                    }
+                }}
+                closeOnSelect={false}
+            >
+                {({ targetProps, targetRef }: DropdownTargetProps<HTMLDivElement>) => (
+                    <TextBlockWithLabel
+                        label="Members"
+                        text={(
+                            <DivAsInputWithDisplay
+                                ref={targetRef}
+                                {...targetProps}
+                                value={!values.members.length
+                                    ? (
+                                        <TSpan
+                                            overflow={"ellipsis"}
+                                            type={"p1"}
+                                            style={{ color: theme.colors.grey40 }}
+                                        >
+                                            Select value
+                                        </TSpan>
+                                    )
+                                    : (
+                                    <Stack gap={6} wrap="wrap">
+                                        {members.filter(({ selected }) => selected).map(({ label }) => label)}
+                                    </Stack>
+                                )}
+                                placeholder="Select value"
+                                variant="inline"
+                            />
+                        )}
+                    />
+                )}
+            </Dropdown>
+
             <Stack justify="space-between">
                 <Button
                     type="submit"

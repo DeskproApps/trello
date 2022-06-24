@@ -8,7 +8,6 @@ const getMembersOfOrganizationService = (
 ) => {
     return baseRequest<Member[]>(client, {
         url: `/organizations/${organizationId}/members`,
-        queryParams: {},
     });
 };
 

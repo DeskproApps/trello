@@ -1,5 +1,4 @@
 import { FC } from "react";
-import styled from "styled-components";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import {
     H1,
