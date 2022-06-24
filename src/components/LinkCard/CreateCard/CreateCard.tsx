@@ -1,15 +1,12 @@
 import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
 import concat from "lodash/concat";
 import isEmpty from "lodash/isEmpty";
-import parseDate from "date-fns/parse";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import {
     faUser,
     faPlus,
     faCheck,
-    faCalendarDays,
     faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -40,11 +37,11 @@ import {
 } from "../../../services/trello";
 import { setEntityCardService } from "../../../services/entityAssociation";
 import { Member, Board, List, Organization } from "../../../services/trello/types";
-import { parseDateTime } from "../../../utils/date";
 import {
     Label,
     Button,
     Loading,
+    DateField,
     SingleSelect,
     EmptyInlineBlock,
     TextBlockWithLabel,
@@ -54,10 +51,6 @@ import { getLabelColor } from "../../../utils";
 type Option = DropdownValueType<string>;
 
 type Options = Option[];
-
-const LabelDueDate = styled(Label)`
-    width: calc(100% - 25px);
-`;
 
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
@@ -82,8 +75,7 @@ const validationSchema = yup.object().shape({
     description: yup.string(),
     labels: yup.array(yup.string()),
     members: yup.array(yup.string()),
-    // ToDo: update to date
-    dueDate: yup.string().matches(/\d{2}\/\d{2}\/\d{4}/).length(10),
+    dueDate: yup.date(),
 });
 
 const resetValue = { key: "", label: "", value: "", type: "value" };
@@ -133,9 +125,9 @@ const CreateCard: FC = () => {
                 name: values.title,
                 desc: values.description,
                 idList: values.list.value,
-                due: !values.dueDate
-                    ? ""
-                    : parseDateTime(parseDate(values.dueDate, "dd/MM/yyyy", new Date())),
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                due: !values.dueDate ? "" : values.dueDate.toISOString(),
                 idLabels: values.labels,
                 idMembers: values.members,
             };
@@ -365,20 +357,12 @@ const CreateCard: FC = () => {
                 />
             </Label>
 
-            <LabelDueDate htmlFor="dueDate" label="Due date">
-                <InputWithDisplay
-                    type="text"
-                    {...getFieldProps("dueDate")}
-                    placeholder="DD/MM/YYYY"
-                    error={!!(touched.dueDate && errors.dueDate)}
-                    leftIcon={{
-                        icon: faCalendarDays,
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        style: { color: theme.colors.grey40 }
-                    }}
-                />
-            </LabelDueDate>
+            <DateField
+                id="dueDateSdk"
+                label="Due date"
+                error={!!(touched.dueDate && errors.dueDate)}
+                onChange={(date) => setFieldValue("dueDate", date[0])}
+            />
 
             {values.board.value && (
                 <>
