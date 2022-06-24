@@ -380,87 +380,95 @@ const CreateCard: FC = () => {
                 />
             </LabelDueDate>
 
-            <LabelUI htmlFor="labels" label="Labels"/>
-            <Dropdown
-                fetchMoreText={"Fetch more"}
-                autoscrollText={"Autoscroll"}
-                selectedIcon={faCheck}
-                externalLinkIcon={faExternalLinkAlt}
-                placement="bottom-start"
-                options={labels}
-                onSelectOption={(option) => {
-                    if (option.value) {
-                        const newValue = values.labels.includes(option.value as never)
-                            ? values.labels.filter((labelId) => labelId !== option.value)
-                            : [...values.labels, option.value]
+            {values.board.value && (
+                <>
+                    <LabelUI htmlFor="labels" label="Labels"/>
+                    <Dropdown
+                        fetchMoreText={"Fetch more"}
+                        autoscrollText={"Autoscroll"}
+                        selectedIcon={faCheck}
+                        externalLinkIcon={faExternalLinkAlt}
+                        placement="bottom-start"
+                        options={labels}
+                        onSelectOption={(option) => {
+                            if (option.value) {
+                                const newValue = values.labels.includes(option.value as never)
+                                    ? values.labels.filter((labelId) => labelId !== option.value)
+                                    : [...values.labels, option.value]
 
-                        setFieldValue("labels", newValue);
-                    }
-                }}
-                closeOnSelect={false}
-            >
-                {({ active, targetProps, targetRef }) => (
-                    <ButtonUI
-                        id="labels"
-                        ref={targetRef}
-                        {...targetProps}
-                        active={active}
-                        text="Add"
-                        icon={faPlus}
-                        minimal
-                        style={{ marginBottom: 10 }}
-                    />
-                )}
-            </Dropdown>
-
-            <Dropdown
-                fetchMoreText="Fetch more"
-                autoscrollText="Autoscroll"
-                selectedIcon={faCheck}
-                externalLinkIcon={faExternalLinkAlt}
-                placement="bottom-start"
-                searchPlaceholder="Select value"
-                options={members}
-                onSelectOption={(option) => {
-                    if (option.value) {
-                        const newValue = values.members.includes(option.value as never)
-                            ? values.members.filter((labelId) => labelId !== option.value)
-                            : [...values.members, option.value]
-
-                        setFieldValue("members", newValue);
-                    }
-                }}
-                closeOnSelect={false}
-            >
-                {({ targetProps, targetRef }: DropdownTargetProps<HTMLDivElement>) => (
-                    <TextBlockWithLabel
-                        label="Members"
-                        text={(
-                            <DivAsInputWithDisplay
-                                ref={targetRef}
-                                {...targetProps}
-                                value={!values.members.length
-                                    ? (
-                                        <TSpan
-                                            overflow={"ellipsis"}
-                                            type={"p1"}
-                                            style={{ color: theme.colors.grey40 }}
-                                        >
-                                            Select value
-                                        </TSpan>
-                                    )
-                                    : (
-                                    <Stack gap={6} wrap="wrap">
-                                        {members.filter(({ selected }) => selected).map(({ label }) => label)}
-                                    </Stack>
-                                )}
-                                placeholder="Select value"
-                                variant="inline"
-                            />
+                                setFieldValue("labels", newValue);
+                            }
+                        }}
+                        closeOnSelect={false}
+                    >
+                        {({ active, targetProps, targetRef }) => (
+                            <Stack gap={6} wrap="wrap" align="baseline" style={{ marginBottom: 10 }}>
+                                <ButtonUI
+                                    id="labels"
+                                    ref={targetRef}
+                                    {...targetProps}
+                                    active={active}
+                                    text="Add"
+                                    icon={faPlus}
+                                    minimal
+                                />
+                                {labels.filter(({ selected }) => selected).map(({ label }) => label)}
+                            </Stack>
                         )}
-                    />
-                )}
-            </Dropdown>
+                    </Dropdown>
+                </>
+            )}
+
+            {values.workspace.value && (
+                <Dropdown
+                    fetchMoreText="Fetch more"
+                    autoscrollText="Autoscroll"
+                    selectedIcon={faCheck}
+                    externalLinkIcon={faExternalLinkAlt}
+                    placement="bottom-start"
+                    searchPlaceholder="Select value"
+                    options={members}
+                    onSelectOption={(option) => {
+                        if (option.value) {
+                            const newValue = values.members.includes(option.value as never)
+                                ? values.members.filter((labelId) => labelId !== option.value)
+                                : [...values.members, option.value]
+
+                            setFieldValue("members", newValue);
+                        }
+                    }}
+                    closeOnSelect={false}
+                >
+                    {({ targetProps, targetRef }: DropdownTargetProps<HTMLDivElement>) => (
+                        <TextBlockWithLabel
+                            label="Members"
+                            text={(
+                                <DivAsInputWithDisplay
+                                    ref={targetRef}
+                                    {...targetProps}
+                                    value={!values.members.length
+                                        ? (
+                                            <TSpan
+                                                overflow={"ellipsis"}
+                                                type={"p1"}
+                                                style={{ color: theme.colors.grey40 }}
+                                            >
+                                                Select value
+                                            </TSpan>
+                                        )
+                                        : (
+                                            <Stack gap={6} wrap="wrap">
+                                                {members.filter(({ selected }) => selected).map(({ label }) => label)}
+                                            </Stack>
+                                        )}
+                                    placeholder="Select value"
+                                    variant="inline"
+                                />
+                            )}
+                        />
+                    )}
+                </Dropdown>
+            )}
 
             <Stack justify="space-between">
                 <Button
