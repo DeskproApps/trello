@@ -5,7 +5,7 @@ import { getQueryParams } from "../../utils";
 
 const baseRequest: Request = async (client, {
     url,
-    content,
+    data,
     method = "GET",
     queryParams = {},
 }) => {
@@ -17,10 +17,10 @@ const baseRequest: Request = async (client, {
         ...queryParams,
     })}`;
 
-    if (content instanceof FormData) {
-        body = content;
-    } else if(content) {
-        body = JSON.stringify(content);
+    if (data instanceof FormData) {
+        body = data;
+    } else if(data) {
+        body = JSON.stringify(data);
     }
 
     const headers: Record<string, string> = {
@@ -29,7 +29,7 @@ const baseRequest: Request = async (client, {
 
     if (body instanceof FormData) {
         headers["X-Atlassian-Token"] = "no-check";
-    } else if (content) {
+    } else if (data) {
         headers["Content-Type"] = "application/json";
     }
 

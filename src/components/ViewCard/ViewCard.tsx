@@ -1,5 +1,4 @@
 import { FC } from "react";
-import styled from "styled-components";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import {
     H1,
@@ -17,15 +16,10 @@ import { getDate } from "../../utils/date";
 import { getLabelColor } from "../../utils";
 import {
     LinkIcon,
+    EmptyInlineBlock,
     TextBlockWithLabel,
 } from "../common";
 import { Members } from "../common/Cards";
-
-const EmptyLabel = styled.span`
-    display: inline-block;
-    min-width: 20px;
-    content: " ";
-`;
 
 const ViewCard: FC<CardType> = ({
     name, desc, board, list, labels, due, members, checklists
@@ -63,7 +57,7 @@ const ViewCard: FC<CardType> = ({
                                 labels.map(({ id, name, color }: any) => (
                                     <Pill
                                         key={id}
-                                        label={name ? name : <EmptyLabel/>}
+                                        label={name ? name : <EmptyInlineBlock/>}
                                         {...getLabelColor(theme, color)}
                                     />
                                 ))

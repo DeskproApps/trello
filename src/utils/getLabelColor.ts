@@ -1,9 +1,10 @@
 import { match } from "ts-pattern";
 import { DeskproAppTheme } from "@deskpro/app-sdk";
+import { LabelColor } from "../services/trello/types";
 
 const getLabelColor = (
     theme: DeskproAppTheme['theme'],
-    color: string,
+    color?: LabelColor,
 ) => {
     return match(color)
         .with("red", () => ({

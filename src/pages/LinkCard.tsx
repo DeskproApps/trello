@@ -1,14 +1,14 @@
-import { FC, useEffect/*, useState*/ } from "react";
-// import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FC, useEffect, useState } from "react";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import {
-    // TwoButtonGroup,
-    // TwoButtonGroupProps,
+    TwoButtonGroup,
+    TwoButtonGroupProps,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { FindCard/*, CreateCard*/ } from "../components/LinkCard";
+import { FindCard, CreateCard } from "../components/LinkCard";
 
 const LinkCardPage: FC = () => {
-    // const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
+    const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
     const { client } = useDeskproAppClient();
 
     useEffect(() => {
@@ -22,13 +22,17 @@ const LinkCardPage: FC = () => {
         client?.deregisterElement("trelloMenu");
 
         client?.setTitle("Link Cards");
+        client?.registerElement("trelloHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
     }, [client]);
 
-    // const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
+    const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
 
     return (
         <>
-            {/*<TwoButtonGroup
+            <TwoButtonGroup
                 selected={selected}
                 oneIcon={faSearch}
                 oneLabel="Find Card"
@@ -40,8 +44,7 @@ const LinkCardPage: FC = () => {
             <>
                 {selected === "one" && <FindCard/>}
                 {selected === "two" && <CreateCard/>}
-            </>*/}
-            <FindCard/>
+            </>
         </>
     );
 };

@@ -26,6 +26,9 @@ export const Main = () => {
     useSetBadgeCount();
 
     useDeskproAppEvents({
+        onShow: () => {
+            client && setTimeout(() => client.resize(), 200);
+        },
         onChange: (context: Context) => {
             context && dispatch({ type: "loadContext", context });
         },
