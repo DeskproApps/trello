@@ -137,7 +137,7 @@ const CreateCard: FC = () => {
                     return setEntityCardService(client, ticketId, cardId);
                 })
                 .then(() => dispatch({ type: "changePage", page: "home" }))
-                .catch((error) => dispatch({ type: "error", error }))
+                .catch((error) => dispatch({ type: "error", error }));
         }
     });
 

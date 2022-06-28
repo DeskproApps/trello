@@ -2,7 +2,6 @@ import {FC, useEffect, useState} from "react";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getCardService } from "../services/trello";
-import { findEntityById } from "../utils";
 import { ViewCard } from "../components/ViewCard";
 import { Loading, NoFound } from "../components/common";
 
@@ -14,6 +13,21 @@ const ViewCardPage: FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        if (!client) {
+            return;
+        }
+
+        client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloMenu");
+        client?.deregisterElement("trelloEditButton");
+
+        client?.registerElement("trelloHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
+    }, [client]);
+
+    useEffect(() => {
         if (!client || !card?.shortLink) {
             return;
         }
@@ -22,17 +36,19 @@ const ViewCardPage: FC = () => {
     }, [client, card?.shortLink]);
 
     useEffect(() => {
-        if (!client) {
+        if (!client || !state?.pageParams?.cardId) {
             return;
         }
 
-        client.deregisterElement("trelloPlusButton");
-        client?.deregisterElement("trelloMenu");
-        client?.registerElement("trelloHomeButton", {
-            type: "home_button",
-            payload: { type: "changePage", page: "home" }
+        client?.registerElement("trelloEditButton", {
+            type: "edit_button",
+            payload: {
+                type: "changePage",
+                page: "edit_card",
+                params: { cardId: state.pageParams.cardId }
+            },
         });
-    }, [client]);
+    }, [client, state?.pageParams?.cardId]);
 
     useEffect(() => {
         if (!client || !state?.pageParams?.cardId || !state.context?.data.ticket.id) {
@@ -71,16 +87,10 @@ const ViewCardPage: FC = () => {
             return;
         }
 
-        const card = findEntityById(state.cards, state.pageParams.cardId);
+        getCardService(client, state.pageParams.cardId)
+            .then((card) => setCard(card))
+            .finally(() => setLoading(false));
 
-        if (card) {
-            setCard(card);
-            setLoading(false);
-        } else {
-            getCardService(client, state.pageParams.cardId)
-                .then((card) => setCard(card))
-                .finally(() => setLoading(false));
-        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state?.pageParams?.cardId]);
 

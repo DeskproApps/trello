@@ -13,6 +13,7 @@ import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
 import { LinkCardPage } from "./LinkCard";
 import { ViewCardPage } from "./ViewCard";
+import { EditCardPage } from "./EditCard";
 import { ErrorBlock } from "../components/common";
 
 export const Main = () => {
@@ -76,6 +77,7 @@ export const Main = () => {
             .with("log_in", () => <LogInPage />)
             .with("link_card", () => <LinkCardPage />)
             .with("view_card", () => <ViewCardPage />)
+            .with("edit_card", () => <EditCardPage />)
             .otherwise(() => <LogInPage />);
 
     return (

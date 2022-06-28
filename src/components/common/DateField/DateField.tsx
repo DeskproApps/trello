@@ -7,7 +7,8 @@ import { Label } from "../Label";
 export type MappedFieldProps = {
     id: string;
     label: string,
-    error: boolean;
+    error: boolean,
+    value?: string,
     onChange: (date: [Date]) => void,
 }
 
@@ -17,6 +18,7 @@ const LabelDueDate = styled(Label)`
 
 export const DateField: FC<MappedFieldProps> = ({
     id,
+    value,
     label,
     error,
     onChange,
@@ -26,6 +28,7 @@ export const DateField: FC<MappedFieldProps> = ({
     return (
         <DatePicker
             options={{ position: "left" }}
+            value={value}
             onChange={onChange}
             render={(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,6 +42,7 @@ export const DateField: FC<MappedFieldProps> = ({
                         id={id}
                         ref={ref}
                         error={error}
+                        readOnly
                         variant="inline"
                         inputsize="small"
                         placeholder="YYYY-MM-DD"
