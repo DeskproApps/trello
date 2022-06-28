@@ -11,7 +11,7 @@ import {
     HorizontalDivider,
     useDeskproAppTheme
 } from "@deskpro/app-sdk";
-import { CardType } from "../../services/trello/types";
+import { CardType, ChecklistItem } from "../../services/trello/types";
 import { getDate } from "../../utils/date";
 import { getLabelColor } from "../../utils";
 import {
@@ -21,8 +21,15 @@ import {
 } from "../common";
 import { Members } from "../common/Cards";
 
-const ViewCard: FC<CardType> = ({
-    name, desc, board, list, labels, due, members, checklists
+type Props = CardType & {
+    onChangeChecklistItem: (
+        itemId: ChecklistItem["id"],
+        state: ChecklistItem["state"],
+    ) => void,
+};
+
+const ViewCard: FC<Props> = ({
+    name, desc, board, list, labels, due, members, checklists, onChangeChecklistItem,
 }) => {
     const { theme } = useDeskproAppTheme();
 
@@ -96,7 +103,9 @@ const ViewCard: FC<CardType> = ({
                                         key={id}
                                         checked={state === "complete"}
                                         label={name}
-                                        onChange={() => {}}
+                                        onChange={() => {
+                                            onChangeChecklistItem(id, state === "complete" ? "incomplete" : "complete")
+                                        }}
                                         labelProps={{ style: { alignItems: "baseline" }}}
                                     />
                                 ))

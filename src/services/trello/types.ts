@@ -44,9 +44,11 @@ export type Member = {
     boards?: Board[],
 };
 
+export type ChecklistItemState = "complete" | "incomplete";
+
 export type ChecklistItem = {
     idChecklist: Checklist["id"],
-    state: "complete" | "incomplete",
+    state: ChecklistItemState,
     id: string,
     name: string,
     nameData:{
