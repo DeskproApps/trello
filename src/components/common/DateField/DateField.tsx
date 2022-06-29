@@ -1,10 +1,15 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
-import { DatePicker, Input, useDeskproAppTheme } from "@deskpro/app-sdk";
+import {
+    Input,
+    DatePicker,
+    DatePickerProps,
+    useDeskproAppTheme,
+} from "@deskpro/app-sdk";
 import { Label } from "../Label";
 
-export type MappedFieldProps = {
+export type MappedFieldProps = DatePickerProps & {
     id: string;
     label: string,
     error: boolean,
@@ -16,12 +21,19 @@ const LabelDueDate = styled(Label)`
     width: calc(100% - 25px);
 `;
 
+const DateInput = styled(Input)`
+    :read-only {
+      cursor: pointer;
+    }
+`;
+
 export const DateField: FC<MappedFieldProps> = ({
     id,
     value,
     label,
     error,
     onChange,
+    ...props
 }: MappedFieldProps) => {
     const { theme } = useDeskproAppTheme();
 
@@ -33,6 +45,7 @@ export const DateField: FC<MappedFieldProps> = ({
             }}
             value={value}
             onChange={onChange}
+            {...props}
             render={(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 _: any, ref: any
@@ -41,11 +54,10 @@ export const DateField: FC<MappedFieldProps> = ({
                     htmlFor={id}
                     label={label}
                 >
-                    <Input
+                    <DateInput
                         id={id}
                         ref={ref}
                         error={error}
-                        readOnly
                         variant="inline"
                         inputsize="small"
                         placeholder="DD/MM/YYYY"
