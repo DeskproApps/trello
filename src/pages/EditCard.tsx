@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import styled from "styled-components";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import isEmpty from "lodash/isEmpty";
@@ -45,6 +46,11 @@ import {
 export type Option = DropdownValueType<string>;
 
 export type Options = Option[];
+
+const TextAreaStyled = styled(TextAreaWithDisplay)`
+    font-size: 11px;
+    font-family: ${({ theme }) => theme.fonts.primary};
+`;
 
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
@@ -376,7 +382,7 @@ const EditCardPage: FC = () => {
             />
 
             <Label htmlFor="description" label="Description">
-                <TextAreaWithDisplay
+                <TextAreaStyled
                     placeholder="Enter description"
                     {...getFieldProps("description")}
                 />
@@ -387,7 +393,7 @@ const EditCardPage: FC = () => {
                 label="Due date"
                 error={!!(touched.dueDate && errors.dueDate)}
                 {...getFieldProps("dueDate")}
-                onChange={(date) => setFieldValue("dueDate", date[0])}
+                onChange={(date: [Date]) => setFieldValue("dueDate", date[0])}
             />
 
             {values.board.value && (
