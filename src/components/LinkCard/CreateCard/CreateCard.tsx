@@ -33,6 +33,7 @@ import {
     createCardService,
     getCurrentMemberService,
     getLabelsOnBoardService,
+    createCardCommentService,
     getMembersOfOrganizationService,
 } from "../../../services/trello";
 import { setEntityCardService } from "../../../services/entityAssociation";
@@ -134,7 +135,14 @@ const CreateCard: FC = () => {
 
             await createCardService(client, newCard)
                 .then(({ id: cardId }) => {
-                    return setEntityCardService(client, ticketId, cardId);
+                    return Promise.all([
+                        setEntityCardService(client, ticketId, cardId),
+                        createCardCommentService(
+                            client,
+                            cardId,
+                            `Linked to Deskpro ticket ${ticketId}, ${state.context?.data.ticket.permalinkUrl}`,
+                        ),
+                    ]);
                 })
                 .then(() => dispatch({ type: "changePage", page: "home" }))
                 .catch((error) => dispatch({ type: "error", error }));
