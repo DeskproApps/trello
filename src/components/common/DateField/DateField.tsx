@@ -27,7 +27,10 @@ export const DateField: FC<MappedFieldProps> = ({
 
     return (
         <DatePicker
-            options={{ position: "left" }}
+            options={{
+                position: "left",
+                dateFormat: "d/m/Y",
+            }}
             value={value}
             onChange={onChange}
             render={(
@@ -45,7 +48,7 @@ export const DateField: FC<MappedFieldProps> = ({
                         readOnly
                         variant="inline"
                         inputsize="small"
-                        placeholder="YYYY-MM-DD"
+                        placeholder="DD/MM/YYYY"
                         leftIcon={{
                             icon: faCalendarDays,
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
