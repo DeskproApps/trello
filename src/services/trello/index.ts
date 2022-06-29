@@ -7,3 +7,4 @@ export { getLabelsOnBoardService } from "./getLabelsOnBoardService";
 export { getMembersOfOrganizationService } from "./getMembersOfOrganizationService";
 export { updateCardService } from "./updateCardService";
 export { updateChecklistItemService } from "./updateChecklistItemService";
+export { getCardCommentsService } from "./getCardCommentsService";

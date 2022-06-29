@@ -11,7 +11,7 @@ import {
     HorizontalDivider,
     useDeskproAppTheme
 } from "@deskpro/app-sdk";
-import { CardType, ChecklistItem } from "../../services/trello/types";
+import { CardType, ChecklistItem, Comment } from "../../services/trello/types";
 import { getDate } from "../../utils/date";
 import { getLabelColor } from "../../utils";
 import {
@@ -20,8 +20,10 @@ import {
     TextBlockWithLabel,
 } from "../common";
 import { Members } from "../common/Cards";
+import { Comments } from "./Comments";
 
 type Props = CardType & {
+    comments?: Comment[],
     onChangeChecklistItem: (
         itemId: ChecklistItem["id"],
         state: ChecklistItem["state"],
@@ -29,7 +31,7 @@ type Props = CardType & {
 };
 
 const ViewCard: FC<Props> = ({
-    name, desc, board, list, labels, due, members, checklists, onChangeChecklistItem,
+    name, desc, board, list, labels, due, members, checklists, comments, onChangeChecklistItem,
 }) => {
     const { theme } = useDeskproAppTheme();
 
@@ -116,6 +118,8 @@ const ViewCard: FC<Props> = ({
             )}
 
             <HorizontalDivider style={{ marginBottom: 10 }} />
+
+            <Comments comments={comments} />
         </>
     );
 };

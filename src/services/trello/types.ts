@@ -170,3 +170,21 @@ export type CardType = {
     board: Board,
     list: List,
 };
+
+export type Comment = {
+    id: string,
+    idMemberCreator: Member["id"],
+    date: DateTime,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    limits: any,
+    type: "commentCard",
+    memberCreator: Member,
+    data: {
+        text: string,
+        board: Board,
+        card: CardType,
+        list: List,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        textData: any,
+    },
+};

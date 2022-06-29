@@ -1,13 +1,12 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseRequest } from "./baseRequest";
-import { CardType } from "./types";
+import { CardType, Comment } from "./types";
 
-const getCardService = (
+const getCardCommentsService = (
     client: IDeskproClient,
     cardId: CardType["id"],
 ) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return baseRequest<Record<string, any>>(client, {
+    return baseRequest<Comment[]>(client, {
         url: `/cards/${cardId}/actions`,
         queryParams: {
             filter: "commentCard",
@@ -15,4 +14,4 @@ const getCardService = (
     });
 };
 
-export { getCardService };
+export { getCardCommentsService };
