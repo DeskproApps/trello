@@ -361,7 +361,7 @@ const CreateCard: FC = () => {
                 id="dueDateSdk"
                 label="Due date"
                 error={!!(touched.dueDate && errors.dueDate)}
-                onChange={(date) => setFieldValue("dueDate", date[0])}
+                onChange={(date: [Date]) => setFieldValue("dueDate", date[0])}
             />
 
             {values.board.value && (
