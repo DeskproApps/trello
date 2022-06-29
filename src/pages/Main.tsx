@@ -8,6 +8,7 @@ import {
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload } from "../context/StoreProvider/types";
 import { deleteEntityCardService } from "../services/entityAssociation";
+import { createCardCommentService } from "../services/trello";
 import { useSetBadgeCount } from "../hooks";
 import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
@@ -41,6 +42,11 @@ export const Main = () => {
             } else if (payload?.type === "unlinkTicket") {
                 if (client) {
                     deleteEntityCardService(client, payload.ticketId, payload.cardId)
+                        .then(() => createCardCommentService(
+                            client,
+                            payload.cardId,
+                            `Unlinked from Deskpro ticket ${payload.ticketId}, ${state.context?.data?.ticket?.permalinkUrl}`
+                        ))
                         .then(() => {
                             dispatch({ type: "changePage", page: "home" });
                         })
