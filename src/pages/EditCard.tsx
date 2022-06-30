@@ -15,14 +15,18 @@ import {
     InputWithDisplay,
     Label as LabelUI,
     Button as ButtonUI,
-    TextAreaWithDisplay,
     DropdownTargetProps,
     DivAsInputWithDisplay,
 } from "@deskpro/deskpro-ui";
 import {
+    P5,
+    Pill,
     Stack,
+    Dropdown,
+    TextArea,
     DropdownValueType,
-    useDeskproAppClient, Dropdown, P5, Pill, useDeskproAppTheme,
+    useDeskproAppTheme,
+    useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import {
@@ -47,7 +51,8 @@ export type Option = DropdownValueType<string>;
 
 export type Options = Option[];
 
-const TextAreaStyled = styled(TextAreaWithDisplay)`
+const TextAreaStyled = styled(TextArea)`
+    min-height: 100px;
     font-size: 11px;
     font-family: ${({ theme }) => theme.fonts.primary};
 `;
@@ -383,6 +388,7 @@ const EditCardPage: FC = () => {
 
             <Label htmlFor="description" label="Description">
                 <TextAreaStyled
+                    variant="inline"
                     placeholder="Enter description"
                     {...getFieldProps("description")}
                 />
