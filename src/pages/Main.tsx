@@ -15,6 +15,7 @@ import { LogInPage } from "./LogIn";
 import { LinkCardPage } from "./LinkCard";
 import { ViewCardPage } from "./ViewCard";
 import { EditCardPage } from "./EditCard";
+import { AddCommentPage } from "./AddComment";
 import { ErrorBlock } from "../components/common";
 
 export const Main = () => {
@@ -84,6 +85,7 @@ export const Main = () => {
             .with("link_card", () => <LinkCardPage />)
             .with("view_card", () => <ViewCardPage />)
             .with("edit_card", () => <EditCardPage />)
+            .with("add_comment", () => <AddCommentPage />)
             .otherwise(() => <LogInPage />);
 
     return (

@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import isEmpty from "lodash/isEmpty";
@@ -15,7 +14,6 @@ import {
     InputWithDisplay,
     Label as LabelUI,
     Button as ButtonUI,
-    TextAreaWithDisplay,
     DropdownTargetProps,
     DivAsInputWithDisplay,
 } from "@deskpro/deskpro-ui";
@@ -38,19 +36,17 @@ import {
     Label,
     Button,
     Loading,
+    TextArea,
     DateField,
     ErrorBlock,
-    SingleSelect, TextBlockWithLabel, EmptyInlineBlock,
+    SingleSelect,
+    EmptyInlineBlock,
+    TextBlockWithLabel,
 } from "../components/common";
 
 export type Option = DropdownValueType<string>;
 
 export type Options = Option[];
-
-const TextAreaStyled = styled(TextAreaWithDisplay)`
-    font-size: 11px;
-    font-family: ${({ theme }) => theme.fonts.primary};
-`;
 
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
@@ -382,7 +378,7 @@ const EditCardPage: FC = () => {
             />
 
             <Label htmlFor="description" label="Description">
-                <TextAreaStyled
+                <TextArea
                     placeholder="Enter description"
                     {...getFieldProps("description")}
                 />

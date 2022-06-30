@@ -12,7 +12,7 @@ import { ViewCard } from "../components/ViewCard";
 import { Loading, NoFound } from "../components/common";
 
 const ViewCardPage: FC = () => {
-    const [state] = useStore();
+    const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const [card, setCard] = useState<CardType | undefined>(undefined);
     const [comments, setComments] = useState<Comment[]>();
@@ -133,6 +133,14 @@ const ViewCardPage: FC = () => {
             });
     };
 
+    const onAddNewCommentPage = (cardId: CardType["id"]) => {
+        dispatch({
+            type: "changePage",
+            page: "add_comment",
+            params: { cardId },
+        });
+    };
+
     if (!loading && !card) {
         return (<NoFound/>);
     }
@@ -143,6 +151,7 @@ const ViewCardPage: FC = () => {
             <ViewCard
                 {...card as CardType}
                 comments={comments}
+                onAddNewCommentPage={onAddNewCommentPage}
                 onChangeChecklistItem={onChangeChecklistItem}
             />
         );

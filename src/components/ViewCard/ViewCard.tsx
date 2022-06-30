@@ -24,6 +24,7 @@ import { Comments } from "./Comments";
 
 type Props = CardType & {
     comments?: Comment[],
+    onAddNewCommentPage: (cardId: CardType["id"]) => void,
     onChangeChecklistItem: (
         itemId: ChecklistItem["id"],
         state: ChecklistItem["state"],
@@ -31,7 +32,18 @@ type Props = CardType & {
 };
 
 const ViewCard: FC<Props> = ({
-    name, desc, board, list, labels, due, members, checklists, comments, onChangeChecklistItem,
+    id,
+    due,
+    name,
+    desc,
+    list,
+    board,
+    labels,
+    members,
+    comments,
+    checklists,
+    onAddNewCommentPage,
+    onChangeChecklistItem,
 }) => {
     const { theme } = useDeskproAppTheme();
 
@@ -119,7 +131,7 @@ const ViewCard: FC<Props> = ({
 
             <HorizontalDivider style={{ marginBottom: 10 }} />
 
-            <Comments comments={comments} />
+            <Comments comments={comments} onClickTitleAction={() => onAddNewCommentPage(id)} />
         </>
     );
 };

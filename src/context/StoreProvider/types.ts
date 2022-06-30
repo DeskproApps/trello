@@ -9,7 +9,8 @@ export type Page =
     | "log_in"
     | "link_card"
     | "view_card"
-    | "edit_card";
+    | "edit_card"
+    | "add_comment";
 
 export type PageParams = {
     activeTab?: "find" | "create",
