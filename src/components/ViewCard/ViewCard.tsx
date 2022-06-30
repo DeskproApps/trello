@@ -51,7 +51,7 @@ const ViewCard: FC<Props> = ({
             />
             <TextBlockWithLabel
                 label="Description"
-                text={desc}
+                text={<P5 dangerouslySetInnerHTML={{ __html: desc }} />}
             />
             <TextBlockWithLabel
                 label="Labels"
