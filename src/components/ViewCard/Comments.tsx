@@ -41,7 +41,7 @@ const Comments: FC<{
                                 <DateTime date={new Date(date)} timeStyle="mini" />
                             </P11>
                         </Stack>
-                        <P1>{data.text}</P1>
+                        <P1 style={{ whiteSpace: "pre-wrap" }}>{data.text}</P1>
                     </Stack>
                 ))}
             </>

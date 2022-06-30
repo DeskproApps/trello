@@ -1,10 +1,8 @@
 import { FC, useEffect } from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
-// import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {
     Stack,
-    /*Button as ButtonUI,*/
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
@@ -73,21 +71,11 @@ const AddCommentPage: FC = () => {
         <form onSubmit={handleSubmit}>
             <Label htmlFor="comment" label="New comment" marginBottom={17}>
                 <TextArea
+                    minWidth="auto"
                     placeholder="Enter comment"
                     {...getFieldProps("comment")}
                 />
             </Label>
-
-            {/*<Label htmlFor="file" label="Attachments" marginBottom={17}>
-                <Stack>
-                    <ButtonUI
-                        minimal
-                        text="Add"
-                        icon={faPlus}
-                        onClick={() => { console.log(">>> addFile") }}
-                    />
-                </Stack>
-            </Label>*/}
 
             <Stack justify="space-between">
                 <Button

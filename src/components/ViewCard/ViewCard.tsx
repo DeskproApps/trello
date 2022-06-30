@@ -1,4 +1,5 @@
 import { FC } from "react";
+import styled from "styled-components";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import {
     H1,
@@ -30,6 +31,10 @@ type Props = CardType & {
         state: ChecklistItem["state"],
     ) => void,
 };
+
+const Description = styled(P5)`
+    white-space: pre-wrap
+`;
 
 const ViewCard: FC<Props> = ({
     id,
@@ -65,7 +70,7 @@ const ViewCard: FC<Props> = ({
             />
             <TextBlockWithLabel
                 label="Description"
-                text={<P5 dangerouslySetInnerHTML={{ __html: desc }} />}
+                text={<Description>{desc}</Description>}
             />
             <TextBlockWithLabel
                 label="Labels"

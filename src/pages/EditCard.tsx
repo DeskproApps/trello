@@ -52,12 +52,6 @@ export type Option = DropdownValueType<string>;
 
 export type Options = Option[];
 
-const TextAreaStyled = styled(TextArea)`
-    min-height: 100px;
-    font-size: 11px;
-    font-family: ${({ theme }) => theme.fonts.primary};
-`;
-
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
     board: yup.object({
