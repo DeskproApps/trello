@@ -12,10 +12,7 @@ const baseRequest: Request = async (client, {
     const dpFetch = await proxyFetch(client);
 
     let body = undefined;
-    const requestUrl = `${BASE_URL}/${url}/?${getQueryParams({
-        ...requireQeuryParams,
-        ...queryParams,
-    })}`;
+    const requestUrl = `${BASE_URL}/${url}/?${getQueryParams(requireQeuryParams)}&${getQueryParams(queryParams, true)}`;
 
     if (data instanceof FormData) {
         body = data;
