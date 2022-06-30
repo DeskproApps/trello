@@ -20,6 +20,7 @@ const LinkCardPage: FC = () => {
         client?.deregisterElement("trelloHomeButton");
         client?.deregisterElement("trelloExternalCtaLink");
         client?.deregisterElement("trelloMenu");
+        client?.deregisterElement("trelloEditButton");
 
         client?.setTitle("Link Cards");
         client?.registerElement("trelloHomeButton", {

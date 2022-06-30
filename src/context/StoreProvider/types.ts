@@ -8,11 +8,12 @@ export type Page =
     | "home"
     | "log_in"
     | "link_card"
-    | "view_card";
+    | "view_card"
+    | "edit_card";
 
 export type PageParams = {
     activeTab?: "find" | "create",
-    cardId?: string,
+    cardId?: CardType["id"],
 };
 
 export interface State {
@@ -20,8 +21,7 @@ export interface State {
     page?: Page;
     pageParams?: PageParams,
     context?: Context,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cards: any[],
+    cards: CardType[],
     _error?: ErrorType,
 }
 

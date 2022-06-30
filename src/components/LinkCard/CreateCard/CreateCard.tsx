@@ -137,7 +137,7 @@ const CreateCard: FC = () => {
                     return setEntityCardService(client, ticketId, cardId);
                 })
                 .then(() => dispatch({ type: "changePage", page: "home" }))
-                .catch((error) => dispatch({ type: "error", error }))
+                .catch((error) => dispatch({ type: "error", error }));
         }
     });
 
@@ -361,7 +361,7 @@ const CreateCard: FC = () => {
                 id="dueDateSdk"
                 label="Due date"
                 error={!!(touched.dueDate && errors.dueDate)}
-                onChange={(date) => setFieldValue("dueDate", date[0])}
+                onChange={(date: [Date]) => setFieldValue("dueDate", date[0])}
             />
 
             {values.board.value && (
