@@ -140,7 +140,10 @@ const CreateCard: FC = () => {
                         createCardCommentService(
                             client,
                             cardId,
-                            `Linked to Deskpro ticket ${ticketId}, ${state.context?.data.ticket.permalinkUrl}`,
+                            `Linked to Deskpro ticket ${ticketId}${state.context?.data?.ticket?.permalinkUrl
+                                ? `, ${state.context.data.ticket.permalinkUrl}`
+                                : ""
+                            }`,
                         ),
                     ]);
                 })

@@ -46,7 +46,10 @@ export const Main = () => {
                         .then(() => createCardCommentService(
                             client,
                             payload.cardId,
-                            `Unlinked from Deskpro ticket ${payload.ticketId}, ${state.context?.data?.ticket?.permalinkUrl}`
+                            `Unlinked from Deskpro ticket ${payload.ticketId}${state.context?.data?.ticket?.permalinkUrl
+                                ? `, ${state.context.data.ticket.permalinkUrl}`
+                                : ""
+                            }`,
                         ))
                         .then(() => {
                             dispatch({ type: "changePage", page: "home" });
