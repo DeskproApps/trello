@@ -33,7 +33,7 @@ export const Main = () => {
     const debounceTargetAction = useDebouncedCallback<(a: TargetAction<ReplyBoxNoteSelection[]>) => void>(
         (action: TargetAction) => {
             match<string>(action.name)
-                .with("linkTicket", () => dispatch({ type: "changePage", page: "home" }))
+                .with("linkTicket", () => dispatch({ type: "changePage", page: "link_card" }))
                 .run()
             ;
         },
