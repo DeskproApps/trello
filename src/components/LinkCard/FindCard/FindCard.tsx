@@ -13,7 +13,10 @@ import {
     SingleSelect,
 } from "../../common";
 import { setEntityCardService } from "../../../services/entityAssociation";
-import { searchByCardService } from "../../../services/trello";
+import {
+    searchByCardService,
+    createCardCommentService,
+} from "../../../services/trello";
 import { CardType, Board } from "../../../services/trello/types";
 
 const getFilteredCards = (cards: CardType[], boardId?: Board["id"]) => {
@@ -132,6 +135,18 @@ const FindCard: FC = () => {
         Promise.all(selectedCards.map(
             (cardId) => setEntityCardService(client, ticketId, cardId)
         ))
+            .then(() => {
+                return Promise.all(selectedCards.map(
+                    (cardId) => createCardCommentService(
+                        client,
+                        cardId,
+                        `Linked to Deskpro ticket ${ticketId}${state.context?.data?.ticket?.permalinkUrl
+                            ? `,${state.context.data.ticket.permalinkUrl}`
+                            : ""
+                        }`,
+                    )
+                ))
+            })
             .then(() => dispatch({ type: "changePage", page: "home" }))
             .catch((error) => dispatch({ type: "error", error }));
     };

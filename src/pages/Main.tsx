@@ -10,12 +10,14 @@ import {
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload, ReplyBoxNoteSelection } from "../context/StoreProvider/types";
 import { deleteEntityCardService } from "../services/entityAssociation";
+import { createCardCommentService } from "../services/trello";
 import { useSetBadgeCount } from "../hooks";
 import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
 import { LinkCardPage } from "./LinkCard";
 import { ViewCardPage } from "./ViewCard";
 import { EditCardPage } from "./EditCard";
+import { AddCommentPage } from "./AddComment";
 import { ErrorBlock } from "../components/common";
 
 export const Main = () => {
@@ -53,6 +55,14 @@ export const Main = () => {
             } else if (payload?.type === "unlinkTicket") {
                 if (client) {
                     deleteEntityCardService(client, payload.ticketId, payload.cardId)
+                        .then(() => createCardCommentService(
+                            client,
+                            payload.cardId,
+                            `Unlinked from Deskpro ticket ${payload.ticketId}${state.context?.data?.ticket?.permalinkUrl
+                                ? `, ${state.context.data.ticket.permalinkUrl}`
+                                : ""
+                            }`,
+                        ))
                         .then(() => {
                             dispatch({ type: "changePage", page: "home" });
                         })
@@ -91,6 +101,7 @@ export const Main = () => {
             .with("link_card", () => <LinkCardPage />)
             .with("view_card", () => <ViewCardPage />)
             .with("edit_card", () => <EditCardPage />)
+            .with("add_comment", () => <AddCommentPage />)
             .otherwise(() => <LogInPage />);
 
     return (
