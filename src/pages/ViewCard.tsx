@@ -4,16 +4,19 @@ import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import {
     getCardService,
+    getCardCommentsService,
     updateChecklistItemService,
 } from "../services/trello";
-import { CardType, ChecklistItem } from "../services/trello/types";
+import { CardType, Comment, ChecklistItem } from "../services/trello/types";
 import { ViewCard } from "../components/ViewCard";
 import { Loading, NoFound } from "../components/common";
 
 const ViewCardPage: FC = () => {
-    const [state] = useStore();
+    const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const [card, setCard] = useState<CardType | undefined>(undefined);
+    const [comments, setComments] = useState<Comment[]>();
+
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -91,8 +94,14 @@ const ViewCardPage: FC = () => {
             return;
         }
 
-        getCardService(client, state.pageParams.cardId)
-            .then((card) => setCard(card))
+        Promise.all([
+            getCardService(client, state.pageParams.cardId),
+            getCardCommentsService(client, state.pageParams.cardId),
+        ])
+            .then(([card, comments]) => {
+                setCard(card);
+                setComments(comments);
+            })
             .finally(() => setLoading(false));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,6 +133,14 @@ const ViewCardPage: FC = () => {
             });
     };
 
+    const onAddNewCommentPage = (cardId: CardType["id"]) => {
+        dispatch({
+            type: "changePage",
+            page: "add_comment",
+            params: { cardId },
+        });
+    };
+
     if (!loading && !card) {
         return (<NoFound/>);
     }
@@ -133,6 +150,8 @@ const ViewCardPage: FC = () => {
         : (
             <ViewCard
                 {...card as CardType}
+                comments={comments}
+                onAddNewCommentPage={onAddNewCommentPage}
                 onChangeChecklistItem={onChangeChecklistItem}
             />
         );
