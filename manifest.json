@@ -2,13 +2,22 @@
   "name": "@deskpro-apps/trello",
   "title": "Trello",
   "description": "Integrate Trello with your helpdesk to improve your management of your tasks",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
   "targets": [{
     "target": "ticket_sidebar",
-    "entrypoint": "index.html"
+    "entrypoint": "index.html",
+    "options": {
+      "actions": {
+        "linkTicket": {
+          "type": "ticket_addition",
+          "title": "Trello Card",
+          "description": "Link ticket to a Trello card"
+        }
+      }
+    }
   }],
   "settings": {
     "client_key": {
