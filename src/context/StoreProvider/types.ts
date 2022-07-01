@@ -38,6 +38,7 @@ export type Dispatch = (action: Action) => void;
 export type StoreReducer = Reducer<State, Action>;
 
 export type AppElementPayload =
+    | { type: "logout" }
     | { type: "changePage", page: Page, params?: PageParams }
     | { type: "unlinkTicket", cardId: CardType["id"], ticketId: string };
 

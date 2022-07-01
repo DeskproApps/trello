@@ -32,6 +32,18 @@ const LogInPage: FC = () => {
         console.error(`Trello: ${error}`);
     }
 
+    useEffect(() => {
+        if (!client) {
+            return;
+        }
+
+        client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloHomeButton");
+        client?.deregisterElement("trelloExternalCtaLink");
+        client?.deregisterElement("trelloMenu");
+        client?.deregisterElement("trelloEditButton");
+    }, [client]);
+
     const onSignIn = useCallback(() => {
         callback?.poll()
             .then(() => dispatch({ type: "setAuth", isAuth: true }))
