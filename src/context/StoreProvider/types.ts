@@ -40,3 +40,8 @@ export type StoreReducer = Reducer<State, Action>;
 export type AppElementPayload =
     | { type: "changePage", page: Page, params?: PageParams }
     | { type: "unlinkTicket", cardId: CardType["id"], ticketId: string };
+
+export interface ReplyBoxNoteSelection {
+    id: string;
+    selected: boolean;
+}

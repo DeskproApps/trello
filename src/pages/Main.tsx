@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { match } from "ts-pattern";
+import { useDebouncedCallback } from "use-debounce";
 import {
     Context,
+    TargetAction,
     useDeskproAppClient,
     useDeskproAppEvents,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
-import { AppElementPayload } from "../context/StoreProvider/types";
+import { AppElementPayload, ReplyBoxNoteSelection } from "../context/StoreProvider/types";
 import { deleteEntityCardService } from "../services/entityAssociation";
 import { createCardCommentService } from "../services/trello";
 import { useSetBadgeCount } from "../hooks";
@@ -27,6 +29,16 @@ export const Main = () => {
     }
 
     useSetBadgeCount();
+
+    const debounceTargetAction = useDebouncedCallback<(a: TargetAction<ReplyBoxNoteSelection[]>) => void>(
+        (action: TargetAction) => {
+            match<string>(action.name)
+                .with("linkTicket", () => dispatch({ type: "changePage", page: "link_card" }))
+                .run()
+            ;
+        },
+        500,
+    );
 
     useDeskproAppEvents({
         onShow: () => {
@@ -57,6 +69,7 @@ export const Main = () => {
                 }
             }
         },
+        onTargetAction: (a) => debounceTargetAction(a as TargetAction),
     }, [client]);
 
     useEffect(() => {
