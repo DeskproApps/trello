@@ -50,6 +50,15 @@ const HomePage: FC = () => {
             type: "plus_button",
             payload: { type: "changePage", page: "link_card" },
         });
+        client?.registerElement("trelloMenu", {
+            type: "menu",
+            items: [{
+                title: "Log Out",
+                payload: {
+                    type: "logout",
+                },
+            }],
+        });
     }, [client]);
 
     useEffect(() => {

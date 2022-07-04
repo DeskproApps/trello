@@ -1,5 +1,9 @@
 import { Reducer } from "react";
-import { Context } from "@deskpro/app-sdk";
+import {
+    Context,
+    HasOAuth2Token,
+    OAuth2CallbackUrlPoll,
+} from "@deskpro/app-sdk";
 import { CardType } from "../../services/trello/types";
 
 export type ErrorType = Error | string | unknown;
@@ -38,6 +42,7 @@ export type Dispatch = (action: Action) => void;
 export type StoreReducer = Reducer<State, Action>;
 
 export type AppElementPayload =
+    | { type: "logout" }
     | { type: "changePage", page: Page, params?: PageParams }
     | { type: "unlinkTicket", cardId: CardType["id"], ticketId: string };
 
@@ -45,3 +50,9 @@ export interface ReplyBoxNoteSelection {
     id: string;
     selected: boolean;
 }
+
+export type OAuthCallback = undefined | {
+    callbackUrl: string,
+    poll: OAuth2CallbackUrlPoll,
+    hasToken?: HasOAuth2Token,
+};

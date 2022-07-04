@@ -25,6 +25,8 @@ const ViewCardPage: FC = () => {
         }
 
         client?.deregisterElement("trelloPlusButton");
+        client?.deregisterElement("trelloHomeButton");
+        client?.deregisterElement("trelloExternalCtaLink");
         client?.deregisterElement("trelloMenu");
         client?.deregisterElement("trelloEditButton");
 

@@ -10,7 +10,7 @@ import {
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload, ReplyBoxNoteSelection } from "../context/StoreProvider/types";
 import { deleteEntityCardService } from "../services/entityAssociation";
-import { createCardCommentService } from "../services/trello";
+import { createCardCommentService, logoutService } from "../services/trello";
 import { useSetBadgeCount } from "../hooks";
 import { HomePage } from "./Home";
 import { LogInPage } from "./LogIn";
@@ -51,7 +51,13 @@ export const Main = () => {
         // @ts-ignore
         onElementEvent(id: string, type: string, payload?: AppElementPayload) {
             if (payload?.type === "changePage") {
-                dispatch({ type: "changePage", page: payload.page, params: payload.params })
+                dispatch({type: "changePage", page: payload.page, params: payload.params})
+            } else if (payload?.type === "logout") {
+                if (client) {
+                    logoutService(client)
+                        .then(() => dispatch({ type: "setAuth", isAuth: false }))
+                        .catch((error) => dispatch({ type: "error", error }));
+                }
             } else if (payload?.type === "unlinkTicket") {
                 if (client) {
                     deleteEntityCardService(client, payload.ticketId, payload.cardId)

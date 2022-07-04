@@ -9,3 +9,5 @@ export { updateCardService } from "./updateCardService";
 export { updateChecklistItemService } from "./updateChecklistItemService";
 export { getCardCommentsService } from "./getCardCommentsService";
 export { createCardCommentService } from "./createCardCommentService";
+export { removeTokenService } from "./removeTokenService";
+export { logoutService } from "./logoutService";
