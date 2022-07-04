@@ -1,12 +1,8 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
-import { baseRequest } from "./baseRequest";
 import { placeholders } from "./constants";
 
 const removeTokenService = (client: IDeskproClient) => {
-    return baseRequest<Comment[]>(client, {
-        url: `/tokens/${placeholders.TOKEN}/`,
-        method: "DELETE",
-    });
+    return client.deleteUserState(placeholders.OAUTH_TOKEN_PATH);
 };
 
 export { removeTokenService };

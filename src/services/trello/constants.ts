@@ -1,9 +1,10 @@
-export const placeholders: Record<string, string> = {
+export const placeholders = {
     KEY: "__client_key__",
-    TOKEN: "[user[oauth2/token]]",
+    OAUTH_TOKEN_PATH: "oauth2/token",
+    TOKEN: `[user[oauth2/token]]`,
 };
 
-export const requireQeuryParams: Record<string, string> = {
+export const requireQeuryParams = {
     key: placeholders.KEY,
     token: placeholders.TOKEN,
 };
