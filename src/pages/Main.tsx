@@ -55,7 +55,6 @@ export const Main = () => {
             } else if (payload?.type === "logout") {
                 if (client) {
                     logoutService(client)
-                        .then(() => client.deleteUserState("oauth2/token"))
                         .then(() => dispatch({ type: "setAuth", isAuth: false }))
                         .catch((error) => dispatch({ type: "error", error }));
                 }

@@ -1,12 +1,16 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import isEmpty from "lodash/isEmpty";
+import isEqual from "lodash/isEqual";
 import styled from "styled-components";
 import {
     P5,
     H3,
+    OAuth2CallbackUrl,
     useDeskproAppClient,
     useDeskproOAuth2Auth,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
+import { OAuthCallback } from "../context/StoreProvider/types";
 import { checkIsAliveService } from "../services/trello";
 import { CustomError } from "../services/trello/types";
 import { useSetAppTitle } from "../hooks";
@@ -23,15 +27,23 @@ const LogInError = styled(P5)`
 
 const LogInPage: FC = () => {
     const { client } = useDeskproAppClient();
-    const { callback } = useDeskproOAuth2Auth("token", /#token=(?<token>[0-9a-f]+)$/);
+    const { callback: callbackInit } = useDeskproOAuth2Auth("token", /#token=(?<token>[0-9a-f]+)$/);
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [authUrl, setAuthUrl] = useState("");
+    const [callback, setCallback] = useState<OAuthCallback>(callbackInit);
 
     if (error) {
         console.error(`Trello: ${error}`);
     }
+
+    useEffect(() => {
+        if (!isEmpty(callback) && !isEqual(callbackInit, callback)) {
+            setCallback(callbackInit);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [callbackInit]);
 
     useEffect(() => {
         if (state?.context?.settings.client_key && callback?.callbackUrl) {
@@ -61,6 +73,10 @@ const LogInPage: FC = () => {
     }, [client]);
 
     const onSignIn = () => {
+        if (!callback) {
+            return;
+        }
+
         setLoading(true);
 
         callback?.poll()
@@ -106,7 +122,7 @@ const LogInPage: FC = () => {
 
         client.oauth2()
             .getCallbackUrl("token", /#token=(?<token>[0-9a-f]+)$/)
-            .then((callback) => {
+            .then((callback: OAuth2CallbackUrl) => {
                 setAuthUrl(`https://trello.com/1/authorize?${getQueryParams({
                     expiration: "never",
                     name: "Deskpro",
@@ -114,9 +130,11 @@ const LogInPage: FC = () => {
                     response_type: "token",
                     key: state?.context?.settings.client_key,
                     redirect_uri: callback?.callbackUrl
-                })}`)
+                })}`);
+                setCallback(callback);
             })
             .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state.isAuth]);
 
     return loading
