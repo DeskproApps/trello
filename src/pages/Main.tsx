@@ -55,9 +55,8 @@ export const Main = () => {
             } else if (payload?.type === "logout") {
                 if (client) {
                     logoutService(client)
-                        .then(() => {
-                            dispatch({ type: "setAuth", isAuth: false });
-                        })
+                        .then(() => client.deleteUserState("oauth2/token"))
+                        .then(() => dispatch({ type: "setAuth", isAuth: false }))
                         .catch((error) => dispatch({ type: "error", error }));
                 }
             } else if (payload?.type === "unlinkTicket") {

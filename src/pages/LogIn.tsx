@@ -10,6 +10,7 @@ import { useStore } from "../context/StoreProvider/hooks";
 import { checkIsAliveService } from "../services/trello";
 import { CustomError } from "../services/trello/types";
 import { useSetAppTitle } from "../hooks";
+import { getQueryParams } from "../utils";
 import {
     Loading,
     AnchorButton,
@@ -26,11 +27,26 @@ const LogInPage: FC = () => {
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Deskpro&scope=read,write&response_type=token&key=${state?.context?.settings.client_key}&redirect_uri=${callback?.callbackUrl}`
+    const [authUrl, setAuthUrl] = useState("");
 
     if (error) {
         console.error(`Trello: ${error}`);
     }
+
+    useEffect(() => {
+        if (state?.context?.settings.client_key && callback?.callbackUrl) {
+            setAuthUrl(`https://trello.com/1/authorize?${getQueryParams({
+                expiration: "never",
+                name: "Deskpro",
+                scope: "read,write",
+                response_type: "token",
+                key: state?.context?.settings.client_key,
+                redirect_uri: callback?.callbackUrl,
+            })}`);
+
+            setLoading(false);
+        }
+    }, [state?.context?.settings.client_key, callback?.callbackUrl]);
 
     useEffect(() => {
         if (!client) {
@@ -44,12 +60,14 @@ const LogInPage: FC = () => {
         client?.deregisterElement("trelloEditButton");
     }, [client]);
 
-    const onSignIn = useCallback(() => {
+    const onSignIn = () => {
+        setLoading(true);
+
         callback?.poll()
             .then(() => dispatch({ type: "setAuth", isAuth: true }))
-            .catch((error) => dispatch({ type: "error", error }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [callback]);
+            .catch((error) => dispatch({ type: "error", error }))
+            .finally(() => setLoading(false));
+    };
 
     useSetAppTitle("Trello");
 
@@ -78,6 +96,28 @@ const LogInPage: FC = () => {
             .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, callback?.hasToken]);
+
+    useEffect(() => {
+        if (!client) {
+            return;
+        }
+
+        setLoading(true);
+
+        client.oauth2()
+            .getCallbackUrl("token", /#token=(?<token>[0-9a-f]+)$/)
+            .then((callback) => {
+                setAuthUrl(`https://trello.com/1/authorize?${getQueryParams({
+                    expiration: "never",
+                    name: "Deskpro",
+                    scope: "read,write",
+                    response_type: "token",
+                    key: state?.context?.settings.client_key,
+                    redirect_uri: callback?.callbackUrl
+                })}`)
+            })
+            .finally(() => setLoading(false));
+    }, [client, state.isAuth]);
 
     return loading
         ? (<Loading/>)
