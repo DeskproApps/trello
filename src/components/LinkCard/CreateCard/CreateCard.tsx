@@ -14,7 +14,6 @@ import {
     Avatar,
     InputWithDisplay,
     DropdownTargetProps,
-    TextAreaWithDisplay,
     DivAsInputWithDisplay,
 } from "@deskpro/deskpro-ui";
 import {
@@ -51,6 +50,10 @@ import {
 import { getLabelColor, getEntityMetadata } from "../../../utils";
 
 type Option = DropdownValueType<string>;
+
+type MemberOption = Option & {
+    metadata: { id: string, fullName: string },
+};
 
 type Options = Option[];
 
@@ -105,7 +108,7 @@ const CreateCard: FC = () => {
     const [boards, setBoards] = useState<Options>([]);
     const [lists, setLists] = useState<Options>([]);
     const [labels, setLabels] = useState<Options>([]);
-    const [members, setMembers] = useState<Options>([]);
+    const [members, setMembers] = useState<MemberOption[]>([]);
 
     const {
         values,
@@ -144,7 +147,7 @@ const CreateCard: FC = () => {
                         labels: card.labels,
                         members: members
                             .filter(({ metadata }) => idMembers.includes(metadata.id))
-                            .map(({ metadata }) => metadata),
+                            .map(({ metadata }) => metadata) as Member[],
                     });
 
                     return Promise.all([

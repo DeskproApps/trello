@@ -1,10 +1,16 @@
 import isEmpty from "lodash/isEmpty";
 import { EntityMetadata } from "../context/StoreProvider/types";
-import { CardType } from "../services/trello/types";
+import {CardType, Board, List, Member} from "../services/trello/types";
 import { parseDateTime } from "../utils/date";
 
-const getEntityMetadata = (card?: CardType): undefined|EntityMetadata => {
-    if (isEmpty(card)) {
+type Card = Omit<CardType, "list" | "board" | "members"> & {
+    list: Pick<List, "id" | "name">,
+    board: Pick<Board, "id" | "name">,
+    members: Array<Pick<Member, "id" | "fullName">>
+};
+
+const getEntityMetadata = (card?: Card): undefined|EntityMetadata => {
+    if (!card || isEmpty(card)) {
         return undefined;
     }
 

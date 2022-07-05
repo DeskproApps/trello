@@ -26,6 +26,7 @@ import {
     useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
+import { setEntityCardService } from "../services/entityAssociation";
 import { useStore } from "../context/StoreProvider/hooks";
 import {
     getCardService,
@@ -35,7 +36,7 @@ import {
     getMembersOfOrganizationService,
 } from "../services/trello";
 import { Board, CardType, Member } from "../services/trello/types";
-import { getLabelColor } from "../utils";
+import { getLabelColor, getEntityMetadata } from "../utils";
 import {
     Label,
     Button,
@@ -51,6 +52,10 @@ import {
 export type Option = DropdownValueType<string>;
 
 export type Options = Option[];
+
+type MemberOption = Option & {
+    metadata: { id: string, fullName: string },
+};
 
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
@@ -88,6 +93,7 @@ const EditCardPage: FC = () => {
     const { theme } = useDeskproAppTheme();
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
+    const ticketId = state.context?.data.ticket.id;
 
     const [error] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
@@ -97,7 +103,7 @@ const EditCardPage: FC = () => {
     const [boards, setBoards] = useState<Options>([]);
     const [lists, setLists] = useState<Options>([]);
     const [labels, setLabels] = useState<Options>([]);
-    const [members, setMembers] = useState<Options>([]);
+    const [members, setMembers] = useState<MemberOption[]>([]);
 
     const {
         values,
@@ -111,7 +117,7 @@ const EditCardPage: FC = () => {
         validationSchema,
         initialValues: initValues,
         onSubmit: async (values) => {
-            if (!client || !card?.id) {
+            if (!client || !card?.id || !ticketId) {
                 return
             }
 
@@ -127,7 +133,18 @@ const EditCardPage: FC = () => {
             };
 
             await updateCardService(client, card.id, newCard)
-                .then((card) => dispatch({
+                .then((card) => {
+                    return setEntityCardService(client, ticketId, card.id, getEntityMetadata({
+                        ...card,
+                        board: { id: values.board.value, name: values.board.label },
+                        list: { id: values.list.key, name: values.list.label },
+                        labels: card.labels,
+                        members: members
+                            .filter(({ metadata }) => card.idMembers.includes(metadata.id))
+                            .map(({ metadata }) => metadata),
+                    }))
+                })
+                .then(() => dispatch({
                     type: "changePage",
                     page: "view_card",
                     params: { cardId: card.id }
@@ -225,6 +242,7 @@ const EditCardPage: FC = () => {
                                 key: id,
                                 value: id,
                                 type: "value",
+                                metadata: { id, fullName },
                                 selected: card.idMembers.includes(id),
                                 label: (
                                     <Stack key={id} gap={6}>
