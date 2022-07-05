@@ -27,6 +27,15 @@ const LinkCardPage: FC = () => {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
         });
+        client?.registerElement("trelloMenu", {
+            type: "menu",
+            items: [{
+                title: "Log Out",
+                payload: {
+                    type: "logout",
+                },
+            }],
+        });
     }, [client]);
 
     const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
