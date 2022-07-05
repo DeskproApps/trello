@@ -36,11 +36,16 @@ const Title: FC<CardType & { onClick?: () => void }> = ({ name, shortUrl, onClic
 
 const Workspace: FC<CardType> = ({ board, list }) => (
     <TwoSider
-        leftLabel={<>Board <LinkIcon size={10} href={board.url}/></>}
+        leftLabel={(
+            <>
+                Board&nbsp;
+                {board?.url && <LinkIcon size={10} href={board.url}/>}
+            </>
+        )}
         leftText={(
             <>
                 <OverflowText>{board.name}</OverflowText>
-                <LinkIcon size={10} href={board.url}/>
+                {board?.url && <LinkIcon size={10} href={board.url}/>}
             </>
         )}
         rightLabel="List"
