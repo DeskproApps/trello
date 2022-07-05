@@ -42,12 +42,13 @@ import {
     Label,
     Button,
     Loading,
+    TextArea,
     DateField,
     SingleSelect,
     EmptyInlineBlock,
     TextBlockWithLabel,
 } from "../../common";
-import { getLabelColor } from "../../../utils";
+import { getLabelColor, getEntityMetadata } from "../../../utils";
 
 type Option = DropdownValueType<string>;
 
@@ -134,9 +135,20 @@ const CreateCard: FC = () => {
             };
 
             await createCardService(client, newCard)
-                .then(({ id: cardId }) => {
+                .then((card) => {
+                    const { id: cardId, idMembers } = card;
+                    const metadata = getEntityMetadata({
+                        ...card,
+                        board: { id: values.board.value, name: values.board.label },
+                        list: { id: values.list.key, name: values.list.label },
+                        labels: card.labels,
+                        members: members
+                            .filter(({ metadata }) => idMembers.includes(metadata.id))
+                            .map(({ metadata }) => metadata),
+                    });
+
                     return Promise.all([
-                        setEntityCardService(client, ticketId, cardId),
+                        setEntityCardService(client, ticketId, cardId, metadata),
                         createCardCommentService(
                             client,
                             cardId,
@@ -182,6 +194,7 @@ const CreateCard: FC = () => {
                     value: id,
                     type: "value",
                     selected: false,
+                    metadata: { id, fullName },
                     label: (
                         <Stack gap={6}>
                             <Avatar size={18} name={fullName} backupIcon={faUser} />
@@ -362,7 +375,8 @@ const CreateCard: FC = () => {
             />
 
             <Label htmlFor="description" label="Description">
-                <TextAreaWithDisplay
+                <TextArea
+                    minWidth="auto"
                     placeholder="Enter description"
                     {...getFieldProps("description")}
                 />
