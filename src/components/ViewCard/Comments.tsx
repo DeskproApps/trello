@@ -16,6 +16,12 @@ const DateTime = styled(ReactTimeAgo)`
     color: ${({ theme }) => theme.colors.grey80};
 `;
 
+const CommentBlock = styled(P1)`
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
 const Comments: FC<{
     comments?: Comment[],
     onClickTitleAction: () => void,
@@ -41,7 +47,7 @@ const Comments: FC<{
                                 <DateTime date={new Date(date)} timeStyle="mini" />
                             </P11>
                         </Stack>
-                        <P1 style={{ whiteSpace: "pre-wrap" }}>{data.text}</P1>
+                        <CommentBlock>{data.text}</CommentBlock>
                     </Stack>
                 ))}
             </>
