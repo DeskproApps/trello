@@ -172,7 +172,7 @@ const EditCardPage: FC = () => {
             return;
         }
 
-        client.setTitle(`Edit: ${card.shortLink}`);
+        client.setTitle(`Edit Card`);
     }, [client, card?.shortLink]);
 
     /* get member */
