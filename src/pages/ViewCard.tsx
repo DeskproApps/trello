@@ -41,7 +41,7 @@ const ViewCardPage: FC = () => {
             return;
         }
 
-        client.setTitle(card.shortLink)
+        client.setTitle("View Card");
     }, [client, card?.shortLink]);
 
     useEffect(() => {

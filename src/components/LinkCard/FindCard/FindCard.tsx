@@ -18,18 +18,8 @@ import {
     createCardCommentService,
 } from "../../../services/trello";
 import { CardType, Board } from "../../../services/trello/types";
+import { getFilteredCards, getEntityMetadata } from "../../../utils";
 
-const getFilteredCards = (cards: CardType[], boardId?: Board["id"]) => {
-    let filteredCards = [];
-
-    if (!boardId || boardId === "any") {
-        filteredCards = cards;
-    } else {
-        filteredCards = cards.filter(({ board }) => board.id === boardId)
-    }
-
-    return filteredCards;
-};
 
 type Option = {
     key: "any" | string,
@@ -133,7 +123,12 @@ const FindCard: FC = () => {
             example: client.getEntityAssociation(TRELLO_ENTITY, ticketId).set([cardId_1, cardId_2, ...])
          */
         Promise.all(selectedCards.map(
-            (cardId) => setEntityCardService(client, ticketId, cardId)
+            (cardId) => setEntityCardService(
+                client,
+                ticketId,
+                cardId,
+                getEntityMetadata(cards.find(({ id }: CardType) => id === cardId)),
+            )
         ))
             .then(() => {
                 return Promise.all(selectedCards.map(

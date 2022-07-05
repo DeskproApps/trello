@@ -4,7 +4,7 @@ import {
     HasOAuth2Token,
     OAuth2CallbackUrlPoll,
 } from "@deskpro/app-sdk";
-import { CardType } from "../../services/trello/types";
+import { CardType, Board, List, Label, Member } from "../../services/trello/types";
 
 export type ErrorType = Error | string | unknown;
 
@@ -55,4 +55,16 @@ export type OAuthCallback = undefined | {
     callbackUrl: string,
     poll: OAuth2CallbackUrlPoll,
     hasToken?: HasOAuth2Token,
+};
+
+export type EntityMetadata = {
+    cardId: CardType["id"],
+    boardId: Board["id"],
+    boardName: Board["name"],
+    listId: List["id"],
+    listName: List["name"],
+    description: CardType["desc"],
+    labels: Array<{ id: Label["id"], name: Label["name"] }>,
+    members: Array<{ id: Member["id"], name: Member["fullName"] }>,
+    dueDate: CardType["due"],
 };
