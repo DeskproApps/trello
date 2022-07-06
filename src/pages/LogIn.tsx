@@ -53,7 +53,7 @@ const LogInPage: FC = () => {
                 scope: "read,write",
                 response_type: "token",
                 key: state?.context?.settings.client_key,
-                redirect_uri: callback?.callbackUrl,
+                return_url: callback?.callbackUrl,
             })}`);
 
             setLoading(false);
@@ -129,7 +129,7 @@ const LogInPage: FC = () => {
                     scope: "read,write",
                     response_type: "token",
                     key: state?.context?.settings.client_key,
-                    redirect_uri: callback?.callbackUrl
+                    return_url: callback?.callbackUrl
                 })}`);
                 setCallback(callback);
             })
