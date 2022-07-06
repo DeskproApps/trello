@@ -14,3 +14,4 @@ export { LinkIcon } from "./LinkIcon";
 export { EmptyInlineBlock } from "./EmptyInlineBlock";
 export { DateField } from "./DateField";
 export { TextArea } from "./TextArea";
+export { Attach } from "./Attach";
