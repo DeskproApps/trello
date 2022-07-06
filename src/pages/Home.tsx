@@ -7,10 +7,10 @@ import { useStore } from "../context/StoreProvider/hooks";
 import { useSetAppTitle } from "../hooks";
 import { getEntityCardListService } from "../services/entityAssociation";
 import { getCardService } from "../services/trello";
+import { CardType } from "../services/trello/types";
 import { Loading, CardInfo, NoFound, InputSearch } from "../components/common";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getFilteredCards = (cards: any[], searchValue: string) => {
+const getFilteredCards = (cards: CardType[], searchValue: string) => {
     let filteredCards = [];
     if (!searchValue) {
         filteredCards = cards;

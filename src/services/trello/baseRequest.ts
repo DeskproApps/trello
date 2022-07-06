@@ -12,7 +12,13 @@ const baseRequest: Request = async (client, {
     const dpFetch = await proxyFetch(client);
 
     let body = undefined;
-    const requestUrl = `${BASE_URL}${url}/?${getQueryParams(requireQeuryParams)}&${getQueryParams(queryParams, true)}`;
+    const headers: Record<string, string> = {};
+
+    const requestUrl = `${BASE_URL}${url}/?${
+        getQueryParams(requireQeuryParams)
+    }&${
+        getQueryParams(queryParams, true)
+    }`;
 
     if (data instanceof FormData) {
         body = data;
@@ -20,14 +26,11 @@ const baseRequest: Request = async (client, {
         body = JSON.stringify(data);
     }
 
-    const headers: Record<string, string> = {
-        "Accept": "application/json",
-    };
-
     if (body instanceof FormData) {
-        headers["X-Atlassian-Token"] = "no-check";
+        //...
     } else if (data) {
         headers["Content-Type"] = "application/json";
+        headers["Accept"] = "application/json";
     }
 
     const res = await dpFetch(requestUrl, {

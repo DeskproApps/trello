@@ -136,7 +136,7 @@ const FindCard: FC = () => {
                         client,
                         cardId,
                         `Linked to Deskpro ticket ${ticketId}${state.context?.data?.ticket?.permalinkUrl
-                            ? `,${state.context.data.ticket.permalinkUrl}`
+                            ? `, ${state.context.data.ticket.permalinkUrl}`
                             : ""
                         }`,
                     )

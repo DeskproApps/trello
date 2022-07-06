@@ -1,4 +1,5 @@
 import { FC, useEffect } from "react";
+import isEmpty from "lodash/isEmpty";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import {
@@ -7,8 +8,11 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { useSetAppTitle } from "../hooks";
-import { createCardCommentService } from "../services/trello";
-import { Button, Label, TextArea } from "../components/common";
+import {
+    createAttachService,
+    createCardCommentService,
+} from "../services/trello";
+import { Button, Label, TextArea, Attach } from "../components/common";
 
 const validationSchema = yup.object().shape({
     comment: yup.string(),
@@ -16,6 +20,7 @@ const validationSchema = yup.object().shape({
 
 const initValues = {
     comment: "",
+    files: [],
 };
 
 const AddCommentPage: FC = () => {
@@ -25,6 +30,7 @@ const AddCommentPage: FC = () => {
     const {
         handleSubmit,
         isSubmitting,
+        setFieldValue,
         getFieldProps,
     } = useFormik({
         validationSchema,
@@ -34,7 +40,22 @@ const AddCommentPage: FC = () => {
                 return
             }
 
-            await createCardCommentService(client, cardId, values.comment)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const promises: Promise<any>[] = [];
+
+            if (!isEmpty(values.comment)) {
+                promises.push(createCardCommentService(client, cardId, values.comment));
+            }
+
+            if (Array.isArray(values.files) && values.files.length) {
+                promises.concat(values.files.map(({ file }) => {
+                    const form = new FormData();
+                    form.append("file", file);
+                    return createAttachService(client, cardId, form);
+                }))
+            }
+
+            await Promise.all(promises)
                 .then(() => {
                     dispatch({
                         type: "changePage",
@@ -74,6 +95,14 @@ const AddCommentPage: FC = () => {
                     minWidth="auto"
                     placeholder="Enter comment"
                     {...getFieldProps("comment")}
+                />
+            </Label>
+
+            <Label label="Attachments">
+                <Attach
+                    onFiles={(files) => {
+                        setFieldValue("files", files);
+                    }}
                 />
             </Label>
 
