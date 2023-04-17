@@ -12,6 +12,7 @@ specifiers:
   '@types/lodash': ^4.14.182
   '@types/react': ^17.0.33
   '@types/react-dom': ^17.0.10
+  '@types/styled-components': ^5.1.26
   '@types/testing-library__jest-dom': ^5.14.2
   '@typescript-eslint/eslint-plugin': 5.6.0
   '@typescript-eslint/parser': 5.6.0
@@ -52,6 +53,7 @@ dependencies:
   '@fortawesome/free-regular-svg-icons': 6.4.0
   '@fortawesome/free-solid-svg-icons': 6.1.1
   '@fortawesome/react-fontawesome': 0.2.0_react@17.0.2
+  '@types/styled-components': 5.1.26
   date-fns: 2.28.0
   flatpickr: 4.6.13
   formik: 2.2.9_react@17.0.2
@@ -540,7 +542,7 @@ packages:
       '@fortawesome/react-fontawesome': 0.1.18_6909f5698ccb6b468185370814560628
       '@popperjs/core': 2.11.2
       '@tippyjs/react': 4.2.6_react-dom@17.0.2+react@17.0.2
-      '@types/styled-components': 5.1.25
+      '@types/styled-components': 5.1.26
       csstype: 3.1.0
       formik: 2.2.9_react@17.0.2
       framer-motion: 6.3.5_react-dom@17.0.2+react@17.0.2
@@ -1221,8 +1223,8 @@ packages:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
     dev: true
 
-  /@types/styled-components/5.1.25:
-    resolution: {integrity: sha512-fgwl+0Pa8pdkwXRoVPP9JbqF0Ivo9llnmsm+7TCI330kbPIFd9qv1Lrhr37shf4tnxCOSu+/IgqM7uJXLWZZNQ==}
+  /@types/styled-components/5.1.26:
+    resolution: {integrity: sha512-KuKJ9Z6xb93uJiIyxo/+ksS7yLjS1KzG6iv5i78dhVg/X3u5t1H7juRWqVmodIdz6wGVaIApo1u01kmFRdJHVw==}
     dependencies:
       '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 18.0.14
