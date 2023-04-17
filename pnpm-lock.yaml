@@ -37,7 +37,7 @@ specifiers:
   rollup-plugin-copy: 3.4.0
   simplebar: ^6.2.5
   slugify: ^1.6.5
-  styled-components: ^5.3.3
+  styled-components: ^5.3.5
   tippy.js: ^6.3.7
   ts-jest: ^27.1.2
   ts-pattern: ^3.3.5
