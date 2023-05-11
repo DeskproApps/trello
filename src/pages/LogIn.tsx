@@ -32,9 +32,9 @@ const LogInPage = () => {
   );
 
   useEffect(() => {
-    if (callback?.callbackUrl && context?.settings.client_key) {
+    if (callback?.callbackUrl && context?.settings.api_key) {
       setAuthUrl(
-        `https://trello.com/1/authorize?expiration=never&name=deskpro&scope=read&key=${context?.settings.client_key}&callback_method=fragment&return_url=${callback?.callbackUrl}`
+        `https://trello.com/1/authorize?expiration=never&name=deskpro&scope=read&key=${context?.settings.api_key}&callback_method=fragment&return_url=${callback?.callbackUrl}`
       );
     }
   }, [callback, context?.settings]);

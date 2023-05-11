@@ -1,23 +1,23 @@
-Trello App Setup
-===
+# Trello App Setup
 
-To install the Trello app you must first get your client key. To do this, login to your Trello account and go to [https://trello.com/app-key](https://trello.com/app-key).
+To install the Trello app you must first get your API Key. To do this, login to your Trello account and go to [https://trello.com/power-ups/admin](https://trello.com/power-ups/admin).
 
-At the top of this page you'll see your client **key**, make a copy of this and store it somewhere safe.
+You'll see a button labelled New, click it to create the Integration.
 
-[![](/docs/assets/setup/trello-setup-01.png)](/docs/assets/setup/trello-setup-01.png)
+[![](/docs/assets/setup/trello-setup-0.png)](/docs/assets/setup/trello-setup-0.png)
 
-Next, we'll need to provide Trello with your Deskpro URL. Go down to the "Allowed Origins" section and 
-enter Deskpro URL in the **New Allowed Origin** field.
+Fill in the required information, making sure to the workspace you'd like to have access to.
 
-[![](/docs/assets/setup/trello-setup-02.png)](/docs/assets/setup/trello-setup-02.png)
+[![](/docs/assets/setup/trello-setup-1.png)](/docs/assets/setup/trello-setup-1.png)
+
+Next, we'll need to provide Trello with your Deskpro URL. Click the integration you just created, and click on API key underneath the name. Enter your Deskpro URL in the "Allowed Origins" field.
+
+[![](/docs/assets/setup/trello-setup-2.png)](/docs/assets/setup/trello-setup-2.png)
 
 Click Submit to add the new allowed origin.
 
-Head back over to Deskpro and in the **Settings** tab of the app, enter the client key you copied in the first step and 
-paste it into the "Client Key" field.
-
-[![](/docs/assets/setup/trello-setup-03.png)](/docs/assets/setup/trello-setup-03.png) 
+Head back over to Deskpro and in the **Settings** tab of the app, enter the API Key you copied in the first step and
+paste it into the "API Key" field.
 
 To configure who can see and use the Trello app, head to the "Permissions" tab and select those users and/or groups you'd like to have access.
 
