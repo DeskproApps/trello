@@ -7,8 +7,11 @@ import {
 } from "@deskpro/app-sdk";
 import { AnchorButton } from "../components/common";
 import { useEffect, useState } from "react";
+import { useStore } from "../context/StoreProvider/hooks";
 
 const LogInPage = () => {
+  const [, dispatch] = useStore();
+
   const [callback, setCallback] = useState<OAuth2CallbackUrl | null>(null);
   const [authUrl, setAuthUrl] = useState<string | null>(null);
   const [isAuthing, setIsAuthing] = useState(false);
@@ -21,7 +24,7 @@ const LogInPage = () => {
       (async () => {
         const callback: OAuth2CallbackUrl = await client
           .oauth2()
-          .getCallbackUrl("auth", /#token=(?<token>.*)&?/, {
+          .getCallbackUrl("token", /#token=(?<token>.*)&?/, {
             pollInterval: 2000,
           });
 
@@ -43,13 +46,16 @@ const LogInPage = () => {
     (async () => {
       setIsAuthing(true);
 
-      if (callback?.poll) {
+      if (client && callback?.poll) {
         // let's remove any previous tokens
-        await client?.deleteUserState("oauth2/auth");
+        await client.deleteUserState("oauth2/token");
 
         await callback.poll();
 
         setIsAuthing(false);
+
+        dispatch({ type: "setAuth", isAuth: true });
+        dispatch({ type: "changePage", page: "home" });
       }
     })();
   };

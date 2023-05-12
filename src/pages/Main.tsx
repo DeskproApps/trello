@@ -41,9 +41,6 @@ export const Main = () => {
     );
 
     useDeskproAppEvents({
-        onShow: () => {
-            client && setTimeout(() => client.resize(), 200);
-        },
         onChange: (context: Context) => {
             context && dispatch({ type: "loadContext", context });
         },
