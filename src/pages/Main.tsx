@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import { match } from "ts-pattern";
 import { useDebouncedCallback } from "use-debounce";
 import {
     Context,
     TargetAction,
+    useDeskproElements,
     useDeskproAppClient,
     useDeskproAppEvents,
 } from "@deskpro/app-sdk";
@@ -18,6 +18,8 @@ import { LinkCardPage } from "./LinkCard";
 import { ViewCardPage } from "./ViewCard";
 import { EditCardPage } from "./EditCard";
 import { AddCommentPage } from "./AddComment";
+import { AdminPage } from "./Admin";
+import { LoadingAppPage } from "./LoadingApp";
 import { ErrorBlock } from "../components/common";
 
 export const Main = () => {
@@ -75,37 +77,20 @@ export const Main = () => {
         onTargetAction: (a) => debounceTargetAction(a as TargetAction),
     }, [client]);
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
-
-        client?.deregisterElement("trelloRefreshButton");
-        client?.deregisterElement("trelloPlusButton");
-        client?.deregisterElement("trelloHomeButton");
-        client?.deregisterElement("trelloExternalCtaLink");
-        client?.deregisterElement("trelloMenu");
-
-        client?.registerElement("trelloRefreshButton", {
-            type: "refresh_button"
-        });
+    useDeskproElements(({ clearElements, registerElement }) => {
+        clearElements();
+        registerElement("trelloRefreshButton", { type: "refresh_button" });
     }, [client]);
 
-    useEffect(() => {
-        dispatch({ type: "changePage", page: !state.isAuth ? "log_in" : "home" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.isAuth]);
-
-    const page = !state.isAuth
-        ? <LogInPage />
-        : match(state.page)
-            .with("home", () => <HomePage />)
-            .with("log_in", () => <LogInPage />)
-            .with("link_card", () => <LinkCardPage />)
-            .with("view_card", () => <ViewCardPage />)
-            .with("edit_card", () => <EditCardPage />)
-            .with("add_comment", () => <AddCommentPage />)
-            .otherwise(() => <LogInPage />);
+    const page = match(state.page)
+        .with("home", () => <HomePage />)
+        .with("log_in", () => <LogInPage />)
+        .with("link_card", () => <LinkCardPage />)
+        .with("view_card", () => <ViewCardPage />)
+        .with("edit_card", () => <EditCardPage />)
+        .with("add_comment", () => <AddCommentPage />)
+        .with("admin/callback", () => <AdminPage/>)
+        .otherwise(() => <LoadingAppPage />);
 
     return (
         <>

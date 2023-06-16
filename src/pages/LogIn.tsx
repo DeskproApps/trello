@@ -1,12 +1,13 @@
+import { useEffect, useState, useCallback } from "react";
 import {
   H3,
+  Title,
   OAuth2CallbackUrl,
   useDeskproAppClient,
   useDeskproLatestAppContext,
   useInitialisedDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { AnchorButton } from "../components/common";
-import { useEffect, useState } from "react";
+import { AnchorButton, Container } from "../components/common";
 import { useStore } from "../context/StoreProvider/hooks";
 
 const LogInPage = () => {
@@ -42,37 +43,38 @@ const LogInPage = () => {
     }
   }, [callback, context?.settings]);
 
-  const poll = () => {
-    (async () => {
-      setIsAuthing(true);
+  const poll = useCallback(() => {
+    if (!client || !callback?.poll) {
+      return;
+    }
 
-      if (client && callback?.poll) {
-        // let's remove any previous tokens
-        await client.deleteUserState("oauth2/token");
+    setTimeout(() => setIsAuthing(true), 1000);
 
-        await callback.poll();
-
-        setIsAuthing(false);
-
-        dispatch({ type: "setAuth", isAuth: true });
-        dispatch({ type: "changePage", page: "home" });
-      }
-    })();
-  };
+    client.deleteUserState("oauth2/token")
+        .then(callback.poll)
+        .then(() => {
+            setIsAuthing(false);
+            dispatch({ type: "setAuth", isAuth: true });
+            dispatch({ type: "changePage", page: "home" });
+        })
+        .catch((error) => dispatch({ type: "error", error }));
+  }, [client, callback, dispatch]);
 
   return (
-    <>
-      <H3>Log into your Trello Account</H3>
+    <Container>
+      <Title as={H3} title="Log into your Trello Account" />
       {authUrl && (
         <AnchorButton
+          intent="secondary"
           text="Sign In"
-          href={authUrl}
           target="_blank"
-          loading={isAuthing}
+          href={authUrl}
           onClick={poll}
+          loading={isAuthing}
+          disabled={isAuthing}
         />
       )}
-    </>
+    </Container>
   );
 };
 

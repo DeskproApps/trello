@@ -3,7 +3,6 @@ import { StoreProvider } from "./context/StoreProvider";
 import { Main } from "./pages/Main";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import "./App.css";
 
 import "iframe-resizer/js/iframeResizer.contentWindow.js";
 import "flatpickr/dist/themes/light.css";
