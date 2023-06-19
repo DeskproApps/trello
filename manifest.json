@@ -3,7 +3,7 @@
   "title": "Trello",
   "description": "Integrate Trello with your helpdesk to improve your management of your tasks",
   "appStoreUrl": "https://www.deskpro.com/product-embed/apps/trello",
-  "version": "1.0.24",
+  "version": "1.0.21",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
@@ -32,9 +32,9 @@
       "order": 10
     },
     "callback_url": {
-      "title": "Callback URL",
+      "title": "Callback URL Origin",
       "type": "app_embedded",
-      "options": { "entrypoint": "https://localhost:3001/?page=admin/callback" },
+      "options": { "entrypoint": "?page=admin/callback" },
       "isRequired": false,
       "isBackendOnly": true,
       "order": 20

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, FC } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -7,7 +7,7 @@ import {
   CopyToClipboardInput,
   useInitialisedDeskproAppClient,
 } from "@deskpro/app-sdk";
-import type { FC } from "react";
+import { getUrlOrigin } from "../utils";
 
 const Description = styled(P1)`
   margin-top: 8px;
@@ -18,6 +18,7 @@ const Description = styled(P1)`
 const AdminPage: FC = () => {
   const [callbackUrl, setCallbackUrl] = useState<string|null>(null);
   const key = useMemo(() => uuidv4(), []);
+  const origin = useMemo(() => getUrlOrigin(callbackUrl), [callbackUrl]);
 
   useInitialisedDeskproAppClient((client) => {
     client.oauth2()
@@ -25,14 +26,14 @@ const AdminPage: FC = () => {
       .then(({ callbackUrl }) => setCallbackUrl(callbackUrl));
   }, [key]);
 
-  if (!callbackUrl) {
+  if (!origin) {
     return (<LoadingSpinner/>);
   }
 
   return (
     <>
-      <CopyToClipboardInput value={callbackUrl} />
-      <Description>The callback URL will be required during Trello app setup</Description>
+      <CopyToClipboardInput value={origin} />
+      <Description>The callback URL origin will be required during Trello app setup</Description>
     </>
   );
 };
