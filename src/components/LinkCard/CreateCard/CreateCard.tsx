@@ -35,7 +35,7 @@ import {
     createCardCommentService,
     getMembersOfOrganizationService,
 } from "../../../services/trello";
-import { setEntityCardService } from "../../../services/entityAssociation";
+import { setEntityCardService } from "../../../services/deskpro";
 import { Member, Board, List, Organization } from "../../../services/trello/types";
 import {
     Label,

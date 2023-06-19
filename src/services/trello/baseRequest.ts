@@ -1,6 +1,6 @@
 import { proxyFetch } from "@deskpro/app-sdk";
 import { Request } from "./types";
-import { BASE_URL, requireQeuryParams } from "./constants";
+import { BASE_URL, requireQeuryParams } from "../../constants";
 import { getQueryParams } from "../../utils";
 
 const baseRequest: Request = async (client, {

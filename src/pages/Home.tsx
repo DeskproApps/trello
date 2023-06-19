@@ -5,7 +5,7 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { useSetAppTitle } from "../hooks";
-import { getEntityCardListService } from "../services/entityAssociation";
+import { getEntityCardListService } from "../services/deskpro";
 import { getCardService } from "../services/trello";
 import { CardType } from "../services/trello/types";
 import { Loading, CardInfo, NoFound, InputSearch } from "../components/common";

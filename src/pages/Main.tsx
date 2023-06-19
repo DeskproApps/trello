@@ -9,7 +9,7 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload, ReplyBoxNoteSelection } from "../context/StoreProvider/types";
-import { deleteEntityCardService } from "../services/entityAssociation";
+import { deleteEntityCardService } from "../services/deskpro";
 import { createCardCommentService, logoutService } from "../services/trello";
 import { useSetBadgeCount } from "../hooks";
 import { HomePage } from "./Home";

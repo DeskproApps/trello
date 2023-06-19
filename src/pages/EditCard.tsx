@@ -26,7 +26,7 @@ import {
     useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { setEntityCardService } from "../services/entityAssociation";
+import { setEntityCardService } from "../services/deskpro";
 import { useStore } from "../context/StoreProvider/hooks";
 import {
     getCardService,

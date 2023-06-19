@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import get from "lodash/get";
 import {
   H3,
   Title,
@@ -9,6 +10,7 @@ import {
 } from "@deskpro/app-sdk";
 import { AnchorButton, Container } from "../components/common";
 import { useStore } from "../context/StoreProvider/hooks";
+import { getQueryParams } from "../utils";
 
 const LogInPage = () => {
   const [, dispatch] = useStore();
@@ -16,9 +18,9 @@ const LogInPage = () => {
   const [callback, setCallback] = useState<OAuth2CallbackUrl | null>(null);
   const [authUrl, setAuthUrl] = useState<string | null>(null);
   const [isAuthing, setIsAuthing] = useState(false);
-
   const { context } = useDeskproLatestAppContext();
   const { client } = useDeskproAppClient();
+  const apiKey = useMemo(() => get(context, ["settings", "api_key"]), [context])
 
   useInitialisedDeskproAppClient(
     (client) => {
@@ -36,12 +38,17 @@ const LogInPage = () => {
   );
 
   useEffect(() => {
-    if (callback?.callbackUrl && context?.settings.api_key) {
-      setAuthUrl(
-        `https://trello.com/1/authorize?expiration=never&name=deskpro&scope=read,write&key=${context?.settings.api_key}&callback_method=fragment&return_url=${callback?.callbackUrl}`
-      );
+    if (callback?.callbackUrl && apiKey) {
+      setAuthUrl(`https://trello.com/1/authorize?${getQueryParams({
+        expiration: "never",
+        name: "deskpro",
+        key: apiKey,
+        callback_method: "fragment",
+        return_url: callback?.callbackUrl,
+        scope: ["read","write"].join(","),
+      })}`);
     }
-  }, [callback, context?.settings]);
+  }, [callback, apiKey]);
 
   const poll = useCallback(() => {
     if (!client || !callback?.poll) {
