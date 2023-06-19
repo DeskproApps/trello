@@ -1,6 +1,12 @@
-import {FC, useEffect, useState} from "react";
+import { FC, useEffect, useState } from "react";
+import get from "lodash/get";
 import cloneDeep from "lodash/cloneDeep";
-import { useDeskproAppClient } from "@deskpro/app-sdk";
+import {
+    LoadingSpinner,
+    useDeskproElements,
+    useDeskproAppClient,
+} from "@deskpro/app-sdk";
+import { useSetAppTitle } from "../hooks";
 import { useStore } from "../context/StoreProvider/hooks";
 import {
     getCardService,
@@ -9,87 +15,55 @@ import {
 } from "../services/trello";
 import { CardType, Comment, ChecklistItem } from "../services/trello/types";
 import { ViewCard } from "../components/ViewCard";
-import { Loading, NoFound } from "../components/common";
+import { Container, NoFound } from "../components/common";
 
 const ViewCardPage: FC = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const [card, setCard] = useState<CardType | undefined>(undefined);
     const [comments, setComments] = useState<Comment[]>();
-
     const [loading, setLoading] = useState<boolean>(true);
+    const cardId = get(state, ["pageParams", "cardId"]);
+    const ticketId = get(state, ["context", "data", "ticket", "id"]);
+    const shortUrl = get(card, ["shortUrl"]);
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
+    useSetAppTitle("View Card");
 
-        client?.deregisterElement("trelloPlusButton");
-        client?.deregisterElement("trelloHomeButton");
-        client?.deregisterElement("trelloExternalCtaLink");
-        client?.deregisterElement("trelloMenu");
-        client?.deregisterElement("trelloEditButton");
-
-        client?.registerElement("trelloHomeButton", {
+    useDeskproElements(({ clearElements, registerElement }) => {
+        clearElements();
+        registerElement("trelloRefreshButton", { type: "refresh_button" });
+        registerElement("trelloHomeButton", {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
         });
-    }, [client]);
 
-    useEffect(() => {
-        if (!client || !card?.shortLink) {
-            return;
-        }
-
-        client.setTitle("View Card");
-    }, [client, card?.shortLink]);
-
-    useEffect(() => {
-        if (!client || !state?.pageParams?.cardId) {
-            return;
-        }
-
-        client?.registerElement("trelloEditButton", {
-            type: "edit_button",
-            payload: {
-                type: "changePage",
-                page: "edit_card",
-                params: { cardId: state.pageParams.cardId }
-            },
-        });
-    }, [client, state?.pageParams?.cardId]);
-
-    useEffect(() => {
-        if (!client || !state?.pageParams?.cardId || !state.context?.data.ticket.id) {
-            return;
-        }
-
-        client?.registerElement("trelloMenu", {
-            type: "menu",
-            items: [{
-                title: "Unlink Ticket",
+        if (cardId) {
+            registerElement("trelloEditButton", {
+                type: "edit_button",
                 payload: {
-                    type: "unlinkTicket",
-                    cardId: state.pageParams.cardId,
-                    ticketId: state.context.data.ticket.id,
+                    type: "changePage",
+                    page: "edit_card",
+                    params: { cardId }
                 },
-            }],
-        });
-    }, [client, state?.pageParams?.cardId, state.context?.data.ticket.id]);
-
-    useEffect(() => {
-        if (!client) {
-            return;
+            });
         }
-
-        if (card?.shortUrl) {
-            client?.registerElement("trelloExternalCtaLink", {
+        if (cardId && ticketId) {
+            registerElement("trelloMenu", {
+                type: "menu",
+                items: [{
+                    title: "Unlink Ticket",
+                    payload: { type: "unlinkTicket", cardId, ticketId },
+                }],
+            });
+        }
+        if (shortUrl) {
+            registerElement("trelloExternalCtaLink", {
                 type: "cta_external_link",
-                url: card.shortUrl,
+                url: shortUrl,
                 hasIcon: true,
             });
         }
-    }, [client, card?.shortUrl]);
+    }, [cardId, ticketId, shortUrl]);
 
     useEffect(() => {
         if (!client || !state?.pageParams?.cardId) {
@@ -147,16 +121,22 @@ const ViewCardPage: FC = () => {
         return (<NoFound/>);
     }
 
-    return loading
-        ? (<Loading/>)
-        : (
+    if (loading) {
+        return (
+            <LoadingSpinner/>
+        );
+    }
+
+    return (
+        <Container>
             <ViewCard
                 {...card as CardType}
                 comments={comments}
                 onAddNewCommentPage={onAddNewCommentPage}
                 onChangeChecklistItem={onChangeChecklistItem}
             />
-        );
+        </Container>
+    );
 };
 
 export { ViewCardPage };

@@ -1,6 +1,8 @@
 import { FC, useEffect, useState, Fragment } from "react";
 import {
+    LoadingSpinner,
     HorizontalDivider,
+    useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
@@ -8,7 +10,7 @@ import { useSetAppTitle } from "../hooks";
 import { getEntityCardListService } from "../services/deskpro";
 import { getCardService } from "../services/trello";
 import { CardType } from "../services/trello/types";
-import { Loading, CardInfo, NoFound, InputSearch } from "../components/common";
+import { CardInfo, NoFound, InputSearch, Container } from "../components/common";
 
 const getFilteredCards = (cards: CardType[], searchValue: string) => {
     let filteredCards = [];
@@ -35,22 +37,14 @@ const HomePage: FC = () => {
 
     useSetAppTitle("Trello Cards");
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
-
-        client?.deregisterElement("trelloPlusButton");
-        client?.deregisterElement("trelloHomeButton");
-        client?.deregisterElement("trelloExternalCtaLink");
-        client?.deregisterElement("trelloMenu");
-        client?.deregisterElement("trelloEditButton");
-
-        client?.registerElement("trelloPlusButton", {
+    useDeskproElements(({ clearElements, registerElement }) => {
+        clearElements();
+        registerElement("trelloRefreshButton", { type: "refresh_button" });
+        registerElement("trelloPlusButton", {
             type: "plus_button",
             payload: { type: "changePage", page: "link_card" },
         });
-        client?.registerElement("trelloMenu", {
+        registerElement("trelloMenu", {
             type: "menu",
             items: [{
                 title: "Log Out",
@@ -59,7 +53,7 @@ const HomePage: FC = () => {
                 },
             }],
         });
-    }, [client]);
+    });
 
     useEffect(() => {
         if (!client || !ticketId) {
@@ -100,31 +94,35 @@ const HomePage: FC = () => {
         });
     };
 
-    return loading
-        ? (<Loading/>)
-        : (
-            <>
-                <InputSearch
-                    value={searchCard}
-                    onClear={() => setSearchCard("")}
-                    onChange={(e) => setSearchCard(e.target.value)}
-                />
-                <HorizontalDivider style={{ marginBottom: 9 }}/>
-                {state.cards.length === 0
-                    ? (<NoFound/>)
-                    : getFilteredCards(state.cards, searchCard).map(({ id, ...card }) => (
-                        <Fragment key={id}>
-                            <CardInfo
-                                id={id}
-                                onTitleClick={() => onPageChangeToViewCard(id)}
-                                {...card}
-                            />
-                            <HorizontalDivider style={{ marginBottom: 9 }}/>
-                        </Fragment>
-                    ))
-                }
-            </>
-        )
+    if (loading) {
+        return (
+            <LoadingSpinner/>
+        );
+    }
+
+    return (
+        <Container>
+            <InputSearch
+                value={searchCard}
+                onClear={() => setSearchCard("")}
+                onChange={(e) => setSearchCard(e.target.value)}
+            />
+            <HorizontalDivider style={{ marginBottom: 9 }}/>
+            {state.cards.length === 0
+                ? (<NoFound/>)
+                : getFilteredCards(state.cards, searchCard).map(({ id, ...card }) => (
+                    <Fragment key={id}>
+                        <CardInfo
+                            id={id}
+                            onTitleClick={() => onPageChangeToViewCard(id)}
+                            {...card}
+                        />
+                        <HorizontalDivider style={{ marginBottom: 9 }}/>
+                    </Fragment>
+                ))
+            }
+        </Container>
+    )
 };
 
 export { HomePage };

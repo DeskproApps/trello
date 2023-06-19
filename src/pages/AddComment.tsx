@@ -1,9 +1,10 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import isEmpty from "lodash/isEmpty";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import {
     Stack,
+    useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
@@ -12,7 +13,7 @@ import {
     createAttachService,
     createCardCommentService,
 } from "../services/trello";
-import { Button, Label, TextArea, Attach } from "../components/common";
+import { Button, Label, TextArea, Attach, Container } from "../components/common";
 
 const validationSchema = yup.object().shape({
     comment: yup.string(),
@@ -71,59 +72,53 @@ const AddCommentPage: FC = () => {
 
     useSetAppTitle("Add Comment");
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
-
-        client?.deregisterElement("trelloPlusButton");
-        client?.deregisterElement("trelloHomeButton");
-        client?.deregisterElement("trelloExternalCtaLink");
-        client?.deregisterElement("trelloMenu");
-        client?.deregisterElement("trelloEditButton");
-
-        client?.registerElement("trelloHomeButton", {
+    useDeskproElements(({ clearElements, registerElement }) => {
+        clearElements();
+        registerElement("trelloRefreshButton", { type: "refresh_button" });
+        registerElement("trelloHomeButton", {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
         });
-    }, [client]);
+    });
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Label htmlFor="comment" label="New comment" marginBottom={17}>
-                <TextArea
-                    minWidth="auto"
-                    placeholder="Enter comment"
-                    {...getFieldProps("comment")}
-                />
-            </Label>
+        <Container>
+            <form onSubmit={handleSubmit}>
+                <Label htmlFor="comment" label="New comment" marginBottom={17}>
+                    <TextArea
+                        minWidth="auto"
+                        placeholder="Enter comment"
+                        {...getFieldProps("comment")}
+                    />
+                </Label>
 
-            <Label label="Attachments">
-                <Attach
-                    onFiles={(files) => {
-                        setFieldValue("files", files);
-                    }}
-                />
-            </Label>
+                <Label label="Attachments">
+                    <Attach
+                        onFiles={(files) => {
+                            setFieldValue("files", files);
+                        }}
+                    />
+                </Label>
 
-            <Stack justify="space-between">
-                <Button
-                    type="submit"
-                    text="Save"
-                    disabled={isSubmitting}
-                    loading={isSubmitting}
-                />
-                <Button
-                    text="Cancel"
-                    intent="tertiary"
-                    onClick={() => dispatch({
-                        type: "changePage",
-                        page: "view_card",
-                        params: { cardId },
-                    })}
-                />
-            </Stack>
-        </form>
+                <Stack justify="space-between">
+                    <Button
+                        type="submit"
+                        text="Save"
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                    />
+                    <Button
+                        text="Cancel"
+                        intent="tertiary"
+                        onClick={() => dispatch({
+                            type: "changePage",
+                            page: "view_card",
+                            params: { cardId },
+                        })}
+                    />
+                </Stack>
+            </form>
+        </Container>
     );
 };
 

@@ -4,6 +4,7 @@ import {
   H3,
   Title,
   OAuth2CallbackUrl,
+  useDeskproElements,
   useDeskproAppClient,
   useDeskproLatestAppContext,
   useInitialisedDeskproAppClient,
@@ -66,6 +67,11 @@ const LogInPage = () => {
         })
         .catch((error) => dispatch({ type: "error", error }));
   }, [client, callback, dispatch]);
+
+  useDeskproElements(({ clearElements, registerElement }) => {
+    clearElements();
+    registerElement("trelloRefreshButton", { type: "refresh_button" });
+  });
 
   return (
     <Container>

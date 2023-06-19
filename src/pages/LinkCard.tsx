@@ -1,33 +1,27 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import {
     TwoButtonGroup,
+    useDeskproElements,
     TwoButtonGroupProps,
-    useDeskproAppClient,
 } from "@deskpro/app-sdk";
+import { useSetAppTitle } from "../hooks";
+import { Container } from "../components/common";
 import { FindCard, CreateCard } from "../components/LinkCard";
 
 const LinkCardPage: FC = () => {
     const [selected, setSelected] = useState<TwoButtonGroupProps["selected"]>("one");
-    const { client } = useDeskproAppClient();
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
+    useSetAppTitle("Link Cards");
 
-        client?.deregisterElement("trelloPlusButton");
-        client?.deregisterElement("trelloHomeButton");
-        client?.deregisterElement("trelloExternalCtaLink");
-        client?.deregisterElement("trelloMenu");
-        client?.deregisterElement("trelloEditButton");
-
-        client?.setTitle("Link Cards");
-        client?.registerElement("trelloHomeButton", {
+    useDeskproElements(({ clearElements, registerElement }) => {
+        clearElements();
+        registerElement("trelloRefreshButton", { type: "refresh_button" });
+        registerElement("trelloHomeButton", {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
         });
-        client?.registerElement("trelloMenu", {
+        registerElement("trelloMenu", {
             type: "menu",
             items: [{
                 title: "Log Out",
@@ -36,12 +30,12 @@ const LinkCardPage: FC = () => {
                 },
             }],
         });
-    }, [client]);
+    });
 
     const onChangeSelected = (active: TwoButtonGroupProps["selected"]) => () => setSelected(active);
 
     return (
-        <>
+        <Container>
             <TwoButtonGroup
                 selected={selected}
                 oneIcon={faSearch}
@@ -55,7 +49,7 @@ const LinkCardPage: FC = () => {
                 {selected === "one" && <FindCard/>}
                 {selected === "two" && <CreateCard/>}
             </>
-        </>
+        </Container>
     );
 };
 

@@ -3,7 +3,6 @@ import { useDebouncedCallback } from "use-debounce";
 import {
     Context,
     TargetAction,
-    useDeskproElements,
     useDeskproAppClient,
     useDeskproAppEvents,
 } from "@deskpro/app-sdk";
@@ -22,7 +21,7 @@ import { AdminPage } from "./Admin";
 import { LoadingAppPage } from "./LoadingApp";
 import { ErrorBlock } from "../components/common";
 
-export const Main = () => {
+const Main = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
 
@@ -50,11 +49,14 @@ export const Main = () => {
         // @ts-ignore
         onElementEvent(id: string, type: string, payload?: AppElementPayload) {
             if (payload?.type === "changePage") {
-                dispatch({type: "changePage", page: payload.page, params: payload.params})
+                dispatch({ type: "changePage", page: payload.page, params: payload.params });
             } else if (payload?.type === "logout") {
                 if (client) {
                     logoutService(client)
-                        .then(() => dispatch({ type: "setAuth", isAuth: false }))
+                        .then(() => {
+                            dispatch({ type: "setAuth", isAuth: false });
+                            dispatch({ type: "changePage", page: "log_in" });
+                        })
                         .catch((error) => dispatch({ type: "error", error }));
                 }
             } else if (payload?.type === "unlinkTicket") {
@@ -77,11 +79,6 @@ export const Main = () => {
         onTargetAction: (a) => debounceTargetAction(a as TargetAction),
     }, [client]);
 
-    useDeskproElements(({ clearElements, registerElement }) => {
-        clearElements();
-        registerElement("trelloRefreshButton", { type: "refresh_button" });
-    }, [client]);
-
     const page = match(state.page)
         .with("home", () => <HomePage />)
         .with("log_in", () => <LogInPage />)
@@ -99,3 +96,5 @@ export const Main = () => {
         </>
     );
 };
+
+export { Main };
