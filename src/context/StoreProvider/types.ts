@@ -14,7 +14,9 @@ export type Page =
     | "link_card"
     | "view_card"
     | "edit_card"
-    | "add_comment";
+    | "add_comment"
+    | "admin/callback"
+;
 
 export type PageParams = {
     activeTab?: "find" | "create",

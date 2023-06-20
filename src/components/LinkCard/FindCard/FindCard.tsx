@@ -12,7 +12,7 @@ import {
     InputSearch,
     SingleSelect,
 } from "../../common";
-import { setEntityCardService } from "../../../services/entityAssociation";
+import { setEntityCardService } from "../../../services/deskpro";
 import {
     searchByCardService,
     createCardCommentService,

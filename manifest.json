@@ -28,7 +28,16 @@
       "title": "API Key",
       "type": "string",
       "isRequired": true,
-      "isBackendOnly": false
+      "isBackendOnly": false,
+      "order": 10
+    },
+    "callback_url": {
+      "title": "Callback URL Origin",
+      "type": "app_embedded",
+      "options": { "entrypoint": "?page=admin/callback" },
+      "isRequired": false,
+      "isBackendOnly": true,
+      "order": 20
     }
   },
   "entityAssociations": {

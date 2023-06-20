@@ -1,5 +1,5 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
-import { TRELLO_ENTITY } from "./constants";
+import { TRELLO_ENTITY } from "../../constants";
 import { CardType } from "../trello/types";
 
 const deleteEntityCardService = (

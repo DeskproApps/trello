@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { match } from "ts-pattern";
 import { useDebouncedCallback } from "use-debounce";
 import {
@@ -9,7 +8,7 @@ import {
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { AppElementPayload, ReplyBoxNoteSelection } from "../context/StoreProvider/types";
-import { deleteEntityCardService } from "../services/entityAssociation";
+import { deleteEntityCardService } from "../services/deskpro";
 import { createCardCommentService, logoutService } from "../services/trello";
 import { useSetBadgeCount } from "../hooks";
 import { HomePage } from "./Home";
@@ -18,9 +17,11 @@ import { LinkCardPage } from "./LinkCard";
 import { ViewCardPage } from "./ViewCard";
 import { EditCardPage } from "./EditCard";
 import { AddCommentPage } from "./AddComment";
+import { AdminPage } from "./Admin";
+import { LoadingAppPage } from "./LoadingApp";
 import { ErrorBlock } from "../components/common";
 
-export const Main = () => {
+const Main = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
 
@@ -48,11 +49,14 @@ export const Main = () => {
         // @ts-ignore
         onElementEvent(id: string, type: string, payload?: AppElementPayload) {
             if (payload?.type === "changePage") {
-                dispatch({type: "changePage", page: payload.page, params: payload.params})
+                dispatch({ type: "changePage", page: payload.page, params: payload.params });
             } else if (payload?.type === "logout") {
                 if (client) {
                     logoutService(client)
-                        .then(() => dispatch({ type: "setAuth", isAuth: false }))
+                        .then(() => {
+                            dispatch({ type: "setAuth", isAuth: false });
+                            dispatch({ type: "changePage", page: "log_in" });
+                        })
                         .catch((error) => dispatch({ type: "error", error }));
                 }
             } else if (payload?.type === "unlinkTicket") {
@@ -75,37 +79,15 @@ export const Main = () => {
         onTargetAction: (a) => debounceTargetAction(a as TargetAction),
     }, [client]);
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
-
-        client?.deregisterElement("trelloRefreshButton");
-        client?.deregisterElement("trelloPlusButton");
-        client?.deregisterElement("trelloHomeButton");
-        client?.deregisterElement("trelloExternalCtaLink");
-        client?.deregisterElement("trelloMenu");
-
-        client?.registerElement("trelloRefreshButton", {
-            type: "refresh_button"
-        });
-    }, [client]);
-
-    useEffect(() => {
-        dispatch({ type: "changePage", page: !state.isAuth ? "log_in" : "home" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.isAuth]);
-
-    const page = !state.isAuth
-        ? <LogInPage />
-        : match(state.page)
-            .with("home", () => <HomePage />)
-            .with("log_in", () => <LogInPage />)
-            .with("link_card", () => <LinkCardPage />)
-            .with("view_card", () => <ViewCardPage />)
-            .with("edit_card", () => <EditCardPage />)
-            .with("add_comment", () => <AddCommentPage />)
-            .otherwise(() => <LogInPage />);
+    const page = match(state.page)
+        .with("home", () => <HomePage />)
+        .with("log_in", () => <LogInPage />)
+        .with("link_card", () => <LinkCardPage />)
+        .with("view_card", () => <ViewCardPage />)
+        .with("edit_card", () => <EditCardPage />)
+        .with("add_comment", () => <AddCommentPage />)
+        .with("admin/callback", () => <AdminPage/>)
+        .otherwise(() => <LoadingAppPage />);
 
     return (
         <>
@@ -114,3 +96,5 @@ export const Main = () => {
         </>
     );
 };
+
+export { Main };
