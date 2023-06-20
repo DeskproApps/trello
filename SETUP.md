@@ -6,24 +6,22 @@ You'll see a button labelled __New__, click it to create the Integration.
 
 [![](./docs/assets/setup/trello-setup-01.png)](/docs/assets/setup/trello-setup-01.png)
 
-Click "Generate a new API key"
+Next fill in the required information:
+
+* __New Power-Up or Integration__: this can be anything, something like "Deskpro App" will do
+* __Workspace__: making sure to select the workspace you'd like to give access to
+* __Iframe connector URL__: can leave empty
+* __Email, Support contact, Author__: Contact info for you and your support
+
+[![](./docs/assets/setup/trello-setup-04.png)](/docs/assets/setup/trello-setup-04.png)
+
+When all fields are filled in, click "Create" to create a new Integration, and then we need to "Generate a new API key"
 
 [![](./docs/assets/setup/trello-setup-02.png)](/docs/assets/setup/trello-setup-02.png)
 
 Confirm our choice
 
 [![](./docs/assets/setup/trello-setup-03.png)](/docs/assets/setup/trello-setup-03.png)
-
-Next fill in the required information:
-
-* __New Power-Up or Integration__: this can be anything, something like "Deskpro App" will do
-* __Workspace__: making sure to the workspace you'd like to have access to
-* __Iframe connector URL__: might be empty
-* __Email, Support contact, Author__: Your data or your support.
-
-[![](./docs/assets/setup/trello-setup-04.png)](/docs/assets/setup/trello-setup-04.png)
-
-When all fields are filled in, click "Create" to create a new Integration
 
 Next, we'll need to provide Trello with your Deskpro URL. Click the integration you just created, and navigate to the "API key". Enter your Deskpro URL in the "Allowed Origins" field (_You can copy it in the Trello settings on the settings tab_).
 
