@@ -1,12 +1,15 @@
 import { FC, useState, useEffect } from "react";
+import noop from "lodash/noop";
 import concat from "lodash/concat";
 import isEmpty from "lodash/isEmpty";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import {
     faUser,
     faPlus,
     faCheck,
+    faSearch,
     faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -21,33 +24,37 @@ import {
     Pill,
     Stack,
     Dropdown,
+    LoadingSpinner,
+    TwoButtonGroup,
     DropdownValueType,
     Label as LabelUI,
     Button as ButtonUI,
     useDeskproAppTheme,
+    useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useStore } from "../../../context/StoreProvider/hooks";
+import { useStore } from "../context/StoreProvider/hooks";
 import {
     createCardService,
     getCurrentMemberService,
     getLabelsOnBoardService,
     createCardCommentService,
     getMembersOfOrganizationService,
-} from "../../../services/trello";
-import { setEntityCardService } from "../../../services/deskpro";
-import { Member, Board, List, Organization } from "../../../services/trello/types";
+} from "../services/trello";
+import { setEntityCardService } from "../services/deskpro";
+import { Member, Board, List, Organization } from "../services/trello/types";
 import {
     Label,
     Button,
-    Loading,
     TextArea,
     DateField,
+    Container,
     SingleSelect,
     EmptyInlineBlock,
     TextBlockWithLabel,
-} from "../../common";
-import { getLabelColor, getEntityMetadata } from "../../../utils";
+} from "../components/common";
+import { getLabelColor, getEntityMetadata } from "../utils";
+import { useSetTitle } from "../hooks";
 
 type Option = DropdownValueType<string>;
 
@@ -96,7 +103,8 @@ const getInitValues = () => ({
     members: [],
 });
 
-const CreateCard: FC = () => {
+const CreateCardPage: FC = () => {
+    const navigate = useNavigate();
     const { theme } = useDeskproAppTheme();
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
@@ -130,8 +138,7 @@ const CreateCard: FC = () => {
                 name: values.title,
                 desc: values.description,
                 idList: values.list.value,
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @todo: change to the formatting via date-fns
                 due: !values.dueDate ? "" : values.dueDate.toISOString(),
                 idLabels: values.labels,
                 idMembers: values.members,
@@ -162,9 +169,29 @@ const CreateCard: FC = () => {
                         ),
                     ]);
                 })
-                .then(() => dispatch({ type: "changePage", page: "home" }))
+                .then(() => navigate("/home"))
                 .catch((error) => dispatch({ type: "error", error }));
         }
+    });
+
+    useSetTitle("Link Cards");
+
+    useDeskproElements(({ clearElements, registerElement }) => {
+        clearElements();
+        registerElement("trelloRefreshButton", { type: "refresh_button" });
+        registerElement("trelloHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", path: "/home" }
+        });
+        registerElement("trelloMenu", {
+            type: "menu",
+            items: [{
+                title: "Log Out",
+                payload: {
+                    type: "logout",
+                },
+            }],
+        });
     });
 
     useEffect(() => {
@@ -182,7 +209,6 @@ const CreateCard: FC = () => {
             })
             .finally(() => setLoading(false));
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client]);
 
     useEffect(() => {
@@ -213,7 +239,6 @@ const CreateCard: FC = () => {
             ...member,
             selected: values.members.includes(member.value as never)
         })));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.members])
 
     useEffect(() => {
@@ -282,7 +307,6 @@ const CreateCard: FC = () => {
             setFieldValue("board", resetValue);
             setFieldValue("list", resetValue);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.workspace]);
 
     useEffect(() => {
@@ -319,7 +343,6 @@ const CreateCard: FC = () => {
                 }
             })
             .catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.board.value]);
 
     useEffect(() => {
@@ -327,176 +350,187 @@ const CreateCard: FC = () => {
             ...label,
             selected: values.labels.includes(label.value as never),
         })));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.labels]);
 
     if (loading) {
-        return <Loading/>
+        return <LoadingSpinner/>
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Label htmlFor="title" label="Title" required>
-                <InputWithDisplay
-                    type="text"
-                    id="title"
-                    {...getFieldProps("title")}
-                    error={!!(touched.title && errors.title)}
-                    placeholder="Enter title"
-                    inputsize="small"
+        <Container>
+            <TwoButtonGroup
+                selected="two"
+                oneIcon={faSearch}
+                oneLabel="Find Card"
+                oneOnClick={() => navigate("/link_card")}
+                twoIcon={faPlus}
+                twoLabel="Create Card"
+                twoOnClick={noop}
+            />
+            <form onSubmit={handleSubmit}>
+                <Label htmlFor="title" label="Title" required>
+                    <InputWithDisplay
+                        type="text"
+                        id="title"
+                        {...getFieldProps("title")}
+                        error={!!(touched.title && errors.title)}
+                        placeholder="Enter title"
+                        inputsize="small"
+                    />
+                </Label>
+
+                <SingleSelect
+                    required
+                    label="Workspace"
+                    options={organizations}
+                    value={values.workspace}
+                    searchPlaceholder="Select value"
+                    error={!!(touched.workspace && errors.workspace)}
+                    onChange={(value: Option) => setFieldValue("workspace", value)}
                 />
-            </Label>
 
-            <SingleSelect
-                required
-                label="Workspace"
-                options={organizations}
-                value={values.workspace}
-                searchPlaceholder="Select value"
-                error={!!(touched.workspace && errors.workspace)}
-                onChange={(value: Option) => setFieldValue("workspace", value)}
-            />
-
-            <SingleSelect
-                required
-                label="Board"
-                options={boards}
-                value={values.board}
-                searchPlaceholder="Select value"
-                error={!!(touched.board && errors.board)}
-                onChange={(value: Option) => setFieldValue("board", value)}
-            />
-
-            <SingleSelect
-                required
-                label="List"
-                options={lists}
-                value={values.list}
-                searchPlaceholder="Select value"
-                error={!!(touched.list && errors.list)}
-                onChange={(value: Option) => setFieldValue("list", value)}
-            />
-
-            <Label htmlFor="description" label="Description">
-                <TextArea
-                    minWidth="auto"
-                    placeholder="Enter description"
-                    {...getFieldProps("description")}
+                <SingleSelect
+                    required
+                    label="Board"
+                    options={boards}
+                    value={values.board}
+                    searchPlaceholder="Select value"
+                    error={!!(touched.board && errors.board)}
+                    onChange={(value: Option) => setFieldValue("board", value)}
                 />
-            </Label>
 
-            <DateField
-                id="dueDateSdk"
-                label="Due date"
-                error={!!(touched.dueDate && errors.dueDate)}
-                onChange={(date: [Date]) => setFieldValue("dueDate", date[0])}
-            />
+                <SingleSelect
+                    required
+                    label="List"
+                    options={lists}
+                    value={values.list}
+                    searchPlaceholder="Select value"
+                    error={!!(touched.list && errors.list)}
+                    onChange={(value: Option) => setFieldValue("list", value)}
+                />
 
-            {values.board.value && (
-                <>
-                    <LabelUI htmlFor="labels" label="Labels"/>
+                <Label htmlFor="description" label="Description">
+                    <TextArea
+                        minWidth="auto"
+                        placeholder="Enter description"
+                        {...getFieldProps("description")}
+                    />
+                </Label>
+
+                <DateField
+                    id="dueDateSdk"
+                    label="Due date"
+                    error={!!(touched.dueDate && errors.dueDate)}
+                    onChange={(date: [Date]) => setFieldValue("dueDate", date[0])}
+                />
+
+                {values.board.value && (
+                    <>
+                        <LabelUI htmlFor="labels" label="Labels"/>
+                        <Dropdown
+                            fetchMoreText={"Fetch more"}
+                            autoscrollText={"Autoscroll"}
+                            selectedIcon={faCheck}
+                            externalLinkIcon={faExternalLinkAlt}
+                            placement="bottom-start"
+                            options={labels}
+                            onSelectOption={(option) => {
+                                if (option.value) {
+                                    const newValue = values.labels.includes(option.value as never)
+                                        ? values.labels.filter((labelId) => labelId !== option.value)
+                                        : [...values.labels, option.value]
+
+                                    setFieldValue("labels", newValue);
+                                }
+                            }}
+                            closeOnSelect={false}
+                        >
+                            {({ active, targetProps, targetRef }) => (
+                                <Stack gap={6} wrap="wrap" align="baseline" style={{ marginBottom: 10 }}>
+                                    {/* @ts-ignore */}
+                                    <ButtonUI
+                                        id="labels"
+                                        ref={targetRef}
+                                        {...targetProps}
+                                        active={active}
+                                        text="Add"
+                                        icon={faPlus}
+                                        minimal
+                                    />
+                                    {labels.filter(({ selected }) => selected).map(({ label }) => label)}
+                                </Stack>
+                            )}
+                        </Dropdown>
+                    </>
+                )}
+
+                {values.workspace.value && (
                     <Dropdown
-                        fetchMoreText={"Fetch more"}
-                        autoscrollText={"Autoscroll"}
+                        fetchMoreText="Fetch more"
+                        autoscrollText="Autoscroll"
                         selectedIcon={faCheck}
                         externalLinkIcon={faExternalLinkAlt}
                         placement="bottom-start"
-                        options={labels}
+                        searchPlaceholder="Select value"
+                        options={members}
                         onSelectOption={(option) => {
                             if (option.value) {
-                                const newValue = values.labels.includes(option.value as never)
-                                    ? values.labels.filter((labelId) => labelId !== option.value)
-                                    : [...values.labels, option.value]
+                                const newValue = values.members.includes(option.value as never)
+                                    ? values.members.filter((labelId) => labelId !== option.value)
+                                    : [...values.members, option.value]
 
-                                setFieldValue("labels", newValue);
+                                setFieldValue("members", newValue);
                             }
                         }}
                         closeOnSelect={false}
                     >
-                        {({ active, targetProps, targetRef }) => (
-                            <Stack gap={6} wrap="wrap" align="baseline" style={{ marginBottom: 10 }}>
-                                <ButtonUI
-                                    id="labels"
-                                    ref={targetRef}
-                                    {...targetProps}
-                                    active={active}
-                                    text="Add"
-                                    icon={faPlus}
-                                    minimal
-                                />
-                                {labels.filter(({ selected }) => selected).map(({ label }) => label)}
-                            </Stack>
+                        {({ targetProps, targetRef }: DropdownTargetProps<HTMLDivElement>) => (
+                            <TextBlockWithLabel
+                                label="Members"
+                                text={(
+                                    <DivAsInputWithDisplay
+                                        ref={targetRef}
+                                        {...targetProps}
+                                        value={!values.members.length
+                                            ? (
+                                                <TSpan
+                                                    overflow={"ellipsis"}
+                                                    type={"p1"}
+                                                    style={{ color: theme.colors.grey40 }}
+                                                >
+                                                    Select value
+                                                </TSpan>
+                                            )
+                                            : (
+                                                <Stack gap={6} wrap="wrap">
+                                                    {members.filter(({ selected }) => selected).map(({ label }) => label)}
+                                                </Stack>
+                                            )}
+                                        placeholder="Select value"
+                                        variant="inline"
+                                    />
+                                )}
+                            />
                         )}
                     </Dropdown>
-                </>
-            )}
+                )}
 
-            {values.workspace.value && (
-                <Dropdown
-                    fetchMoreText="Fetch more"
-                    autoscrollText="Autoscroll"
-                    selectedIcon={faCheck}
-                    externalLinkIcon={faExternalLinkAlt}
-                    placement="bottom-start"
-                    searchPlaceholder="Select value"
-                    options={members}
-                    onSelectOption={(option) => {
-                        if (option.value) {
-                            const newValue = values.members.includes(option.value as never)
-                                ? values.members.filter((labelId) => labelId !== option.value)
-                                : [...values.members, option.value]
-
-                            setFieldValue("members", newValue);
-                        }
-                    }}
-                    closeOnSelect={false}
-                >
-                    {({ targetProps, targetRef }: DropdownTargetProps<HTMLDivElement>) => (
-                        <TextBlockWithLabel
-                            label="Members"
-                            text={(
-                                <DivAsInputWithDisplay
-                                    ref={targetRef}
-                                    {...targetProps}
-                                    value={!values.members.length
-                                        ? (
-                                            <TSpan
-                                                overflow={"ellipsis"}
-                                                type={"p1"}
-                                                style={{ color: theme.colors.grey40 }}
-                                            >
-                                                Select value
-                                            </TSpan>
-                                        )
-                                        : (
-                                            <Stack gap={6} wrap="wrap">
-                                                {members.filter(({ selected }) => selected).map(({ label }) => label)}
-                                            </Stack>
-                                        )}
-                                    placeholder="Select value"
-                                    variant="inline"
-                                />
-                            )}
-                        />
-                    )}
-                </Dropdown>
-            )}
-
-            <Stack justify="space-between">
-                <Button
-                    type="submit"
-                    text="Create"
-                    disabled={isSubmitting}
-                    loading={isSubmitting}
-                />
-                <Button
-                    text="Cancel"
-                    intent="tertiary"
-                    onClick={() => dispatch({ type: "changePage", page: "home" })}
-                />
-            </Stack>
-        </form>
+                <Stack justify="space-between">
+                    <Button
+                        type="submit"
+                        text="Create"
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                    />
+                    <Button
+                        text="Cancel"
+                        intent="tertiary"
+                        onClick={() => navigate("/home")}
+                    />
+                </Stack>
+            </form>
+        </Container>
     );
 };
 
-export { CreateCard };
+export { CreateCardPage };

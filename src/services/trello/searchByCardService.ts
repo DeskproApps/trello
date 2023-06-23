@@ -7,11 +7,11 @@ const searchByCardService = (client: IDeskproClient, query: string) => {
         url: "/search",
         queryParams: {
             modelTypes: "cards",
-            card_board: true,
+            card_board: `${true}`,
             board_fields: "idOrganization,name,shortUrl,url",
-            card_list: true,
-            card_members: true,
-            cards_limit: 1000,
+            card_list: `${true}`,
+            card_members: `${true}`,
+            cards_limit: "1000",
             query,
         }
     })

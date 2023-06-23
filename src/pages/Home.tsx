@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     LoadingSpinner,
     HorizontalDivider,
@@ -6,7 +7,7 @@ import {
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
-import { useSetAppTitle } from "../hooks";
+import { useSetTitle } from "../hooks";
 import { getEntityCardListService } from "../services/deskpro";
 import { getCardService } from "../services/trello";
 import { CardType } from "../services/trello/types";
@@ -29,20 +30,21 @@ const getFilteredCards = (cards: CardType[], searchValue: string) => {
 };
 
 const HomePage: FC = () => {
+    const navigate = useNavigate();
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(true);
     const [searchCard, setSearchCard] = useState<string>("");
     const ticketId = state.context?.data.ticket.id
 
-    useSetAppTitle("Trello Cards");
+    useSetTitle("Trello Cards");
 
     useDeskproElements(({ clearElements, registerElement }) => {
         clearElements();
         registerElement("trelloRefreshButton", { type: "refresh_button" });
         registerElement("trelloPlusButton", {
             type: "plus_button",
-            payload: { type: "changePage", page: "link_card" },
+            payload: { type: "changePage", path: "/link_card" },
         });
         registerElement("trelloMenu", {
             type: "menu",
@@ -71,27 +73,21 @@ const HomePage: FC = () => {
                             return getCardService(client, cardId);
                         }))
                     } else {
-                        dispatch({ type: "changePage", page: "link_card" });
+                        navigate("/link_card");
                     }
                 } else {
                     return Promise.reject(false);
                 }
             })
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             .then((cards) => dispatch({ type: "linkedTrelloCards", cards }))
             .catch((error) => dispatch({ type: "error", error }))
             .finally(() => setLoading(false));
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, ticketId]);
 
     const onPageChangeToViewCard = (cardId: string) => {
-        dispatch({
-            type: "changePage",
-            page: "view_card",
-            params: { cardId }
-        });
+        navigate(`/view_card/${cardId}`);
     };
 
     if (loading) {

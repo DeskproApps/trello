@@ -1,25 +1,29 @@
-import { useState, FC, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent } from "react";
+import noop from "lodash/noop";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useDebouncedCallback } from "use-debounce";
+import { useNavigate } from "react-router-dom";
 import {
-    HorizontalDivider, Stack,
+    Stack,
+    TwoButtonGroup,
+    LoadingSpinner,
+    HorizontalDivider,
+    useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useStore } from "../../../context/StoreProvider/hooks";
+import { useSetTitle } from "../hooks";
+import { getEntityMetadata, getFilteredCards } from "../utils";
+import { useStore } from "../context/StoreProvider/hooks";
+import { Board, CardType } from "../services/trello/types";
+import { createCardCommentService, searchByCardService } from "../services/trello";
+import { setEntityCardService } from "../services/deskpro";
 import {
     Cards,
     Button,
-    Loading,
+    Container,
     InputSearch,
     SingleSelect,
-} from "../../common";
-import { setEntityCardService } from "../../../services/deskpro";
-import {
-    searchByCardService,
-    createCardCommentService,
-} from "../../../services/trello";
-import { CardType, Board } from "../../../services/trello/types";
-import { getFilteredCards, getEntityMetadata } from "../../../utils";
-
+} from "../components/common";
 
 type Option = {
     key: "any" | string,
@@ -30,7 +34,8 @@ type Option = {
 
 type ObjectOptions = Record<"any" | Board["id"], Option>
 
-const FindCard: FC = () => {
+const LinkCardPage: FC = () => {
+    const navigate = useNavigate();
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(false);
@@ -142,12 +147,41 @@ const FindCard: FC = () => {
                     )
                 ))
             })
-            .then(() => dispatch({ type: "changePage", page: "home" }))
+            .then(() => navigate("/home"))
             .catch((error) => dispatch({ type: "error", error }));
     };
 
+    useSetTitle("Link Cards");
+
+    useDeskproElements(({ clearElements, registerElement }) => {
+        clearElements();
+        registerElement("trelloRefreshButton", { type: "refresh_button" });
+        registerElement("trelloHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", path: "/home" }
+        });
+        registerElement("trelloMenu", {
+            type: "menu",
+            items: [{
+                title: "Log Out",
+                payload: {
+                    type: "logout",
+                },
+            }],
+        });
+    });
+
     return (
-        <>
+        <Container>
+            <TwoButtonGroup
+                selected="one"
+                oneIcon={faSearch}
+                oneLabel="Find Card"
+                oneOnClick={noop}
+                twoIcon={faPlus}
+                twoLabel="Create Card"
+                twoOnClick={() => navigate("/create_card")}
+            />
             <InputSearch
                 value={searchCard}
                 onClear={onClearSearch}
@@ -171,7 +205,7 @@ const FindCard: FC = () => {
                 />
                 <Button
                     text="Cancel"
-                    onClick={() => dispatch({ type: "changePage", page: "home" })}
+                    onClick={() => navigate("/home")}
                     intent="secondary"
                 />
             </Stack>
@@ -179,7 +213,7 @@ const FindCard: FC = () => {
             <HorizontalDivider style={{ marginBottom: "10px" }} />
 
             {loading
-                ? (<Loading/>)
+                ? (<LoadingSpinner/>)
                 : (
                     <Cards
                         cards={getFilteredCards(cards, selectedBoard?.value)}
@@ -187,8 +221,8 @@ const FindCard: FC = () => {
                         onChange={onChangeSelectedCard}
                     />
                 )}
-        </>
+        </Container>
     );
 };
 
-export { FindCard };
+export { LinkCardPage };

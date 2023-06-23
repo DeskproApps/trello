@@ -8,6 +8,7 @@ import {
     faCheck,
     faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     TSpan,
     Avatar,
@@ -92,9 +93,13 @@ const initValues = {
 };
 
 const EditCardPage: FC = () => {
+    const navigate = useNavigate();
+    const { cardId } = useParams();
     const { theme } = useDeskproAppTheme();
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
+
+    // @todo: change to useDeskproLatestContext hook
     const ticketId = state.context?.data.ticket.id;
 
     const [error] = useState<boolean>(false);
@@ -146,11 +151,7 @@ const EditCardPage: FC = () => {
                             .map(({ metadata }) => metadata),
                     }))
                 })
-                .then(() => dispatch({
-                    type: "changePage",
-                    page: "view_card",
-                    params: { cardId: card.id }
-                }))
+                .then(() => navigate(`/view_card/${card.id}`))
                 .catch((error) => dispatch({ type: "error", error }));
         },
     });
@@ -160,7 +161,7 @@ const EditCardPage: FC = () => {
         registerElement("trelloRefreshButton", { type: "refresh_button" });
         registerElement("trelloHomeButton", {
             type: "home_button",
-            payload: { type: "changePage", page: "home" }
+            payload: { type: "changePage", path: "/home" }
         });
     });
 
@@ -194,7 +195,7 @@ const EditCardPage: FC = () => {
 
     /* get dependent data */
     useEffect(() => {
-        if (!client || !state?.pageParams?.cardId) {
+        if (!client || !cardId) {
             return;
         }
 
@@ -209,9 +210,8 @@ const EditCardPage: FC = () => {
                 }
             })
             .then(() => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                return getCardService(client, state.pageParams.cardId);
+                return getCardService(client, cardId);
             })
             .then((card) => {
                 setCard(card);
@@ -275,8 +275,7 @@ const EditCardPage: FC = () => {
             })
             .catch(() => {})
             .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, state?.pageParams?.cardId]);
+    }, [client, cardId]);
 
     /* Set boards */
     useEffect(() => {
@@ -335,7 +334,6 @@ const EditCardPage: FC = () => {
 
             setFieldValue("list", resetValue);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.board.value]);
 
     /* mark selected labels */
@@ -436,6 +434,7 @@ const EditCardPage: FC = () => {
                         >
                             {({ active, targetProps, targetRef }) => (
                                 <Stack gap={6} wrap="wrap" align="baseline" style={{ marginBottom: 10 }}>
+                                    {/* @ts-ignore */}
                                     <ButtonUI
                                         id="labels"
                                         ref={targetRef}
@@ -514,11 +513,7 @@ const EditCardPage: FC = () => {
                     <Button
                         text="Cancel"
                         intent="tertiary"
-                        onClick={() => dispatch({
-                            type: "changePage",
-                            page: "view_card",
-                            params: { cardId: card?.id },
-                        })}
+                        onClick={() => navigate(`/view_card/${card?.id}`)}
                     />
                 </Stack>
             </form>

@@ -26,7 +26,10 @@ const Title: FC<CardType & { onClick?: () => void }> = ({ name, shortUrl, onClic
                 <a
                     href="#"
                     style={{ color: theme.colors.cyan100, textDecoration: "none" }}
-                    onClick={onClick}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onClick && onClick();
+                    }}
                 >{name}</a>
             </H3>
             <TrelloLink href={shortUrl} />

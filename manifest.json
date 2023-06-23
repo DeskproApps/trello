@@ -34,7 +34,7 @@
     "callback_url": {
       "title": "Callback URL Origin",
       "type": "app_embedded",
-      "options": { "entrypoint": "?page=admin/callback" },
+      "options": { "entrypoint": "#/admin/callback" },
       "isRequired": false,
       "isBackendOnly": true,
       "order": 20

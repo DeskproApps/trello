@@ -12,3 +12,4 @@ export { createCardCommentService } from "./createCardCommentService";
 export { removeTokenService } from "./removeTokenService";
 export { logoutService } from "./logoutService";
 export { createAttachService } from "./createAttachService";
+export { getOrganizationsService } from "./getOrganizationsService";

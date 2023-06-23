@@ -1,6 +1,6 @@
 import { proxyFetch } from "@deskpro/app-sdk";
-import { Request } from "./types";
-import { BASE_URL, requireQeuryParams } from "../../constants";
+import { Request } from "../../types";
+import {BASE_URL, placeholders, requireQeuryParams} from "../../constants";
 import { getQueryParams } from "../../utils";
 
 const baseRequest: Request = async (client, {
@@ -15,9 +15,12 @@ const baseRequest: Request = async (client, {
     const headers: Record<string, string> = {};
 
     const requestUrl = `${BASE_URL}${url}/?${
-        getQueryParams(requireQeuryParams)
+        getQueryParams([
+            `key=${placeholders.KEY}`,
+            `token=${placeholders.TOKEN}`,
+        ].join("&"))
     }&${
-        getQueryParams(queryParams, true)
+        getQueryParams(queryParams/*, true*/)
     }`;
 
     if (data instanceof FormData) {

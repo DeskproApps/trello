@@ -2,13 +2,14 @@ import { FC } from "react";
 import isEmpty from "lodash/isEmpty";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     Stack,
     useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
-import { useSetAppTitle } from "../hooks";
+import { useSetTitle } from "../hooks";
 import {
     createAttachService,
     createCardCommentService,
@@ -25,9 +26,10 @@ const initValues = {
 };
 
 const AddCommentPage: FC = () => {
+    const navigate = useNavigate();
+    const { cardId } = useParams();
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
-    const cardId = state.pageParams?.cardId;
     const {
         handleSubmit,
         isSubmitting,
@@ -57,27 +59,21 @@ const AddCommentPage: FC = () => {
             }
 
             await Promise.all(promises)
-                .then(() => {
-                    dispatch({
-                        type: "changePage",
-                        page: "view_card",
-                        params: { cardId },
-                    })
-                })
+                .then(() => navigate(`/view_card/${cardId}`))
                 .catch((error) => {
                     dispatch({ type: "error", error })
                 });
         },
     });
 
-    useSetAppTitle("Add Comment");
+    useSetTitle("Add Comment");
 
     useDeskproElements(({ clearElements, registerElement }) => {
         clearElements();
         registerElement("trelloRefreshButton", { type: "refresh_button" });
         registerElement("trelloHomeButton", {
             type: "home_button",
-            payload: { type: "changePage", page: "home" }
+            payload: { type: "changePage", path: "/home" }
         });
     });
 
@@ -110,11 +106,7 @@ const AddCommentPage: FC = () => {
                     <Button
                         text="Cancel"
                         intent="tertiary"
-                        onClick={() => dispatch({
-                            type: "changePage",
-                            page: "view_card",
-                            params: { cardId },
-                        })}
+                        onClick={() => navigate(`/view_card/${cardId}`)}
                     />
                 </Stack>
             </form>
