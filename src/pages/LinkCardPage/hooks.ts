@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
+import noop from "lodash/noop";
 import { useDebouncedCallback } from "use-debounce";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
-import { useStore } from "../../context/StoreProvider/hooks";
 import { searchByCardService } from "../../services/trello";
 import { getOption } from "../../utils";
 import type { ChangeEvent } from "react";
@@ -21,7 +21,6 @@ type UseSearch = () => {
 
 const useSearch: UseSearch = () => {
     const { client } = useDeskproAppClient();
-    const [, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(false);
     const [boardOptions, setBoardOptions] = useState<BoardOptionsMap>({
         any: getOption("any", "Any"),
@@ -36,7 +35,7 @@ const useSearch: UseSearch = () => {
         }
 
         if (!q || q.length < 2) {
-            dispatch({ type: "linkedTrelloCards", cards: [] });
+            setCards([]);
             return;
         }
 
@@ -57,12 +56,12 @@ const useSearch: UseSearch = () => {
                     }, {})
                 });
             })
-            .catch(() => {})
+            .catch(noop)
             .finally(() => setLoading(false));
     }, 500);
 
     const onClearSearch = useCallback(() => {
-        setSearchCard('');
+        setSearchCard("");
         setCards([]);
     }, []);
 

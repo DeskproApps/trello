@@ -1,16 +1,19 @@
-import { useEffect, useState, useCallback } from "react";
-import cloneDeep from "lodash/cloneDeep";
-import { useDeskproAppClient } from "@deskpro/app-sdk";
+import { useCallback } from "react";
+import get from "lodash/get";
+import { useDeskproAppClient, useQueryWithClient } from "@deskpro/app-sdk";
 import {
     getCardService,
     getCardCommentsService,
     updateChecklistItemService,
 } from "../../services/trello";
-import type { CardType, Comment, ChecklistItem } from "../../services/trello/types";
+import { useAsyncError } from "../../hooks";
+import { QueryKey, queryClient } from "../../query";
+import type { Maybe } from "../../types";
+import type { CardType, ChecklistItem, Comment } from "../../services/trello/types";
 
 type UseCard = (cardId?: CardType["id"]) => {
-    card?: CardType,
-    comments: Comment[],
+    card: Maybe<CardType>,
+    comments: Maybe<Comment[]>,
     loading: boolean,
     onChangeChecklistItem: (
         itemId: ChecklistItem["id"],
@@ -20,52 +23,36 @@ type UseCard = (cardId?: CardType["id"]) => {
 
 const useCard: UseCard = (cardId) => {
     const { client } = useDeskproAppClient();
-    const [card, setCard] = useState<CardType|undefined>(undefined);
-    const [comments, setComments] = useState<Comment[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const { asyncErrorHandler } = useAsyncError();
+
+    const card = useQueryWithClient(
+        [QueryKey.CARD, cardId as CardType["id"]],
+        (client) => getCardService(client, cardId as CardType["id"]),
+        { enabled: Boolean(cardId) },
+    );
+
+    const comments = useQueryWithClient(
+        [QueryKey.CARD, cardId as CardType["id"], QueryKey.COMMENTS],
+        (client) => getCardCommentsService(client, cardId as CardType["id"]),
+        { enabled: Boolean(cardId) },
+    );
 
     const onChangeChecklistItem = useCallback((itemId, state) => {
-        if (!client || !card?.id) {
-            return;
-        }
-
-        updateChecklistItemService(client, card.id, itemId, { state })
-            .then((checklistItem: ChecklistItem) => {
-                const updatedCart = cloneDeep<CardType>(card);
-
-                updatedCart.checklists = updatedCart.checklists.map((checklist) => {
-                    checklist.checkItems = checklist.checkItems.map((item) => {
-                        if (item.id === itemId) {
-                            item = checklistItem;
-                        }
-
-                        return item;
-                    });
-                    return checklist
-                });
-
-                setCard(updatedCart);
-            });
-    }, [client, card]);
-
-    useEffect(() => {
         if (!client || !cardId) {
             return;
         }
 
-        Promise.all([
-            getCardService(client, cardId),
-            getCardCommentsService(client, cardId),
-        ])
-            .then(([card, comments]) => {
-                setCard(card);
-                setComments(comments);
-            })
-            .finally(() => setLoading(false));
+        updateChecklistItemService(client, cardId, itemId, { state })
+            .then(() => queryClient.invalidateQueries())
+            .catch(asyncErrorHandler);
+    }, [client, cardId, asyncErrorHandler]);
 
-    }, [client, cardId]);
-
-    return { card, comments, loading, onChangeChecklistItem };
+    return {
+        loading: [card, comments].some(({ isLoading }) => isLoading),
+        card: get(card, ["data"]),
+        comments: get(comments, ["data"]),
+        onChangeChecklistItem,
+    };
 };
 
 export { useCard };

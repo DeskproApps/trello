@@ -1,4 +1,4 @@
-import { FC } from "react";
+import size from "lodash/size";
 import styled from "styled-components";
 import { faUser, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@deskpro/deskpro-ui";
@@ -10,7 +10,9 @@ import {
     Stack,
     Button as ButtonUI,
 } from "@deskpro/app-sdk";
-import { Comment } from "../../services/trello/types";
+import type { FC } from "react";
+import type { Comment } from "../../services/trello/types";
+import type { Maybe } from "../../types";
 
 const DateTime = styled(ReactTimeAgo)`
     color: ${({ theme }) => theme.colors.grey80};
@@ -23,10 +25,10 @@ const CommentBlock = styled(P1)`
 `;
 
 const Comments: FC<{
-    comments?: Comment[],
+    comments: Maybe<Comment[]>,
     onClickTitleAction: () => void,
 }> = ({ comments, onClickTitleAction }) => {
-    return (Array.isArray(comments) && comments.length > 0)
+    return (Array.isArray(comments) && size(comments))
         ? (
             <>
                 <Stack gap={6} align="center" style={{ marginBottom: 14 }}>

@@ -6,6 +6,7 @@ specifiers:
   '@fortawesome/free-regular-svg-icons': ^6.4.0
   '@fortawesome/free-solid-svg-icons': ^6.1.0
   '@fortawesome/react-fontawesome': ^0.2.0
+  '@tanstack/react-query': ^4.29.17
   '@testing-library/jest-dom': ^5.16.1
   '@testing-library/react': ^12.1.2
   '@types/jest': ^27.4.0
@@ -34,6 +35,7 @@ specifiers:
   prettier: ^2.8.7
   react: ^17.0.2
   react-dom: ^17.0.2
+  react-error-boundary: ^4.0.10
   react-router-dom: ^6.13.0
   react-time-ago: ^7.2.1
   rimraf: ^3.0.2
@@ -56,6 +58,7 @@ dependencies:
   '@fortawesome/free-regular-svg-icons': 6.4.0
   '@fortawesome/free-solid-svg-icons': 6.4.0
   '@fortawesome/react-fontawesome': 0.2.0_react@17.0.2
+  '@tanstack/react-query': 4.29.17_sfoxds7t5ydpegc3knd667wn6m
   date-fns: 2.30.0
   flatpickr: 4.6.13
   formik: 2.4.2_react@17.0.2
@@ -65,6 +68,7 @@ dependencies:
   polished: 4.2.2
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
+  react-error-boundary: 4.0.10_react@17.0.2
   react-router-dom: 6.13.0_sfoxds7t5ydpegc3knd667wn6m
   react-time-ago: 7.2.1_4mmkotllyfvdasy3ylahcptbsu
   simplebar: 6.2.5
@@ -524,7 +528,7 @@ packages:
       '@fortawesome/free-regular-svg-icons': 6.4.0
       '@fortawesome/free-solid-svg-icons': 6.4.0
       '@fortawesome/react-fontawesome': 0.1.19_zute3adenybwwon4zpn6czkvnu
-      '@tanstack/react-query': 4.29.15_sfoxds7t5ydpegc3knd667wn6m
+      '@tanstack/react-query': 4.29.17_sfoxds7t5ydpegc3knd667wn6m
       '@types/jest': 29.5.2
       fast-check: 3.10.0
       flatpickr: 4.6.13
@@ -1155,12 +1159,12 @@ packages:
       '@sinonjs/commons': 1.8.6
     dev: true
 
-  /@tanstack/query-core/4.29.15:
-    resolution: {integrity: sha512-Recc1d5rjHesKhzlH3Aw66v+vQxtB9OHEXP/vxgEcEJ0DwEpfe3EQ4id20vuBJHY2XRjfgWGmUs6ZgK6PSsTXA==}
+  /@tanstack/query-core/4.29.17:
+    resolution: {integrity: sha512-iDbO8yZOpm1lqgq6L8mpxGbKaoiyZSjthxEB3WGU7mNPYss9q4H3Q67+e2xXGwkemEVmtEX/WwvtFitrvVU8TA==}
     dev: false
 
-  /@tanstack/react-query/4.29.15_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-1zDkv95ljuJ623hhbYU8YIprPW2x6774kh3IQNEuZav62+S+Zr26uUOrE2zGRp9I1uO5Liw/0uYB3dWXQP5+3Q==}
+  /@tanstack/react-query/4.29.17_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-udOy/jgqiBHBAP93YPAU3QoVYO+Rtx9HT/10xGDQzC8iQU/wIxcIaT/usX+1NSzoUFYU5hUcPaNErPWZnR7XgA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -1171,7 +1175,8 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 4.29.15
+      '@tanstack/query-core': 4.29.17
+      client-only: 0.0.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       use-sync-external-store: 1.2.0_react@17.0.2
@@ -1873,6 +1878,10 @@ packages:
   /cjs-module-lexer/1.2.3:
     resolution: {integrity: sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==}
     dev: true
+
+  /client-only/0.0.1:
+    resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+    dev: false
 
   /cliui/7.0.4:
     resolution: {integrity: sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==}
@@ -4386,6 +4395,15 @@ packages:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
+
+  /react-error-boundary/4.0.10_react@17.0.2:
+    resolution: {integrity: sha512-pvVKdi77j2OoPHo+p3rorgE43OjDWiqFkaqkJz8sJKK6uf/u8xtzuaVfj5qJ2JnDLIgF1De3zY5AJDijp+LVPA==}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.22.5
+      react: 17.0.2
+    dev: false
 
   /react-fast-compare/2.0.4:
     resolution: {integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==}

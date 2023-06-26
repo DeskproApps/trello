@@ -68,7 +68,7 @@ const LinkCard: FC<Props> = ({
             {(cards && cards.length > 0) && (
                 <SingleSelect
                     label="Board"
-                    value={selectedBoard?.label}
+                    value={selectedBoard}
                     onChange={onSelectBoard}
                     options={Object.values(boardOptions)}
                 />

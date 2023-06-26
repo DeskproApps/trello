@@ -1,4 +1,4 @@
-export { ErrorBlock } from "./Error";
+export { ErrorBlock } from "./ErrorBlock";
 export { Button, AnchorButton } from "./Button";
 export { Label } from "./Label";
 export { SingleSelect } from "./SingleSelect";

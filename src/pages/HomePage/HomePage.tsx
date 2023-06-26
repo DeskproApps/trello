@@ -4,8 +4,7 @@ import {
     LoadingSpinner,
     useDeskproElements,
 } from "@deskpro/app-sdk";
-import { useSetTitle } from "../../hooks";
-import { useCards } from "./hooks";
+import { useSetTitle, useLinkedCards } from "../../hooks";
 import { getFilteredCards } from "../../utils";
 import { Home } from "../../components";
 import type { FC } from "react";
@@ -14,7 +13,7 @@ import type { CardType } from "../../services/trello/types";
 const HomePage: FC = () => {
     const navigate = useNavigate();
     const [searchCard, setSearchCard] = useState<string>("");
-    const { cards, loading } = useCards();
+    const { cards, isLoading } = useLinkedCards();
 
     const onChangeSearchCard = useCallback((e) => {
         setSearchCard(e.target.value);
@@ -48,7 +47,7 @@ const HomePage: FC = () => {
         navigate(`/view_card/${cardId}`);
     }, [navigate]);
 
-    if (loading) {
+    if (isLoading) {
         return (
             <LoadingSpinner/>
         );

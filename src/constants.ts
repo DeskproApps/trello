@@ -1,3 +1,6 @@
+/** Common */
+export const UNKNOWN_ERROR = "An error occurred";
+
 /** Deskpro */
 export const TRELLO_ENTITY = 'linkedTrelloCards';
 

@@ -1,5 +1,9 @@
 import type { DateTime } from "../../types";
 
+export type TrelloAPIError = {
+    //..
+};
+
 export type CustomError = {
     error: {
         code: number,

@@ -7,7 +7,6 @@ import {
     useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
 import { useSetTitle } from "../../hooks";
-import { CardType } from "../../services/trello/types";
 import { ViewCard } from "../../components";
 import { useCard } from "./hooks";
 import type { TicketContext } from "../../types";
@@ -67,7 +66,7 @@ const ViewCardPage: FC = () => {
 
     return (
         <ViewCard
-            card={card as CardType}
+            card={card}
             comments={comments}
             onNavigateToAddNewComment={onNavigateToAddNewComment}
             onChangeChecklistItem={onChangeChecklistItem}

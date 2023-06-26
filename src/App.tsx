@@ -1,11 +1,9 @@
-import { Suspense } from "react";
 import { match } from "ts-pattern";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import {
     Context,
     TargetAction,
-    LoadingSpinner,
     useDeskproAppClient,
     useDeskproAppEvents,
 } from "@deskpro/app-sdk";
@@ -26,18 +24,12 @@ import {
     LogInPage,
     ViewCardPage,
 } from "./pages";
-import { ErrorBlock } from "./components/common";
 import type { EventPayload } from "./types";
 
 const App = () => {
-    console.log(">>> app:");
     const navigate = useNavigate();
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
-
-    if (state._error) {
-        console.error(`Trello: ${state._error}`);
-    }
 
     useSetBadgeCount();
 
@@ -59,7 +51,6 @@ const App = () => {
         // @ts-ignore
         onElementEvent(id: string, type: string, payload?: EventPayload) {
             if (payload?.type === "changePage" && isNavigatePayload(payload)) {
-                console.log(">>> changePage", payload);
                 navigate(payload.path);
             } else if (payload?.type === "logout") {
                 if (client) {
@@ -95,21 +86,17 @@ const App = () => {
     }, [client]);
 
     return (
-        <Suspense fallback={<LoadingSpinner/>}>
-            <h1>APP</h1>
-            {state._error && (<ErrorBlock text="An error occurred" />)}
-            <Routes>
-                <Route path="/home" element={<HomePage />}/>)
-                <Route path="/log_in" element={<LogInPage />}/>)
-                <Route path="/link_card" element={<LinkCardPage />}/>)
-                <Route path="/create_card" element={<CreateCardPage/>}/>)
-                <Route path="/view_card/:cardId" element={<ViewCardPage />}/>)
-                <Route path="/edit_card/:cardId" element={<EditCardPage />}/>)
-                <Route path="/add_comment/:cardId" element={<AddCommentPage />}/>)
-                <Route path="/admin/callback" element={<AdminCallbackPage/>}/>)
-                <Route index element={<LoadingAppPage/>} />
-            </Routes>
-        </Suspense>
+        <Routes>
+            <Route path="/home" element={<HomePage />}/>)
+            <Route path="/log_in" element={<LogInPage />}/>)
+            <Route path="/link_card" element={<LinkCardPage />}/>)
+            <Route path="/create_card" element={<CreateCardPage/>}/>)
+            <Route path="/view_card/:cardId" element={<ViewCardPage />}/>)
+            <Route path="/edit_card/:cardId" element={<EditCardPage />}/>)
+            <Route path="/add_comment/:cardId" element={<AddCommentPage />}/>)
+            <Route path="/admin/callback" element={<AdminCallbackPage/>}/>)
+            <Route index element={<LoadingAppPage/>} />
+        </Routes>
     );
 };
 

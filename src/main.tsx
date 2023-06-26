@@ -1,11 +1,15 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import { DeskproAppProvider } from "@deskpro/app-sdk";
+import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
 import { StoreProvider } from "./context/StoreProvider";
+import { queryClient } from "./query";
 import { App } from "./App";
+import { ErrorFallback } from "./components";
 
 import "iframe-resizer/js/iframeResizer.contentWindow.js";
 import "flatpickr/dist/themes/light.css";
@@ -21,9 +25,15 @@ ReactDOM.render(
   <React.StrictMode>
       <DeskproAppProvider>
           <HashRouter>
-              <StoreProvider>
-                  <App />
-              </StoreProvider>
+              <QueryClientProvider client={queryClient}>
+                  <Suspense fallback={<LoadingSpinner/>}>
+                      <ErrorBoundary FallbackComponent={ErrorFallback}>
+                          <StoreProvider>
+                              <App />
+                          </StoreProvider>
+                      </ErrorBoundary>
+                  </Suspense>
+              </QueryClientProvider>
           </HashRouter>
       </DeskproAppProvider>
   </React.StrictMode>,

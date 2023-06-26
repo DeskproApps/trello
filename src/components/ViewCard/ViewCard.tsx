@@ -20,10 +20,11 @@ import {
 import { Members } from "../common/Cards";
 import { Comments } from "./Comments";
 import type { FC } from "react";
+import type { Maybe } from "../../types";
 
 type Props =  {
-    card: CardType,
-    comments?: Comment[],
+    card: Maybe<CardType>,
+    comments: Maybe<Comment[]>,
     onNavigateToAddNewComment: () => void,
     onChangeChecklistItem: (
         itemId: ChecklistItem["id"],

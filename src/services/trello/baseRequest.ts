@@ -1,7 +1,8 @@
 import { proxyFetch } from "@deskpro/app-sdk";
 import { Request } from "../../types";
-import {BASE_URL, placeholders } from "../../constants";
+import { BASE_URL, placeholders } from "../../constants";
 import { getQueryParams } from "../../utils";
+import { TrelloError } from "./TrelloError";
 
 const baseRequest: Request = async (client, {
     url,
@@ -20,7 +21,7 @@ const baseRequest: Request = async (client, {
             `token=${placeholders.TOKEN}`,
         ].join("&"))
     }&${
-        getQueryParams(queryParams/*, true*/)
+        getQueryParams(queryParams)
     }`;
 
     if (data instanceof FormData) {
@@ -42,21 +43,11 @@ const baseRequest: Request = async (client, {
         headers,
     });
 
-    if (res.status === 400) {
-        return res.json();
-    }
-
-    if (res.status === 401) {
-        return Promise.resolve({
-            error: {
-                code: 401,
-                status: "Unauthorized"
-            }
-        })
-    }
-
     if (res.status < 200 || res.status >= 400) {
-        throw new Error(`${method} ${url}: Response Status [${res.status}]`);
+        throw new TrelloError({
+            status: res.status,
+            data: await res.json(),
+        });
     }
 
     try {
