@@ -29,17 +29,17 @@ import {
     useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { setEntityCardService } from "../services/deskpro";
-import { useStore } from "../context/StoreProvider/hooks";
+import { setEntityCardService } from "../../services/deskpro";
+import { useStore } from "../../context/StoreProvider/hooks";
 import {
     getCardService,
     updateCardService,
     getCurrentMemberService,
     getLabelsOnBoardService,
     getMembersOfOrganizationService,
-} from "../services/trello";
-import { Board, CardType, Member } from "../services/trello/types";
-import { getLabelColor, getEntityMetadata } from "../utils";
+} from "../../services/trello";
+import { Board, CardType, Member } from "../../services/trello/types";
+import { getLabelColor, getEntityMetadata } from "../../utils";
 import {
     Label,
     Button,
@@ -50,7 +50,7 @@ import {
     SingleSelect,
     EmptyInlineBlock,
     TextBlockWithLabel,
-} from "../components/common";
+} from "../../components/common";
 
 export type Option = DropdownValueType<string>;
 
@@ -210,6 +210,7 @@ const EditCardPage: FC = () => {
                 }
             })
             .then(() => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 return getCardService(client, cardId);
             })
@@ -275,6 +276,7 @@ const EditCardPage: FC = () => {
             })
             .catch(() => {})
             .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, cardId]);
 
     /* Set boards */
@@ -334,6 +336,7 @@ const EditCardPage: FC = () => {
 
             setFieldValue("list", resetValue);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.board.value]);
 
     /* mark selected labels */
@@ -434,6 +437,7 @@ const EditCardPage: FC = () => {
                         >
                             {({ active, targetProps, targetRef }) => (
                                 <Stack gap={6} wrap="wrap" align="baseline" style={{ marginBottom: 10 }}>
+                                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                     {/* @ts-ignore */}
                                     <ButtonUI
                                         id="labels"

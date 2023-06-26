@@ -1,7 +1,7 @@
 import isEmpty from "lodash/isEmpty";
 import { EntityMetadata } from "../context/StoreProvider/types";
 import {CardType, Board, List, Member} from "../services/trello/types";
-import { parseDateTime } from "../utils/date";
+import { parseDateTime } from "./date";
 
 type Card = Omit<CardType, "list" | "board" | "members"> & {
     list: Pick<List, "id" | "name">,

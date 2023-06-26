@@ -1,6 +1,6 @@
-import { H3, Title, useDeskproElements } from "@deskpro/app-sdk";
+import { useDeskproElements } from "@deskpro/app-sdk";
 import { useLogIn } from "./hooks";
-import { AnchorButton, Container } from "../../components/common";
+import { LogIn } from "../../components";
 
 const LogInPage = () => {
   const { poll, authUrl, isAuthing } = useLogIn();
@@ -11,18 +11,7 @@ const LogInPage = () => {
   });
 
   return (
-    <Container>
-      <Title as={H3} title="Log into your Trello Account" />
-      <AnchorButton
-        intent="secondary"
-        text="Sign In"
-        target="_blank"
-        href={authUrl || "#"}
-        onClick={poll}
-        loading={isAuthing}
-        disabled={!authUrl || isAuthing}
-      />
-    </Container>
+    <LogIn poll={poll} authUrl={authUrl} isAuthing={isAuthing} />
   );
 };
 

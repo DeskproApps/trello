@@ -26,23 +26,21 @@ import {
     Dropdown,
     LoadingSpinner,
     TwoButtonGroup,
-    DropdownValueType,
     Label as LabelUI,
     Button as ButtonUI,
     useDeskproAppTheme,
     useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useStore } from "../context/StoreProvider/hooks";
+import { useStore } from "../../context/StoreProvider/hooks";
 import {
     createCardService,
     getCurrentMemberService,
     getLabelsOnBoardService,
     createCardCommentService,
     getMembersOfOrganizationService,
-} from "../services/trello";
-import { setEntityCardService } from "../services/deskpro";
-import { Member, Board, List, Organization } from "../services/trello/types";
+} from "../../services/trello";
+import { setEntityCardService } from "../../services/deskpro";
 import {
     Label,
     Button,
@@ -52,17 +50,22 @@ import {
     SingleSelect,
     EmptyInlineBlock,
     TextBlockWithLabel,
-} from "../components/common";
-import { getLabelColor, getEntityMetadata } from "../utils";
-import { useSetTitle } from "../hooks";
+} from "../../components/common";
+import {
+    getOption,
+    getLabelColor,
+    getEntityMetadata,
+} from "../../utils";
+import { useSetTitle } from "../../hooks";
+import type { Option } from "../../types";
+import type { Member, Board, List, Organization, Label as LabelType } from "../../services/trello/types";
 
-type Option = DropdownValueType<string>;
-
-type MemberOption = Option & {
-    metadata: { id: string, fullName: string },
+export type MemberOption = Option<Member["id"]> & {
+    metadata: {
+        id: Member["id"]
+        fullName: Member["fullName"],
+    },
 };
-
-type Options = Option[];
 
 const validationSchema = yup.object().shape({
     title: yup.string().required(),
@@ -90,13 +93,13 @@ const validationSchema = yup.object().shape({
     dueDate: yup.date(),
 });
 
-const resetValue = { key: "", label: "", value: "", type: "value" };
+const resetValue = getOption("", "");
 
 const getInitValues = () => ({
     title: "",
-    workspace: { key: "", label: "", value: "", type: "value" },
-    board: { key: "", label: "", value: "", type: "value" },
-    list: { key: "", label: "", value: "", type: "value" },
+    workspace: resetValue,
+    board: resetValue,
+    list: resetValue,
     description: "",
     labels: [],
     dueDate: "",
@@ -112,10 +115,10 @@ const CreateCardPage: FC = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [member, setMember] = useState<Member|null>(null);
-    const [organizations, setOrganizations] = useState<Options>([]);
-    const [boards, setBoards] = useState<Options>([]);
-    const [lists, setLists] = useState<Options>([]);
-    const [labels, setLabels] = useState<Options>([]);
+    const [organizations, setOrganizations] = useState<Array<Option<Organization["id"]>>>([]);
+    const [boards, setBoards] = useState<Array<Option<Board["id"]>>>([]);
+    const [lists, setLists] = useState<Array<Option<List["id"]>>>([]);
+    const [labels, setLabels] = useState<Array<Option<LabelType["id"]>>>([]);
     const [members, setMembers] = useState<MemberOption[]>([]);
 
     const {
@@ -139,6 +142,8 @@ const CreateCardPage: FC = () => {
                 desc: values.description,
                 idList: values.list.value,
                 // @todo: change to the formatting via date-fns
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 due: !values.dueDate ? "" : values.dueDate.toISOString(),
                 idLabels: values.labels,
                 idMembers: values.members,
@@ -149,8 +154,8 @@ const CreateCardPage: FC = () => {
                     const { id: cardId, idMembers } = card;
                     const metadata = getEntityMetadata({
                         ...card,
-                        board: { id: values.board.value, name: values.board.label },
-                        list: { id: values.list.key, name: values.list.label },
+                        board: { id: values.board.value, name: values.board.label as Board["name"] },
+                        list: { id: values.list.key, name: values.list.label as List["name"] },
                         labels: card.labels,
                         members: members
                             .filter(({ metadata }) => idMembers.includes(metadata.id))
@@ -209,6 +214,7 @@ const CreateCardPage: FC = () => {
             })
             .finally(() => setLoading(false));
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client]);
 
     useEffect(() => {
@@ -219,17 +225,14 @@ const CreateCardPage: FC = () => {
         getMembersOfOrganizationService(client, values.workspace.value)
             .then((members) => {
                 setMembers(members.map(({ id, fullName }) => ({
-                    key: id,
-                    value: id,
-                    type: "value",
                     selected: false,
                     metadata: { id, fullName },
-                    label: (
+                    ...getOption(id, (
                         <Stack gap={6}>
                             <Avatar size={18} name={fullName} backupIcon={faUser} />
                             <P5>{fullName}</P5>
                         </Stack>
-                    ),
+                    )),
                 })));
             });
     }, [client, values.workspace.value]);
@@ -239,40 +242,29 @@ const CreateCardPage: FC = () => {
             ...member,
             selected: values.members.includes(member.value as never)
         })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.members])
 
     useEffect(() => {
         if (!isEmpty(member?.organizations)) {
-            setOrganizations((member?.organizations as Organization[]).map(({ id, displayName }) => ({
-                key: id,
-                value: id,
-                type: "value",
-                label: displayName,
-            })));
+            setOrganizations((member?.organizations as Organization[])
+                .map(({ id, displayName }) => getOption(id, displayName))
+            );
         }
     }, [member?.organizations]);
 
     useEffect(() => {
         if (!isEmpty(member?.boards)) {
-            setBoards((member?.boards as Board[]).map(({ id, name }) => ({
-                key: id,
-                value: id,
-                type: "value",
-                label: name,
-            })));
+            setBoards((member?.boards as Board[]).map(({ id, name }) => getOption(id, name)));
 
-            const lists: Options = (member?.boards as Board[]).reduce((acc: Options, { lists = [] }) => {
-                if (!isEmpty(lists)) {
-                    return concat(acc, lists?.map(({ id, name }: List) => ({
-                        key: id,
-                        value: id,
-                        type: "value",
-                        label: name,
-                    })));
-                }
+            const lists = (member?.boards as Board[])
+                .reduce<Array<Option<List["id"]>>>((acc, { lists = [] }) => {
+                    if (!isEmpty(lists)) {
+                        return concat(acc, lists?.map(({ id, name }: List) => getOption(id, name)));
+                    }
 
-                return acc;
-            }, []);
+                    return acc;
+                }, []);
 
             setLists(lists);
         }
@@ -282,31 +274,23 @@ const CreateCardPage: FC = () => {
         if (values.workspace.value && !isEmpty(member?.boards)) {
             setBoards((member?.boards as Board[])
                 .filter(({ idOrganization }) => (idOrganization === values.workspace.value))
-                .map(({ id, name }) => ({
-                    key: id,
-                    value: id,
-                    type: "value",
-                    label: name,
-                })));
+                .map(({ id, name }) => getOption(id, name)));
 
 
-            const lists: Options = (member?.boards as Board[]).reduce((acc: Options, { idOrganization, lists = [] }) => {
-                if (!isEmpty(lists) && idOrganization === values.workspace.value) {
-                    return concat(acc, lists?.map(({ id, name }: List) => ({
-                        key: id,
-                        value: id,
-                        type: "value",
-                        label: name,
-                    })));
-                }
+            const lists = (member?.boards as Board[])
+                .reduce<Array<Option<List["id"]>>>((acc, { idOrganization, lists = [] }) => {
+                    if (!isEmpty(lists) && idOrganization === values.workspace.value) {
+                        return concat(acc, lists?.map(({ id, name }: List) => getOption(id, name)));
+                    }
 
-                return acc;
-            }, []);
+                    return acc;
+                }, []);
 
             setLists(lists);
             setFieldValue("board", resetValue);
             setFieldValue("list", resetValue);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.workspace]);
 
     useEffect(() => {
@@ -317,32 +301,25 @@ const CreateCardPage: FC = () => {
         const board = member?.boards?.find(({ id }) => id === values.board.value) as Board;
 
         setLists(
-            board.lists?.map(({ id, name }): Option => ({
-                key: id,
-                value: id,
-                label: name,
-                type: "value",
+            board.lists?.map(({ id, name }) => ({
+                ...getOption(id, name),
                 selected: false,
-            })) as Options
+            })) as Array<Option<List["id"]>>
         );
 
         getLabelsOnBoardService(client, values.board.value)
             .then((labels) => {
                 if (!isEmpty(labels)) {
-                    setLabels(labels.map(({ id, name, color }): Option => ({
-                        key: id,
-                        value: id,
-                        type: "value",
-                        label: (
-                            <Pill
-                                label={name ? name : <EmptyInlineBlock/>}
-                                {...getLabelColor(theme, color)}
-                            />
-                        ),
-                    })));
+                    setLabels(labels.map(({ id, name, color }) => getOption(id, (
+                        <Pill
+                            label={name ? name : <EmptyInlineBlock/>}
+                            {...getLabelColor(theme, color)}
+                        />
+                    ))));
                 }
             })
             .catch(() => {});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.board.value]);
 
     useEffect(() => {
@@ -350,6 +327,7 @@ const CreateCardPage: FC = () => {
             ...label,
             selected: values.labels.includes(label.value as never),
         })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values.labels]);
 
     if (loading) {
@@ -447,6 +425,7 @@ const CreateCardPage: FC = () => {
                         >
                             {({ active, targetProps, targetRef }) => (
                                 <Stack gap={6} wrap="wrap" align="baseline" style={{ marginBottom: 10 }}>
+                                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                     {/* @ts-ignore */}
                                     <ButtonUI
                                         id="labels"

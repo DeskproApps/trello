@@ -7,7 +7,7 @@ import {
   CopyToClipboardInput,
   useInitialisedDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { getUrlOrigin } from "../utils";
+import { getUrlOrigin } from "../../utils";
 
 const Description = styled(P1)`
   margin-top: 8px;
@@ -15,7 +15,7 @@ const Description = styled(P1)`
   color: ${({ theme }) => theme.colors.grey80};
 `;
 
-const AdminPage: FC = () => {
+const AdminCallbackPage: FC = () => {
   const [callbackUrl, setCallbackUrl] = useState<string|null>(null);
   const key = useMemo(() => uuidv4(), []);
   const origin = useMemo(() => getUrlOrigin(callbackUrl), [callbackUrl]);
@@ -38,4 +38,4 @@ const AdminPage: FC = () => {
   );
 };
 
-export { AdminPage };
+export { AdminCallbackPage };

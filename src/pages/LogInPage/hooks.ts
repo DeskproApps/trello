@@ -15,8 +15,8 @@ const useLogIn = () => {
     const navigate = useNavigate();
     const [, dispatch] = useStore();
 
-    const [callback, setCallback] = useState<OAuth2CallbackUrl | null>(null);
-    const [authUrl, setAuthUrl] = useState<string | null>(null);
+    const [callback, setCallback] = useState<OAuth2CallbackUrl|null>(null);
+    const [authUrl, setAuthUrl] = useState<string|null>(null);
     const [isAuthing, setIsAuthing] = useState(false);
     const { context } = useDeskproLatestAppContext();
     const { client } = useDeskproAppClient();

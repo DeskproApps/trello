@@ -1,10 +1,8 @@
-import { FC } from "react";
 import get from "lodash/get";
 import { useNavigate } from "react-router-dom";
-import { LoadingSpinner, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
-import { useStore } from "../context/StoreProvider/hooks";
-// import { Page } from "../context/StoreProvider/types";
-import { checkIsAliveService } from "../services/trello";
+import { useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
+import { useStore } from "../../context/StoreProvider/hooks";
+import { checkIsAliveService } from "../../services/trello";
 
 const useCheckIsAuth = () => {
     const navigate = useNavigate();
@@ -25,12 +23,4 @@ const useCheckIsAuth = () => {
     }, [state.isAuth, dispatch]);
 };
 
-const LoadingAppPage: FC = () => {
-    useCheckIsAuth();
-
-    return (
-        <LoadingSpinner/>
-    );
-};
-
-export { LoadingAppPage };
+export { useCheckIsAuth };
