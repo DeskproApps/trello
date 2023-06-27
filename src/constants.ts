@@ -2,6 +2,8 @@
 export const UNKNOWN_ERROR = "An error occurred";
 
 /** Deskpro */
+export const APP_PREFIX = "trello";
+
 export const TRELLO_ENTITY = 'linkedTrelloCards';
 
 /** Trello */

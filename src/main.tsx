@@ -8,6 +8,7 @@ import en from "javascript-time-ago/locale/en.json";
 import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
 import { StoreProvider } from "./context/StoreProvider";
 import { queryClient } from "./query";
+import { ReplyBoxProvider } from "./hooks";
 import { App } from "./App";
 import { ErrorFallback } from "./components";
 
@@ -29,7 +30,9 @@ ReactDOM.render(
                   <Suspense fallback={<LoadingSpinner/>}>
                       <ErrorBoundary FallbackComponent={ErrorFallback}>
                           <StoreProvider>
-                              <App />
+                              <ReplyBoxProvider>
+                                  <App />
+                              </ReplyBoxProvider>
                           </StoreProvider>
                       </ErrorBoundary>
                   </Suspense>

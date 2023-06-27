@@ -4,7 +4,7 @@ import {
     useQueryWithClient,
     useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
-import { getEntityCardListService } from "../services/deskpro";
+import { getEntityListService } from "../services/deskpro";
 import { getCardService } from "../services/trello";
 import { useQueriesWithClient } from "./useQueriesWithClient";
 import { QueryKey } from "../query";
@@ -22,7 +22,7 @@ const useLinkedCards: UseLinkedCards = () => {
 
     const linkedIds = useQueryWithClient(
         [QueryKey.LINKED_CARDS],
-        (client) => getEntityCardListService(client, ticketId),
+        (client) => getEntityListService(client, ticketId),
         { enabled: Boolean(ticketId) },
     );
 
@@ -35,7 +35,7 @@ const useLinkedCards: UseLinkedCards = () => {
 
     return {
         isLoading: [linkedIds, ...cards].some(({ isLoading }) => isLoading),
-        cards: cards.map(({ data }) => data).filter(Boolean) as CardType[]
+        cards: cards.map(({ data }) => data).filter(Boolean) as CardType[] || [],
     }
 };
 

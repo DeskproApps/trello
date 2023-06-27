@@ -6,7 +6,7 @@ import {
     useDeskproAppClient,
     useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
-import { useSetTitle, useLinkedAutoComment } from "../../hooks";
+import { useSetTitle, useLinkedAutoComment, useReplyBox } from "../../hooks";
 import { getEntityMetadata, getFilteredCards } from "../../utils";
 import { useStore } from "../../context/StoreProvider/hooks";
 import { setEntityCardService } from "../../services/deskpro";
@@ -20,8 +20,10 @@ const LinkCardPage: FC = () => {
     const navigate = useNavigate();
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
     const { client } = useDeskproAppClient();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, dispatch] = useStore();
     const { addLinkComment } = useLinkedAutoComment();
+    const { setSelectionState } = useReplyBox();
     const [selectedCards, setSelectedCards] = useState<Array<CardType["id"]>>([]);
     const [selectedBoard, setSelectedBoard] = useState<Option<"any"|Board["id"]>>(getOption("any", "Any"));
     const {
@@ -65,7 +67,10 @@ const LinkCardPage: FC = () => {
                     getEntityMetadata(cards.find(({ id }: CardType) => id === cardId)),
                 )
             ),
-            ...selectedCards.map((cardId) => addLinkComment(cardId))
+            ...selectedCards.map((cardId) => addLinkComment(cardId)),
+            ...selectedCards.map((cardId) => setSelectionState(cardId, true, "note")),
+            ...selectedCards.map((cardId) => setSelectionState(cardId, true, "email")),
+
         ])
             .then(() => navigate("/home"))
             .catch((error) => dispatch({ type: "error", error }));

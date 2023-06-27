@@ -9,6 +9,7 @@ import {
 import { deleteEntityCardService } from "../services/deskpro";
 import { useAsyncError } from "./useAsyncError";
 import { useLinkedAutoComment } from "./useLinkedAutoComment";
+import { useReplyBox } from "./useReplyBox";
 import type { TicketContext } from "../types";
 import type { CardType } from "../services/trello/types";
 
@@ -23,6 +24,7 @@ const useUnlinkCard: UseUnlinkCard = () => {
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
     const { asyncErrorHandler } = useAsyncError();
     const { addUnlinkComment } = useLinkedAutoComment();
+    const { deleteSelectionState } = useReplyBox();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const ticketId = get(context, ["data", "ticket", "id"]);
 
@@ -36,13 +38,15 @@ const useUnlinkCard: UseUnlinkCard = () => {
         return Promise.all([
             deleteEntityCardService(client, ticketId, card.id),
             addUnlinkComment(card.id),
+            deleteSelectionState(card.id, "note"),
+            deleteSelectionState(card.id, "email"),
         ])
             .catch(asyncErrorHandler)
             .finally(() => {
                 setIsLoading(false);
                 navigate("/home");
             });
-    }, [client, navigate, asyncErrorHandler, ticketId, addUnlinkComment]);
+    }, [client, navigate, asyncErrorHandler, ticketId, addUnlinkComment, deleteSelectionState]);
 
     return { isLoading, unlink };
 };

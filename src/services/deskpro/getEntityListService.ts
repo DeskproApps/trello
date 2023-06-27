@@ -1,7 +1,7 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { TRELLO_ENTITY } from "../../constants";
 
-const getEntityCardListService = (
+const getEntityListService = (
     client: IDeskproClient,
     ticketId: string,
 ): Promise<string[]> => {
@@ -10,4 +10,4 @@ const getEntityCardListService = (
         .list();
 };
 
-export { getEntityCardListService };
+export { getEntityListService };
