@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
@@ -22,23 +22,23 @@ import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
 
 TimeAgo.addDefaultLocale(en)
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root') as Element);
+root.render((
   <React.StrictMode>
-      <DeskproAppProvider>
-          <HashRouter>
-              <QueryClientProvider client={queryClient}>
-                  <Suspense fallback={<LoadingSpinner/>}>
-                      <ErrorBoundary FallbackComponent={ErrorFallback}>
-                          <StoreProvider>
-                              <ReplyBoxProvider>
-                                  <App />
-                              </ReplyBoxProvider>
-                          </StoreProvider>
-                      </ErrorBoundary>
-                  </Suspense>
-              </QueryClientProvider>
-          </HashRouter>
-      </DeskproAppProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+    <DeskproAppProvider>
+      <HashRouter>
+        <QueryClientProvider client={queryClient}>
+          <Suspense fallback={<LoadingSpinner/>}>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <StoreProvider>
+                <ReplyBoxProvider>
+                  <App />
+                </ReplyBoxProvider>
+              </StoreProvider>
+            </ErrorBoundary>
+          </Suspense>
+        </QueryClientProvider>
+      </HashRouter>
+    </DeskproAppProvider>
+  </React.StrictMode>
+));
