@@ -6,10 +6,9 @@ import {
     useDeskproAppClient,
     useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
-import { useSetTitle } from "../../hooks";
+import { useSetTitle, useLinkedAutoComment } from "../../hooks";
 import { getEntityMetadata, getFilteredCards } from "../../utils";
 import { useStore } from "../../context/StoreProvider/hooks";
-import { createCardCommentService } from "../../services/trello";
 import { setEntityCardService } from "../../services/deskpro";
 import { getOption } from "../../utils";
 import { useSearch } from "./hooks";
@@ -21,7 +20,8 @@ const LinkCardPage: FC = () => {
     const navigate = useNavigate();
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
     const { client } = useDeskproAppClient();
-    const [state, dispatch] = useStore();
+    const [_, dispatch] = useStore();
+    const { addLinkComment } = useLinkedAutoComment();
     const [selectedCards, setSelectedCards] = useState<Array<CardType["id"]>>([]);
     const [selectedBoard, setSelectedBoard] = useState<Option<"any"|Board["id"]>>(getOption("any", "Any"));
     const {
@@ -57,26 +57,16 @@ const LinkCardPage: FC = () => {
         /* ToDo: it is necessary to be able to link several entities with one request
             example: client.getEntityAssociation(TRELLO_ENTITY, ticketId).set([cardId_1, cardId_2, ...])
          */
-        Promise.all(selectedCards.map(
-            (cardId) => setEntityCardService(
-                client,
-                ticketId,
-                cardId,
-                getEntityMetadata(cards.find(({ id }: CardType) => id === cardId)),
-            )
-        ))
-            .then(() => {
-                return Promise.all(selectedCards.map(
-                    (cardId) => createCardCommentService(
-                        client,
-                        cardId,
-                        `Linked to Deskpro ticket ${ticketId}${state.context?.data?.ticket?.permalinkUrl
-                            ? `, ${state.context.data.ticket.permalinkUrl}`
-                            : ""
-                        }`,
-                    )
-                ))
-            })
+        Promise.all([
+            ...selectedCards.map((cardId) => setEntityCardService(
+                    client,
+                    ticketId,
+                    cardId,
+                    getEntityMetadata(cards.find(({ id }: CardType) => id === cardId)),
+                )
+            ),
+            ...selectedCards.map((cardId) => addLinkComment(cardId))
+        ])
             .then(() => navigate("/home"))
             .catch((error) => dispatch({ type: "error", error }));
     };

@@ -38,6 +38,15 @@
       "isRequired": false,
       "isBackendOnly": true,
       "order": 20
+    },
+    "add_comment_when_linking": {
+      "title": "Leave a comment on the card in Trello when it is linked to a ticket in Deskpro",
+      "description": "",
+      "type": "boolean",
+      "default": true,
+      "isRequired": false,
+      "isBackendOnly": false,
+      "order": 30
     }
   },
   "entityAssociations": {

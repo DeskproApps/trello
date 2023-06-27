@@ -32,12 +32,12 @@ import {
     useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
+import { useLinkedAutoComment } from "../../hooks";
 import { useStore } from "../../context/StoreProvider/hooks";
 import {
     createCardService,
     getCurrentMemberService,
     getLabelsOnBoardService,
-    createCardCommentService,
     getMembersOfOrganizationService,
 } from "../../services/trello";
 import { setEntityCardService } from "../../services/deskpro";
@@ -111,6 +111,7 @@ const CreateCardPage: FC = () => {
     const { theme } = useDeskproAppTheme();
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
+    const { addLinkComment } = useLinkedAutoComment();
     const ticketId = state.context?.data.ticket.id;
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -164,14 +165,7 @@ const CreateCardPage: FC = () => {
 
                     return Promise.all([
                         setEntityCardService(client, ticketId, cardId, metadata),
-                        createCardCommentService(
-                            client,
-                            cardId,
-                            `Linked to Deskpro ticket ${ticketId}${state.context?.data?.ticket?.permalinkUrl
-                                ? `, ${state.context.data.ticket.permalinkUrl}`
-                                : ""
-                            }`,
-                        ),
+                        addLinkComment(cardId),
                     ]);
                 })
                 .then(() => navigate("/home"))

@@ -37,7 +37,8 @@ export type Request = <T>(
 
 /** Deskpro types */
 export type Settings = {
-    //..
+    api_key?: string,
+    add_comment_when_linking?: boolean,
 };
 
 export type TicketData = {
