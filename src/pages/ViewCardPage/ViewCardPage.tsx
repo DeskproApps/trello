@@ -41,7 +41,7 @@ const ViewCardPage: FC = () => {
                 type: "menu",
                 items: [{
                     title: "Unlink Ticket",
-                    payload: { type: "unlinkTicket", cardId, ticketId },
+                    payload: { type: "unlink", card },
                 }],
             });
         }
@@ -52,7 +52,7 @@ const ViewCardPage: FC = () => {
                 hasIcon: true,
             });
         }
-    }, [cardId, ticketId, shortUrl]);
+    }, [cardId, ticketId, shortUrl, card]);
 
     const onNavigateToAddNewComment = useCallback(() => {
         navigate(`/add_comment/${cardId}`);

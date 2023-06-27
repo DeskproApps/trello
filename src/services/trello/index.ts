@@ -10,7 +10,6 @@ export { updateChecklistItemService } from "./updateChecklistItemService";
 export { getCardCommentsService } from "./getCardCommentsService";
 export { createCardCommentService } from "./createCardCommentService";
 export { removeTokenService } from "./removeTokenService";
-export { logoutService } from "./logoutService";
 export { createAttachService } from "./createAttachService";
 export { getOrganizationsService } from "./getOrganizationsService";
 export { TrelloError } from "./TrelloError";

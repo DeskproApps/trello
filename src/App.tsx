@@ -1,17 +1,17 @@
 import { match } from "ts-pattern";
+import get from "lodash/get";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import {
-    Context,
-    TargetAction,
+    LoadingSpinner,
     useDeskproAppClient,
     useDeskproAppEvents,
 } from "@deskpro/app-sdk";
-import { useStore } from "./context/StoreProvider/hooks";
-import { ReplyBoxNoteSelection } from "./context/StoreProvider/types";
-import { deleteEntityCardService } from "./services/deskpro";
-import { createCardCommentService, logoutService } from "./services/trello";
-import { useSetBadgeCount } from "./hooks";
+import {
+    useLogout,
+    useUnlinkCard,
+    useSetBadgeCount,
+} from "./hooks";
 import { isNavigatePayload } from "./utils";
 import {
     AddCommentPage,
@@ -24,66 +24,56 @@ import {
     LogInPage,
     ViewCardPage,
 } from "./pages";
+import type { ReplyBoxNoteSelection } from "./context/StoreProvider/types";
+import type { TargetAction } from "@deskpro/app-sdk";
 import type { EventPayload } from "./types";
 
 const App = () => {
     const navigate = useNavigate();
-    const [state, dispatch] = useStore();
+    const { logout, isLoading: isLoadingLogout } = useLogout();
+    const { unlink, isLoading: isLoadingUnlink } = useUnlinkCard();
     const { client } = useDeskproAppClient();
+
+    const isLoading = [isLoadingLogout, isLoadingUnlink].some((isLoading) => isLoading);
 
     useSetBadgeCount();
 
     const debounceTargetAction = useDebouncedCallback<(a: TargetAction<ReplyBoxNoteSelection[]>) => void>(
         (action: TargetAction) => {
-            match<string>(action.name)
+            console.log(">>> onTargetAction:", action);
+            match(action.name)
                 .with("linkTicket", () => navigate("/link_card"))
-                .run()
-            ;
+                .run();
         },
         500,
     );
 
+    const debounceElementEvent = useDebouncedCallback((_, __, payload: EventPayload) => {
+        console.log(">>> onElementEvent:", { _, __, payload });
+        match(payload.type)
+            .with("changePage", () => {
+                if (isNavigatePayload(payload)) {
+                    navigate(payload.path);
+                }
+            })
+            .with("logout", logout)
+            .with("unlink", () => unlink(get(payload, ["card"])))
+            .run();
+    }, 500);
+
     useDeskproAppEvents({
-        onChange: (context: Context) => {
-            context && dispatch({ type: "loadContext", context });
-        },
+        onShow: () => client && setTimeout(() => client.resize(), 200),
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        onElementEvent(id: string, type: string, payload?: EventPayload) {
-            if (payload?.type === "changePage" && isNavigatePayload(payload)) {
-                navigate(payload.path);
-            } else if (payload?.type === "logout") {
-                if (client) {
-                    logoutService(client)
-                        .then(() => {
-                            dispatch({ type: "setAuth", isAuth: false });
-                            navigate("/log_in");
-                        })
-                        .catch((error) => dispatch({ type: "error", error }));
-                }
-            } else if (payload?.type === "unlinkTicket") {
-                if (client) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    deleteEntityCardService(client, payload?.ticketId, payload.cardId)
-                        .then(() => createCardCommentService(
-                            client,
-                            payload.cardId,
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            `Unlinked from Deskpro ticket ${payload?.ticketId}${state.context?.data?.ticket?.permalinkUrl
-                                ? `, ${state.context.data.ticket.permalinkUrl}`
-                                : ""
-                            }`,
-                        ))
-                        .then(() => {
-                            navigate("/home");
-                        })
-                }
-            }
-        },
+        onElementEvent: debounceElementEvent,
         onTargetAction: (a) => debounceTargetAction(a as TargetAction),
     }, [client]);
+
+    if (isLoading) {
+        return (
+            <LoadingSpinner/>
+        );
+    }
 
     return (
         <Routes>

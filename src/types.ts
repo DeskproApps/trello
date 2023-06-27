@@ -66,5 +66,5 @@ export type NavigateToChangePage = { type: "changePage", path: To };
 export type EventPayload =
     | NavigateToChangePage
     | { type: "logout" }
-    | { type: "unlinkTicket", cardId: CardType["id"] }
+    | { type: "unlink", card: CardType }
 ;
