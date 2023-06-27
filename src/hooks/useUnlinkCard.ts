@@ -10,6 +10,7 @@ import { deleteEntityCardService } from "../services/deskpro";
 import { useAsyncError } from "./useAsyncError";
 import { useLinkedAutoComment } from "./useLinkedAutoComment";
 import { useReplyBox } from "./useReplyBox";
+import { useDeskproLabel } from "./useDeskproLabel";
 import type { TicketContext } from "../types";
 import type { CardType } from "../services/trello/types";
 
@@ -25,6 +26,7 @@ const useUnlinkCard: UseUnlinkCard = () => {
     const { asyncErrorHandler } = useAsyncError();
     const { addUnlinkComment } = useLinkedAutoComment();
     const { deleteSelectionState } = useReplyBox();
+    const { removeDeskproLabel } = useDeskproLabel();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const ticketId = get(context, ["data", "ticket", "id"]);
 
@@ -38,6 +40,7 @@ const useUnlinkCard: UseUnlinkCard = () => {
         return Promise.all([
             deleteEntityCardService(client, ticketId, card.id),
             addUnlinkComment(card.id),
+            removeDeskproLabel(card),
             deleteSelectionState(card.id, "note"),
             deleteSelectionState(card.id, "email"),
         ])
@@ -46,7 +49,7 @@ const useUnlinkCard: UseUnlinkCard = () => {
                 setIsLoading(false);
                 navigate("/home");
             });
-    }, [client, navigate, asyncErrorHandler, ticketId, addUnlinkComment, deleteSelectionState]);
+    }, [client, navigate, asyncErrorHandler, ticketId, addUnlinkComment, deleteSelectionState, removeDeskproLabel]);
 
     return { isLoading, unlink };
 };

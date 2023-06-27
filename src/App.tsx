@@ -42,7 +42,6 @@ const App = () => {
 
     const debounceTargetAction = useDebouncedCallback<(a: TargetAction<ReplyBoxNoteSelection[]>) => void>(
         (action: TargetAction) => {
-            console.log(">>> onTargetAction:", action);
             match(action.name)
                 .with("linkTicket", () => navigate("/link_card"))
                 .run();
@@ -51,7 +50,6 @@ const App = () => {
     );
 
     const debounceElementEvent = useDebouncedCallback((_, __, payload: EventPayload) => {
-        console.log(">>> onElementEvent:", { _, __, payload });
         match(payload.type)
             .with("changePage", () => {
                 if (isNavigatePayload(payload)) {

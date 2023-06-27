@@ -63,6 +63,15 @@
       "isRequired": false,
       "isBackendOnly": false,
       "order": 50
+    },
+    "add_deskpro_label": {
+      "title": "Add \"Deskpro\" label when creating or linking Card",
+      "description": "Automatically adding a label to indicate in Trello that the card is currently linked to a Deskpro ticket",
+      "type": "boolean",
+      "default": true,
+      "isRequired": false,
+      "isBackendOnly": false,
+      "order": 60
     }
   },
   "entityAssociations": {

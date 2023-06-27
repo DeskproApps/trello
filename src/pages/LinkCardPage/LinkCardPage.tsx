@@ -6,7 +6,12 @@ import {
     useDeskproAppClient,
     useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
-import { useSetTitle, useLinkedAutoComment, useReplyBox } from "../../hooks";
+import {
+  useSetTitle,
+  useReplyBox,
+  useDeskproLabel,
+  useLinkedAutoComment,
+} from "../../hooks";
 import { getEntityMetadata, getFilteredCards } from "../../utils";
 import { useStore } from "../../context/StoreProvider/hooks";
 import { setEntityCardService } from "../../services/deskpro";
@@ -23,6 +28,7 @@ const LinkCardPage: FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, dispatch] = useStore();
     const { addLinkComment } = useLinkedAutoComment();
+    const { addDeskproLabel } = useDeskproLabel();
     const { setSelectionState } = useReplyBox();
     const [selectedCards, setSelectedCards] = useState<Array<CardType["id"]>>([]);
     const [selectedBoard, setSelectedBoard] = useState<Option<"any"|Board["id"]>>(getOption("any", "Any"));
@@ -56,9 +62,6 @@ const LinkCardPage: FC = () => {
             return;
         }
 
-        /* ToDo: it is necessary to be able to link several entities with one request
-            example: client.getEntityAssociation(TRELLO_ENTITY, ticketId).set([cardId_1, cardId_2, ...])
-         */
         Promise.all([
             ...selectedCards.map((cardId) => setEntityCardService(
                     client,
@@ -70,7 +73,10 @@ const LinkCardPage: FC = () => {
             ...selectedCards.map((cardId) => addLinkComment(cardId)),
             ...selectedCards.map((cardId) => setSelectionState(cardId, true, "note")),
             ...selectedCards.map((cardId) => setSelectionState(cardId, true, "email")),
-
+            ...selectedCards.map((cardId) => {
+                const card = cards.find(({ id }: CardType) => id === cardId);
+                return card ? addDeskproLabel(card) : Promise.resolve();
+            }),
         ])
             .then(() => navigate("/home"))
             .catch((error) => dispatch({ type: "error", error }));

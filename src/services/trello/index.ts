@@ -13,3 +13,6 @@ export { removeTokenService } from "./removeTokenService";
 export { createAttachService } from "./createAttachService";
 export { getOrganizationsService } from "./getOrganizationsService";
 export { TrelloError } from "./TrelloError";
+export { addLabelToCardService } from "./addLabelToCardService";
+export { removeLabelFromCardService } from "./removeLabelFromCardService";
+export { createLabelService } from "./createLabelService";

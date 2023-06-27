@@ -18,7 +18,7 @@ import { useLinkedCards } from "./useLinkedCards";
 import { getEntityListService } from "../services/deskpro";
 import { createCardCommentService } from "../services/trello";
 import { APP_PREFIX } from "../constants";
-import type { FC } from "react";
+import type { FC, PropsWithChildren } from "react";
 import type { IDeskproClient, GetStateResponse, TargetAction } from "@deskpro/app-sdk";
 import type { CardType } from "../services/trello/types";
 import type { TicketContext, TicketData } from "../types";
@@ -86,7 +86,7 @@ const ReplyBoxContext = createContext<ReturnUseReplyBox>({
 
 const useReplyBox = () => useContext<ReturnUseReplyBox>(ReplyBoxContext);
 
-const ReplyBoxProvider: FC = ({ children }) => {
+const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
     const { client } = useDeskproAppClient();
     const { cards } = useLinkedCards();

@@ -1,3 +1,5 @@
+import type { LabelColor } from "./services/trello/types";
+
 /** Common */
 export const UNKNOWN_ERROR = "An error occurred";
 
@@ -5,6 +7,11 @@ export const UNKNOWN_ERROR = "An error occurred";
 export const APP_PREFIX = "trello";
 
 export const TRELLO_ENTITY = 'linkedTrelloCards';
+
+export const DESKPRO_LABEL: { name: string, color: LabelColor } = {
+    name: "Deskpro",
+    color: "blue",
+};
 
 /** Trello */
 export const placeholders = {

@@ -7,7 +7,7 @@ import {
 import { useSetTitle, useLinkedCards } from "../../hooks";
 import { getFilteredCards } from "../../utils";
 import { Home } from "../../components";
-import type { FC } from "react";
+import type { FC, ChangeEvent } from "react";
 import type { CardType } from "../../services/trello/types";
 
 const HomePage: FC = () => {
@@ -15,7 +15,7 @@ const HomePage: FC = () => {
     const [searchCard, setSearchCard] = useState<string>("");
     const { cards, isLoading } = useLinkedCards();
 
-    const onChangeSearchCard = useCallback((e) => {
+    const onChangeSearchCard = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setSearchCard(e.target.value);
     }, []);
 

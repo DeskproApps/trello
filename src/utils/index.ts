@@ -6,3 +6,4 @@ export { getEntityMetadata } from "./getEntityMetadata";
 export { getUrlOrigin } from "./getUrlOrigin";
 export { isNavigatePayload } from "./isNavigatePayload";
 export { getOption } from "./getOption";
+export { findDeskproLabel } from "./findDeskproLabel";

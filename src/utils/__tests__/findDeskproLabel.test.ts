@@ -9,7 +9,7 @@ const labels = [
 
 describe("getProjectName", () => {
   test("should return deskpro label", () => {
-    expect(findDeskproLabel({ labels: [...labels, dpLabel ] } as never)).toEqual(dpLabel);
+    expect(findDeskproLabel([...labels, dpLabel ] as never)).toEqual(dpLabel);
   });
 
   test("should return undefined if the label not found", () => {

@@ -32,7 +32,7 @@ import {
     useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useLinkedAutoComment } from "../../hooks";
+import { useLinkedAutoComment, useDeskproLabel } from "../../hooks";
 import { useStore } from "../../context/StoreProvider/hooks";
 import {
     createCardService,
@@ -112,6 +112,7 @@ const CreateCardPage: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const { addLinkComment } = useLinkedAutoComment();
+    const { addDeskproLabel } = useDeskproLabel();
     const ticketId = state.context?.data.ticket.id;
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -166,6 +167,7 @@ const CreateCardPage: FC = () => {
                     return Promise.all([
                         setEntityCardService(client, ticketId, cardId, metadata),
                         addLinkComment(cardId),
+                        addDeskproLabel(card),
                     ]);
                 })
                 .then(() => navigate("/home"))

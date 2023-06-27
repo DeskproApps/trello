@@ -30,7 +30,7 @@ export type RequestParams = {
     queryParams?: string|Dict<string>|ParamKeyValuePair[],
 };
 
-export type Request = <T>(
+export type Request = <T = void>(
     client: IDeskproClient,
     params: RequestParams,
 ) => Promise<T>;
@@ -41,6 +41,7 @@ export type Settings = {
     add_comment_when_linking?: boolean,
     default_comment_on_ticket_reply?: boolean,
     default_comment_on_ticket_note?: boolean,
+    add_deskpro_label?: boolean,
 };
 
 export type TicketData = {

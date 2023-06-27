@@ -37,7 +37,7 @@ const useCard: UseCard = (cardId) => {
         { enabled: Boolean(cardId) },
     );
 
-    const onChangeChecklistItem = useCallback((itemId, state) => {
+    const onChangeChecklistItem = useCallback((itemId: ChecklistItem["id"], state: ChecklistItem["state"]) => {
         if (!client || !cardId) {
             return;
         }
