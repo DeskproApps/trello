@@ -1,5 +1,4 @@
 import get from "lodash/get";
-import styled from "styled-components";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { Title, useDeskproAppTheme } from "@deskpro/app-sdk";
 import { P5, Pill, Icon, Stack } from "@deskpro/deskpro-ui";
@@ -7,6 +6,7 @@ import { getDate } from "../../utils/date";
 import { getLabelColor } from "../../utils";
 import {
     LinkIcon,
+    Markdown,
     Container,
     TrelloLogo,
     EmptyInlineBlock,
@@ -19,10 +19,6 @@ import type { CardType } from "../../services/trello/types";
 type Props = {
     card: CardType,
 };
-
-const Description = styled(P5)`
-    white-space: pre-wrap
-`;
 
 const Info: FC<Props> = ({ card }) => {
     const { theme } = useDeskproAppTheme();
@@ -51,7 +47,9 @@ const Info: FC<Props> = ({ card }) => {
             />
             <TextBlockWithLabel
                 label="Description"
-                text={<Description>{get(card, ["desc"], "-")}</Description>}
+                text={(
+                    <Markdown text={get(card, ["desc"], "-")} />
+                )}
             />
             <TextBlockWithLabel
                 label="Labels"

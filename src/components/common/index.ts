@@ -15,3 +15,5 @@ export { DateField } from "./DateField";
 export { TextArea } from "./TextArea";
 export { Attach } from "./Attach";
 export { Container } from "./Layout";
+export { Comment } from "./Comment";
+export { Markdown } from "./Markdown";

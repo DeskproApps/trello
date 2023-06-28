@@ -10,7 +10,7 @@ const createCardCommentService = (
     return baseRequest<Comment>(client, {
         url: `/cards/${cardId}/actions/comments`,
         method: "POST",
-        queryParams: {
+        data: {
             text: comment,
         },
     });
