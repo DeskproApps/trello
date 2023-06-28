@@ -3,6 +3,7 @@ import get from "lodash/get";
 import size from "lodash/size";
 import map from "lodash/map";
 import has from "lodash/has";
+import noop from "lodash/noop";
 import toLower from "lodash/toLower";
 import truncate from "lodash/truncate";
 import capitalize from "lodash/capitalize";
@@ -110,14 +111,14 @@ const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
             return client.setState(noteKey(ticketId, cardId), { id: cardId, selected })
                 .then(() => getEntityListService(client, ticketId))
                 .then((cardIds) => registerReplyBoxNotesAdditionsTargetAction(client, ticketId, cardIds, cardsMap))
-                .catch(() => {})
+                .catch(noop)
         }
 
         if (type === "email" && isCommentOnEmail) {
             return client?.setState(emailKey(ticketId, cardId), { id: cardId, selected })
                 .then(() => getEntityListService(client, ticketId))
                 .then((cardIds) => registerReplyBoxEmailsAdditionsTargetAction(client, ticketId, cardIds, cardsMap))
-                .catch(() => {})
+                .catch(noop)
         }
     }, [client, ticketId, isCommentOnNote, isCommentOnEmail, cardsMap]);
 

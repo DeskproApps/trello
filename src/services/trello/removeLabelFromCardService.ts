@@ -7,7 +7,7 @@ const removeLabelFromCardService = (
     cardId: CardType["id"],
     labelId: Label["id"],
 ) => {
-    return baseRequest(client, {
+    return baseRequest<void>(client, {
         url: `/cards/${cardId}/idLabels/${labelId}`,
         method: "DELETE",
     });

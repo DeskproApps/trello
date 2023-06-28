@@ -26,6 +26,7 @@ const Card: FC<any> = ({ checked, onChange, ...props }) => (
                     size={12}
                     checked={checked}
                     onChange={onChange}
+                    containerStyle={{ marginTop: 4 }}
                 />
             </CardMedia>
             <CardBody>

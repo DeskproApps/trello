@@ -6,9 +6,7 @@ type Props = {
 };
 
 const NoFound: FC<Props> = ({ text = "No found" } = {}) => (
-    <>
-        <P1>{text}</P1>
-    </>
+    <P1>{text}</P1>
 );
 
 export { NoFound };

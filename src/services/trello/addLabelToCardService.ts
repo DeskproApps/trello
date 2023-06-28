@@ -7,7 +7,7 @@ const addLabelToCardService = (
     cardId: CardType["id"],
     labelId: Label["id"],
 ) => {
-    return baseRequest(client, {
+    return baseRequest<Array<Label["id"]>>(client, {
         url: `/cards/${cardId}/idLabels`,
         method: "POST",
         queryParams: {

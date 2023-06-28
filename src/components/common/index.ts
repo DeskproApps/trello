@@ -5,7 +5,7 @@ export { SingleSelect } from "./SingleSelect";
 export { InputSearch } from "./InputSearch";
 export { TextBlockWithLabel } from "./TextBlockWithLabel";
 export { OverflowText } from "./OverflowText";
-export { TrelloLink } from "./TrelloLink";
+export { TrelloLink, TrelloLogo } from "./TrelloLink";
 export { TwoSider } from "./TwoSider";
 export { NoFound } from "./NoFound";
 export { Cards, Card, CardInfo } from "./Cards";

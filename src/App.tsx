@@ -32,15 +32,6 @@ const App = () => {
     const isAdmin = useMemo(() => pathname.includes("/admin/"), [pathname]);
     const isLoading = [isLoadingLogout, isLoadingUnlink].some((isLoading) => isLoading);
 
-    // const debounceTargetAction = useDebouncedCallback<(a: TargetAction<ReplyBoxNoteSelection[]>) => void>(
-    //     (action: TargetAction) => {
-    //         match(action.name)
-    //             .with("linkTicket", () => navigate("/link_card"))
-    //             .run();
-    //     },
-    //     500,
-    // );
-
     const debounceElementEvent = useDebouncedCallback((_, __, payload: EventPayload) => {
         match(payload.type)
             .with("changePage", () => {
@@ -58,7 +49,6 @@ const App = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onElementEvent: debounceElementEvent,
-        // onTargetAction: (a) => debounceTargetAction(a as TargetAction),
     }, [client]);
 
     if (isLoading) {

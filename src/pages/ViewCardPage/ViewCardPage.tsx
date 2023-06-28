@@ -18,7 +18,6 @@ const ViewCardPage: FC = () => {
     const { card, comments, loading, onChangeChecklistItem } = useCard(cardId);
 
     const ticketId = get(context, ["data", "ticket", "id"]);
-    const shortUrl = get(card, ["shortUrl"]);
 
     useSetTitle("View Card");
 
@@ -45,14 +44,7 @@ const ViewCardPage: FC = () => {
                 }],
             });
         }
-        if (shortUrl) {
-            registerElement("trelloExternalCtaLink", {
-                type: "cta_external_link",
-                url: shortUrl,
-                hasIcon: true,
-            });
-        }
-    }, [cardId, ticketId, shortUrl, card]);
+    }, [cardId, ticketId, card]);
 
     const onNavigateToAddNewComment = useCallback(() => {
         navigate(`/add_comment/${cardId}`);

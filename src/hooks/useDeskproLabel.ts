@@ -11,10 +11,10 @@ import {
 import { findDeskproLabel } from "../utils";
 import { DESKPRO_LABEL } from "../constants";
 import type { TicketContext } from "../types";
-import type { CardType } from "../services/trello/types";
+import type { CardType, Label } from "../services/trello/types";
 
 type UseDeskproLabel = () => {
-    addDeskproLabel: (card: CardType) => Promise<void>,
+    addDeskproLabel: (card: CardType) => Promise<void|Array<Label["id"]>>,
     removeDeskproLabel: (card: CardType) => Promise<void>,
 };
 

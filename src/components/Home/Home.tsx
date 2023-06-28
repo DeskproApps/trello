@@ -30,7 +30,7 @@ const Home: FC<Props> = ({
             />
             <HorizontalDivider style={{ marginBottom: 9 }}/>
             {!size(cards)
-                ? (<NoFound/>)
+                ? (<NoFound text="No Trello cards found" />)
                 : cards.map(({ id, ...card }) => (
                     <Fragment key={id}>
                         <CardInfo
