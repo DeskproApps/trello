@@ -116,7 +116,7 @@ const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
         if (type === "email" && isCommentOnEmail) {
             return client?.setState(emailKey(ticketId, cardId), { id: cardId, selected })
                 .then(() => getEntityListService(client, ticketId))
-                .then((taskIds) => registerReplyBoxEmailsAdditionsTargetAction(client, ticketId, taskIds, cardsMap))
+                .then((cardIds) => registerReplyBoxEmailsAdditionsTargetAction(client, ticketId, cardIds, cardsMap))
                 .catch(() => {})
         }
     }, [client, ticketId, isCommentOnNote, isCommentOnEmail, cardsMap]);

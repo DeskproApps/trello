@@ -7,13 +7,13 @@ import {
     useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
 import {
-  useSetTitle,
-  useReplyBox,
-  useDeskproLabel,
-  useLinkedAutoComment,
+    useSetTitle,
+    useReplyBox,
+    useAsyncError,
+    useDeskproLabel,
+    useLinkedAutoComment,
 } from "../../hooks";
 import { getEntityMetadata, getFilteredCards } from "../../utils";
-import { useStore } from "../../context/StoreProvider/hooks";
 import { setEntityCardService } from "../../services/deskpro";
 import { getOption } from "../../utils";
 import { useSearch } from "./hooks";
@@ -25,8 +25,7 @@ const LinkCardPage: FC = () => {
     const navigate = useNavigate();
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
     const { client } = useDeskproAppClient();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, dispatch] = useStore();
+    const { asyncErrorHandler } = useAsyncError();
     const { addLinkComment } = useLinkedAutoComment();
     const { addDeskproLabel } = useDeskproLabel();
     const { setSelectionState } = useReplyBox();
@@ -79,7 +78,7 @@ const LinkCardPage: FC = () => {
             }),
         ])
             .then(() => navigate("/home"))
-            .catch((error) => dispatch({ type: "error", error }));
+            .catch(asyncErrorHandler);
     };
 
     const onNavigateToCreateCard = useCallback(() => navigate("/create_card"), [navigate]);

@@ -1,9 +1,10 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseRequest } from "./baseRequest";
-import { CustomError, Member } from "./types";
+import { Member } from "./types";
+import { TrelloError } from "./TrelloError";
 
 const getCurrentMemberService = (client: IDeskproClient) => {
-    return baseRequest<Member & CustomError>(client, {
+    return baseRequest<Member & TrelloError>(client, {
         url:  "/members/me",
         queryParams: {
             boards: "all",

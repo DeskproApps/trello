@@ -7,19 +7,18 @@ import {
     useDeskproLatestAppContext,
     useInitialisedDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useStore } from "../../context/StoreProvider/hooks";
 import { checkIsAliveService } from "../../services/trello";
 import { getQueryParams } from "../../utils";
+import { useAsyncError } from "../../hooks";
 
 const useLogIn = () => {
     const navigate = useNavigate();
-    const [, dispatch] = useStore();
-
     const [callback, setCallback] = useState<OAuth2CallbackUrl|null>(null);
     const [authUrl, setAuthUrl] = useState<string|null>(null);
     const [isAuthing, setIsAuthing] = useState(false);
     const { context } = useDeskproLatestAppContext();
     const { client } = useDeskproAppClient();
+    const { asyncErrorHandler } = useAsyncError();
     const apiKey = useMemo(() => get(context, ["settings", "api_key"]), [context])
 
     useInitialisedDeskproAppClient(
@@ -63,14 +62,13 @@ const useLogIn = () => {
             .then((res) => {
                 if (get(res, ["isAlive"])) {
                     setIsAuthing(false);
-                    dispatch({ type: "setAuth", isAuth: true });
                     navigate("/home");
                 } else {
                     throw new Error(get(res, ["error"], "Unknown error"));
                 }
             })
-            .catch((error) => dispatch({ type: "error", error }));
-    }, [client, callback, dispatch, navigate]);
+            .catch(asyncErrorHandler);
+    }, [client, callback, navigate, asyncErrorHandler]);
 
     return { authUrl, poll, isAuthing };
 };

@@ -1,11 +1,11 @@
 import get from "lodash/get";
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { getCurrentMemberService } from "./getCurrentMember";
-import { CustomError } from "./types";
+import { TrelloError } from "./TrelloError";
 
 const checkIsAliveService = (
     client: IDeskproClient,
-): Promise<CustomError | { isAlive: true }> => {
+): Promise<TrelloError | { isAlive: true }> => {
     return getCurrentMemberService(client)
         .then((data) => {
             if (get(data, ["error"])) {

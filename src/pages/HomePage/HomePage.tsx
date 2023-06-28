@@ -4,7 +4,7 @@ import {
     LoadingSpinner,
     useDeskproElements,
 } from "@deskpro/app-sdk";
-import { useSetTitle, useLinkedCards } from "../../hooks";
+import { useSetTitle, useSetBadgeCount, useLinkedCards } from "../../hooks";
 import { getFilteredCards } from "../../utils";
 import { Home } from "../../components";
 import type { FC, ChangeEvent } from "react";
@@ -24,6 +24,8 @@ const HomePage: FC = () => {
     }, []);
 
     useSetTitle("Trello Cards");
+
+    useSetBadgeCount(cards);
 
     useDeskproElements(({ clearElements, registerElement }) => {
         clearElements();

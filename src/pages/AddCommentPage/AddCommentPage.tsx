@@ -5,8 +5,7 @@ import {
     useDeskproElements,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useStore } from "../../context/StoreProvider/hooks";
-import { useSetTitle } from "../../hooks";
+import { useSetTitle, useAsyncError } from "../../hooks";
 import {
     createAttachService,
     createCardCommentService,
@@ -18,8 +17,8 @@ import type { Values } from "../../components/AddComment";
 const AddCommentPage: FC = () => {
     const navigate = useNavigate();
     const { cardId } = useParams();
-    const [, dispatch] = useStore();
     const { client } = useDeskproAppClient();
+    const { asyncErrorHandler } = useAsyncError();
 
     const onCancel = useCallback(() => {
         navigate(`/view_card/${cardId}`)
@@ -47,10 +46,8 @@ const AddCommentPage: FC = () => {
 
         return Promise.all(promises)
             .then(() => navigate(`/view_card/${cardId}`))
-            .catch((error) => {
-                dispatch({ type: "error", error })
-            });
-    }, [client, cardId, dispatch, navigate]);
+            .catch(asyncErrorHandler);
+    }, [client, cardId, asyncErrorHandler, navigate]);
 
     useSetTitle("Add Comment");
 

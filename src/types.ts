@@ -4,7 +4,7 @@ import type {
     IDeskproClient,
     DropdownValueType,
 } from "@deskpro/app-sdk";
-import type { CardType } from "./services/trello/types";
+import type { CardType, Board, Label, List, Member } from "./services/trello/types";
 
 /** Common types */
 export type Maybe<T> = T | undefined | null;
@@ -50,6 +50,18 @@ export type TicketData = {
         subject: string,
         permalinkUrl: string,
     },
+};
+
+export type EntityMetadata = {
+    cardId: CardType["id"],
+    boardId: Board["id"],
+    boardName: Board["name"],
+    listId: List["id"],
+    listName: List["name"],
+    description: CardType["desc"],
+    labels: Array<{ id: Label["id"], name: Label["name"] }>,
+    members: Array<{ id: Member["id"], name: Member["fullName"] }>,
+    dueDate: CardType["due"],
 };
 
 export type TicketContext = Context<TicketData, Maybe<Settings>>;

@@ -1,4 +1,6 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useMemo, useState, useEffect } from "react";
+import get from "lodash/get";
+import has from "lodash/has";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import isEmpty from "lodash/isEmpty";
@@ -28,9 +30,9 @@ import {
     useDeskproAppTheme,
     useDeskproElements,
     useDeskproAppClient,
+    useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
 import { setEntityCardService } from "../../services/deskpro";
-import { useStore } from "../../context/StoreProvider/hooks";
 import {
     getCardService,
     updateCardService,
@@ -38,8 +40,8 @@ import {
     getLabelsOnBoardService,
     getMembersOfOrganizationService,
 } from "../../services/trello";
-import { Board, CardType, Member } from "../../services/trello/types";
 import { getLabelColor, getEntityMetadata } from "../../utils";
+import { useAsyncError } from "../../hooks";
 import {
     Label,
     Button,
@@ -51,6 +53,8 @@ import {
     EmptyInlineBlock,
     TextBlockWithLabel,
 } from "../../components/common";
+import type { Board, CardType, Member } from "../../services/trello/types";
+import type { TicketContext } from "../../types";
 
 export type Option = DropdownValueType<string>;
 
@@ -97,10 +101,9 @@ const EditCardPage: FC = () => {
     const { cardId } = useParams();
     const { theme } = useDeskproAppTheme();
     const { client } = useDeskproAppClient();
-    const [state, dispatch] = useStore();
-
-    // @todo: change to useDeskproLatestContext hook
-    const ticketId = state.context?.data.ticket.id;
+    const { context } = useDeskproLatestAppContext() as { context: TicketContext };
+    const { asyncErrorHandler } = useAsyncError();
+    const ticketId = useMemo(() => get(context, ["data", "ticket", "id"]), [context]);
 
     const [error] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
@@ -152,7 +155,7 @@ const EditCardPage: FC = () => {
                     }))
                 })
                 .then(() => navigate(`/view_card/${card.id}`))
-                .catch((error) => dispatch({ type: "error", error }));
+                .catch(asyncErrorHandler);
         },
     });
 
@@ -184,8 +187,8 @@ const EditCardPage: FC = () => {
 
         getCurrentMemberService(client)
             .then((member) => {
-                (member?.error)
-                    ? dispatch({ type: "error", error: member.error })
+                has(member, ["error"])
+                    ? asyncErrorHandler(get(member, ["error"]))
                     : setMember(member);
             })
             .finally(() => setLoading(false));
@@ -202,18 +205,11 @@ const EditCardPage: FC = () => {
         setLoading(true);
 
         getCurrentMemberService(client)
-            .then((member) => {
-                if (member?.error) {
-                    dispatch({ type: "error", error: member.error })
-                } else {
-                    return setMember(member);
-                }
-            })
-            .then(() => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                return getCardService(client, cardId);
-            })
+            .then((member) => has(member, ["error"])
+                ? asyncErrorHandler(get(member, ["error"]))
+                : setMember(member)
+            )
+            .then(() => getCardService(client, cardId))
             .then((card) => {
                 setCard(card);
                 setFieldValue("title", card.name);

@@ -1,4 +1,6 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useMemo, useState, useEffect } from "react";
+import get from "lodash/get";
+import has from "lodash/has";
 import noop from "lodash/noop";
 import concat from "lodash/concat";
 import isEmpty from "lodash/isEmpty";
@@ -31,9 +33,13 @@ import {
     useDeskproAppTheme,
     useDeskproElements,
     useDeskproAppClient,
+    useDeskproLatestAppContext,
 } from "@deskpro/app-sdk";
-import { useLinkedAutoComment, useDeskproLabel } from "../../hooks";
-import { useStore } from "../../context/StoreProvider/hooks";
+import {
+    useAsyncError,
+    useDeskproLabel,
+    useLinkedAutoComment,
+} from "../../hooks";
 import {
     createCardService,
     getCurrentMemberService,
@@ -57,7 +63,7 @@ import {
     getEntityMetadata,
 } from "../../utils";
 import { useSetTitle } from "../../hooks";
-import type { Option } from "../../types";
+import type { Option, TicketContext } from "../../types";
 import type { Member, Board, List, Organization, Label as LabelType } from "../../services/trello/types";
 
 export type MemberOption = Option<Member["id"]> & {
@@ -110,10 +116,11 @@ const CreateCardPage: FC = () => {
     const navigate = useNavigate();
     const { theme } = useDeskproAppTheme();
     const { client } = useDeskproAppClient();
-    const [state, dispatch] = useStore();
+    const { context } = useDeskproLatestAppContext() as { context: TicketContext };
     const { addLinkComment } = useLinkedAutoComment();
     const { addDeskproLabel } = useDeskproLabel();
-    const ticketId = state.context?.data.ticket.id;
+    const { asyncErrorHandler } = useAsyncError();
+    const ticketId = useMemo(() => get(context, ["data", "ticket", "id"]), [context]);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [member, setMember] = useState<Member|null>(null);
@@ -171,7 +178,7 @@ const CreateCardPage: FC = () => {
                     ]);
                 })
                 .then(() => navigate("/home"))
-                .catch((error) => dispatch({ type: "error", error }));
+                .catch(asyncErrorHandler);
         }
     });
 
@@ -203,11 +210,10 @@ const CreateCardPage: FC = () => {
         setLoading(true);
 
         getCurrentMemberService(client)
-            .then((member) => {
-                (member?.error)
-                    ? dispatch({ type: "error", error: member.error })
-                    : setMember(member);
-            })
+            .then((member) => has(member, ["error"])
+                ? asyncErrorHandler(get(member, ["error"]))
+                : setMember(member)
+            )
             .finally(() => setLoading(false));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

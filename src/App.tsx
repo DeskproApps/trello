@@ -8,11 +8,7 @@ import {
     useDeskproAppClient,
     useDeskproAppEvents,
 } from "@deskpro/app-sdk";
-import {
-    useLogout,
-    useUnlinkCard,
-    useSetBadgeCount,
-} from "./hooks";
+import { useLogout, useUnlinkCard } from "./hooks";
 import { isNavigatePayload } from "./utils";
 import {
     AddCommentPage,
@@ -25,8 +21,6 @@ import {
     LogInPage,
     ViewCardPage,
 } from "./pages";
-import type { ReplyBoxNoteSelection } from "./context/StoreProvider/types";
-import type { TargetAction } from "@deskpro/app-sdk";
 import type { EventPayload } from "./types";
 
 const App = () => {
@@ -38,16 +32,14 @@ const App = () => {
     const isAdmin = useMemo(() => pathname.includes("/admin/"), [pathname]);
     const isLoading = [isLoadingLogout, isLoadingUnlink].some((isLoading) => isLoading);
 
-    useSetBadgeCount();
-
-    const debounceTargetAction = useDebouncedCallback<(a: TargetAction<ReplyBoxNoteSelection[]>) => void>(
-        (action: TargetAction) => {
-            match(action.name)
-                .with("linkTicket", () => navigate("/link_card"))
-                .run();
-        },
-        500,
-    );
+    // const debounceTargetAction = useDebouncedCallback<(a: TargetAction<ReplyBoxNoteSelection[]>) => void>(
+    //     (action: TargetAction) => {
+    //         match(action.name)
+    //             .with("linkTicket", () => navigate("/link_card"))
+    //             .run();
+    //     },
+    //     500,
+    // );
 
     const debounceElementEvent = useDebouncedCallback((_, __, payload: EventPayload) => {
         match(payload.type)
@@ -66,7 +58,7 @@ const App = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onElementEvent: debounceElementEvent,
-        onTargetAction: (a) => debounceTargetAction(a as TargetAction),
+        // onTargetAction: (a) => debounceTargetAction(a as TargetAction),
     }, [client]);
 
     if (isLoading) {

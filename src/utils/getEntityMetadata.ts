@@ -1,5 +1,5 @@
 import isEmpty from "lodash/isEmpty";
-import { EntityMetadata } from "../context/StoreProvider/types";
+import { EntityMetadata } from "../types";
 import {CardType, Board, List, Member} from "../services/trello/types";
 import { parseDateTime } from "./date";
 

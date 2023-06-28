@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
-import { useStore } from "../context/StoreProvider/hooks";
 
-const useSetBadgeCount = () => {
+const useSetBadgeCount = <T>(items: Array<T>) => {
     const { client } = useDeskproAppClient();
-    const [state] = useStore();
 
     useEffect(() => {
-        if (!Array.isArray(state.cards)) {
+        if (!Array.isArray(items)) {
             return;
         }
 
-        client?.setBadgeCount(state.cards.length);
-    }, [client, state.cards]);
+        client?.setBadgeCount(items.length);
+    }, [client, items]);
 };
 
 export { useSetBadgeCount };

@@ -1,26 +1,30 @@
+import { useMemo } from "react";
 import get from "lodash/get";
+import size from "lodash/size";
 import { useNavigate } from "react-router-dom";
-import { useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
-import { useStore } from "../../context/StoreProvider/hooks";
-import { checkIsAliveService } from "../../services/trello";
+import {
+    useDeskproLatestAppContext,
+    useInitialisedDeskproAppClient,
+} from "@deskpro/app-sdk";
+import { getEntityListService } from "../../services/deskpro";
+import { getCurrentMemberService } from "../../services/trello";
+import type { TicketContext } from "../../types";
 
 const useCheckIsAuth = () => {
     const navigate = useNavigate();
-    const [state, dispatch] = useStore();
+    const { context } = useDeskproLatestAppContext() as { context: TicketContext };
+    const ticketId = useMemo(() => get(context, ["data", "ticket", "id"]), [context]);
 
     useInitialisedDeskproAppClient((client) => {
-        checkIsAliveService(client)
-            .then((res) => {
-                const isAlive = get(res, ["isAlive"]);
-                if (isAlive) {
-                    dispatch({ type: "setAuth", isAuth: true });
-                    navigate("/home");
-                } else {
-                    navigate("/log_in");
-                }
-            })
-            .catch(() => navigate("/log_in") )
-    }, [state.isAuth, dispatch]);
+        if (!ticketId) {
+            return;
+        }
+
+        getCurrentMemberService(client)
+            .then(() => getEntityListService(client, ticketId))
+            .then((entityIds) => navigate(size(entityIds) ? "/home" : "/link_card"))
+            .catch(() => navigate("/log_in"))
+    }, [ticketId]);
 };
 
 export { useCheckIsAuth };

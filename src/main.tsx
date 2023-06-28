@@ -6,7 +6,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
-import { StoreProvider } from "./context/StoreProvider";
 import { queryClient } from "./query";
 import { ReplyBoxProvider } from "./hooks";
 import { App } from "./App";
@@ -24,21 +23,19 @@ TimeAgo.addDefaultLocale(en)
 
 const root = ReactDOM.createRoot(document.getElementById('root') as Element);
 root.render((
-  <React.StrictMode>
-    <DeskproAppProvider>
-      <HashRouter>
-        <QueryClientProvider client={queryClient}>
-          <Suspense fallback={<LoadingSpinner/>}>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <StoreProvider>
-                <ReplyBoxProvider>
-                  <App />
-                </ReplyBoxProvider>
-              </StoreProvider>
-            </ErrorBoundary>
-          </Suspense>
-        </QueryClientProvider>
-      </HashRouter>
-    </DeskproAppProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <DeskproAppProvider>
+            <HashRouter>
+                <QueryClientProvider client={queryClient}>
+                    <Suspense fallback={<LoadingSpinner/>}>
+                        <ErrorBoundary FallbackComponent={ErrorFallback}>
+                            <ReplyBoxProvider>
+                                <App/>
+                            </ReplyBoxProvider>
+                        </ErrorBoundary>
+                    </Suspense>
+                </QueryClientProvider>
+            </HashRouter>
+        </DeskproAppProvider>
+    </React.StrictMode>
 ));
