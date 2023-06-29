@@ -5,7 +5,9 @@ import {
     useDeskproElements,
 } from "@deskpro/app-sdk";
 import { useSetTitle, useSetBadgeCount, useLinkedCards } from "../../hooks";
+import { useHomeDeps } from "./hooks";
 import { getFilteredCards } from "../../utils";
+
 import { Home } from "../../components";
 import type { FC, ChangeEvent } from "react";
 import type { CardType } from "../../services/trello/types";
@@ -14,6 +16,7 @@ const HomePage: FC = () => {
     const navigate = useNavigate();
     const [searchCard, setSearchCard] = useState<string>("");
     const { cards, isLoading } = useLinkedCards();
+    const { organizations } = useHomeDeps()
 
     const onChangeSearchCard = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setSearchCard(e.target.value);
@@ -58,6 +61,7 @@ const HomePage: FC = () => {
     return (
         <Home
             searchCard={searchCard}
+            organizations={organizations}
             onChangeSearchCard={onChangeSearchCard}
             onClearSearchCard={onClearSearchCard}
             onNavigateToViewCard={onNavigateToViewCard}

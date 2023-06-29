@@ -17,3 +17,5 @@ export { Attach } from "./Attach";
 export { Container } from "./Layout";
 export { Comment } from "./Comment";
 export { Markdown } from "./Markdown";
+export { Link } from "./Link";
+export { DeskproTickets } from "./DeskproTickets";

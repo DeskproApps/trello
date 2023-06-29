@@ -4,17 +4,24 @@ import { useDeskproAppClient, useQueryWithClient } from "@deskpro/app-sdk";
 import {
     getCardService,
     getCardCommentsService,
+    getOrganizationsService,
     updateChecklistItemService,
 } from "../../services/trello";
 import { useAsyncError } from "../../hooks";
 import { QueryKey, queryClient } from "../../query";
 import type { Maybe } from "../../types";
-import type { CardType, ChecklistItem, Comment } from "../../services/trello/types";
+import type {
+    Comment,
+    CardType,
+    Organization,
+    ChecklistItem,
+} from "../../services/trello/types";
 
 type UseCard = (cardId?: CardType["id"]) => {
     card: Maybe<CardType>,
     comments: Maybe<Comment[]>,
     loading: boolean,
+    organizations: Organization[],
     onChangeChecklistItem: (
         itemId: ChecklistItem["id"],
         state: ChecklistItem["state"],
@@ -37,6 +44,11 @@ const useCard: UseCard = (cardId) => {
         { enabled: Boolean(cardId) },
     );
 
+    const organizations = useQueryWithClient(
+        [QueryKey.ORGANIZATIONS],
+        (client) => getOrganizationsService(client),
+    );
+
     const onChangeChecklistItem = useCallback((itemId: ChecklistItem["id"], state: ChecklistItem["state"]) => {
         if (!client || !cardId) {
             return;
@@ -48,9 +60,10 @@ const useCard: UseCard = (cardId) => {
     }, [client, cardId, asyncErrorHandler]);
 
     return {
-        loading: [card, comments].some(({ isLoading }) => isLoading),
+        loading: [card, comments, organizations].some(({ isLoading }) => isLoading),
         card: get(card, ["data"]),
         comments: get(comments, ["data"]),
+        organizations: get(organizations, ["data"], []) || [],
         onChangeChecklistItem,
     };
 };

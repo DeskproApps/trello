@@ -15,7 +15,11 @@ import {
 } from "../common";
 import type { FC, ChangeEvent } from "react";
 import type { Option } from "../../types";
-import type { CardType, Board } from "../../services/trello/types";
+import type {
+    Board,
+    CardType,
+    Organization,
+} from "../../services/trello/types";
 
 type Props = {
     searchCard: string,
@@ -31,6 +35,7 @@ type Props = {
     onLinkCard: () => void,
     onChangeSelectedCard: (cardId: CardType["id"]) => void,
     loading: boolean,
+    organizations: Organization[],
 };
 
 const LinkCard: FC<Props> = ({
@@ -47,6 +52,7 @@ const LinkCard: FC<Props> = ({
     onLinkCard,
     onChangeSelectedCard,
     loading,
+    organizations,
 }) => {
     return (
         <Container>
@@ -94,6 +100,7 @@ const LinkCard: FC<Props> = ({
                 : (
                     <Cards
                         cards={cards}
+                        organizations={organizations}
                         selectedCards={selectedCards}
                         onChange={onChangeSelectedCard}
                     />

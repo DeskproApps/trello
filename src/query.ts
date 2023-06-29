@@ -14,6 +14,7 @@ enum QueryKey {
   LINKED_CARDS = "linkedCards",
   CARD = "card",
   COMMENTS = "comments",
+  ORGANIZATIONS = "organizations",
 }
 
 export { queryClient, QueryKey };

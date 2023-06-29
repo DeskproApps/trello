@@ -36,6 +36,7 @@ const LinkCardPage: FC = () => {
         loading,
         searchCard,
         boardOptions,
+        organizations,
         onClearSearch,
         onChangeSearch,
     } = useSearch();
@@ -107,6 +108,7 @@ const LinkCardPage: FC = () => {
 
     return (
         <LinkCard
+            organizations={organizations}
             loading={loading}
             searchCard={searchCard}
             onClearSearch={onClearSearch}

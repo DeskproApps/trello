@@ -1,4 +1,5 @@
 import get from "lodash/get";
+import find from "lodash/find";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { Title, useDeskproAppTheme } from "@deskpro/app-sdk";
 import { P5, Pill, Icon, Stack } from "@deskpro/deskpro-ui";
@@ -14,16 +15,20 @@ import {
 } from "../common";
 import { Members } from "../common/Cards";
 import type { FC } from "react";
-import type { CardType } from "../../services/trello/types";
+import type { CardType, Organization } from "../../services/trello/types";
 
 type Props = {
     card: CardType,
+    organizations: Organization[],
 };
 
-const Info: FC<Props> = ({ card }) => {
+const Info: FC<Props> = ({ card, organizations }) => {
     const { theme } = useDeskproAppTheme();
     const labels = get(card, ["labels"]);
     const due = get(card, ["due"]);
+    const workspace = find(organizations, {
+        id: get(card, ["board", "idOrganization"]),
+    });
 
     return (
         <Container>
@@ -31,6 +36,17 @@ const Info: FC<Props> = ({ card }) => {
                 title={get(card, ["name"], "-")}
                 icon={<TrelloLogo/>}
                 link={get(card, ["shortUrl"], "#")}
+            />
+            <TextBlockWithLabel
+                label="Board"
+                text={(
+                    <>
+                        <P5 style={{ marginRight: 4 }}>{get(workspace, ["displayName"], "-")}</P5>
+                        {get(workspace, ["url"]) && (
+                            <LinkIcon size={10} href={get(workspace, ["url"], "#")}/>
+                        )}
+                    </>
+                )}
             />
             <TextBlockWithLabel
                 label="Board"

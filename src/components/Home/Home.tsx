@@ -4,7 +4,7 @@ import { HorizontalDivider } from "@deskpro/app-sdk";
 import { CardInfo, NoFound, InputSearch, Container } from "../common";
 import type { FC } from "react";
 import type { Props as SearchProps } from "../common/InputSearch";
-import type { CardType } from "../../services/trello/types";
+import type { CardType, Organization } from "../../services/trello/types";
 
 type Props = {
     cards: CardType[],
@@ -12,11 +12,13 @@ type Props = {
     onChangeSearchCard: SearchProps["onChange"],
     onClearSearchCard: () => void,
     onNavigateToViewCard: (cardId: CardType["id"]) => void,
+    organizations: Organization[],
 };
 
 const Home: FC<Props> = ({
     cards,
     searchCard,
+    organizations,
     onClearSearchCard,
     onChangeSearchCard,
     onNavigateToViewCard,
@@ -31,12 +33,12 @@ const Home: FC<Props> = ({
             <HorizontalDivider style={{ marginBottom: 9 }}/>
             {!size(cards)
                 ? (<NoFound text="No Trello cards found" />)
-                : cards.map(({ id, ...card }) => (
-                    <Fragment key={id}>
+                : cards.map((card) => (
+                    <Fragment key={card.id}>
                         <CardInfo
-                            id={id}
-                            onTitleClick={() => onNavigateToViewCard(id)}
-                            {...card}
+                            card={card}
+                            organizations={organizations}
+                            onTitleClick={() => onNavigateToViewCard(card.id)}
                         />
                         <HorizontalDivider style={{ marginBottom: 9 }}/>
                     </Fragment>

@@ -15,7 +15,13 @@ const ViewCardPage: FC = () => {
     const navigate = useNavigate();
     const { cardId } = useParams();
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
-    const { card, comments, loading, onChangeChecklistItem } = useCard(cardId);
+    const {
+        card,
+        loading,
+        comments,
+        organizations,
+        onChangeChecklistItem,
+    } = useCard(cardId);
 
     const ticketId = get(context, ["data", "ticket", "id"]);
 
@@ -60,6 +66,7 @@ const ViewCardPage: FC = () => {
         <ViewCard
             card={card}
             comments={comments}
+            organizations={organizations}
             onNavigateToAddNewComment={onNavigateToAddNewComment}
             onChangeChecklistItem={onChangeChecklistItem}
         />

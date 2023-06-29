@@ -1,12 +1,17 @@
 import { useState, useCallback } from "react";
+import get from "lodash/get";
 import noop from "lodash/noop";
 import { useDebouncedCallback } from "use-debounce";
-import { useDeskproAppClient } from "@deskpro/app-sdk";
-import { searchByCardService } from "../../services/trello";
+import {
+    useQueryWithClient,
+    useDeskproAppClient,
+} from "@deskpro/app-sdk";
+import { searchByCardService, getOrganizationsService } from "../../services/trello";
+import { QueryKey } from "../../query";
 import { getOption } from "../../utils";
 import type { ChangeEvent } from "react";
 import type { Option } from "../../types";
-import type { CardType, Board } from "../../services/trello/types";
+import type { CardType, Board, Organization } from "../../services/trello/types";
 
 type BoardOptionsMap = Record<"any"|Board["id"], Option>
 
@@ -17,6 +22,7 @@ type UseSearch = () => {
     boardOptions: BoardOptionsMap,
     onClearSearch: () => void,
     onChangeSearch: (e: ChangeEvent<HTMLInputElement>) => void,
+    organizations: Organization[],
 };
 
 const useSearch: UseSearch = () => {
@@ -70,6 +76,11 @@ const useSearch: UseSearch = () => {
         searchInTrello(q);
     };
 
+    const organizations = useQueryWithClient(
+        [QueryKey.ORGANIZATIONS],
+        (client) => getOrganizationsService(client),
+    );
+
     return {
         cards,
         loading,
@@ -77,6 +88,7 @@ const useSearch: UseSearch = () => {
         boardOptions,
         onClearSearch,
         onChangeSearch,
+        organizations: get(organizations, ["data"], []) || [],
     };
 };
 
