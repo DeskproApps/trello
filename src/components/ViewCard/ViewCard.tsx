@@ -30,7 +30,7 @@ const ViewCard: FC<Props> = ({
 }) => {
     const checklists = get(card, ["checklists"]);
     const isChecklists = useMemo(() => {
-        return Array.isArray(checklists) && size(checklists)
+        return Array.isArray(checklists) && Boolean(size(checklists));
     }, [checklists]);
 
     if (!card) {

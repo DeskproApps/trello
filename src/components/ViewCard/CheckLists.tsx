@@ -17,7 +17,7 @@ type Props =  {
 const CheckLists: FC<Props> = ({ checklists, onChangeChecklistItem }) => {
     return (
         <Container>
-            {(Array.isArray(checklists) && size(checklists)) && (
+            {(Array.isArray(checklists) && Boolean(size(checklists))) && (
                 <>
                     <Title title="Checklist" />
 

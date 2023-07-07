@@ -10,7 +10,7 @@ const createLabelService = (
     return baseRequest<Label>(client, {
         url: "/labels",
         method: "POST",
-        queryParams: label as Dict<string>,
+        data: label as Dict<string>,
     });
 };
 

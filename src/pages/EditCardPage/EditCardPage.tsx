@@ -226,7 +226,7 @@ const EditCardPage: FC = () => {
                     value: card.list.id,
                     type: "value",
                 });
-                setFieldValue("dueDate", new Date(card.due));
+                card.due && setFieldValue("dueDate", new Date(card.due));
                 setFieldValue("labels", card.idLabels);
                 setFieldValue("members", card.idMembers);
 

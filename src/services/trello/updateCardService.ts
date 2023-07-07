@@ -6,12 +6,12 @@ const updateCardService = (
     client: IDeskproClient,
     cardId: CardType["id"],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    queryParams: any,
+    data: any,
 ) => {
     return baseRequest<CardType>(client, {
         url: `/cards/${cardId}`,
         method: "PUT",
-        queryParams,
+        data,
     });
 };
 

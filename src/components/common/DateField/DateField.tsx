@@ -8,6 +8,7 @@ import {
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
 import { Label } from "../Label";
+import "./DateField.css";
 
 export type MappedFieldProps = DatePickerProps & {
     id: string;
