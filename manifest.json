@@ -1,93 +1,93 @@
 {
-  "name": "@deskpro-apps/trello",
-  "title": "Trello",
-  "description": "Integrate Trello with your helpdesk to improve your management of your tasks",
-  "appStoreUrl": "https://www.deskpro.com/product-embed/apps/trello",
-  "version": "1.0.23",
-  "scope": "agent",
-  "isSingleInstall": false,
-  "hasDevMode": true,
-  "serveUrl": "https://apps-cdn.deskpro-service.com/__name__/__version__",
-  "targets": [
-    {
-      "target": "ticket_sidebar",
-      "entrypoint": "index.html",
-      "options": {
-        "actions": {
-          "linkTicket": {
-            "type": "ticket_addition",
-            "title": "Trello Card",
-            "description": "Link ticket to a Trello card"
-          }
+    "name": "@deskpro-apps/trello",
+    "title": "Trello",
+    "description": "Integrate Trello with your helpdesk to improve your management of your tasks",
+    "appStoreUrl": "https://www.deskpro.com/product-embed/apps/trello",
+    "version": "1.1.0",
+    "scope": "agent",
+    "isSingleInstall": false,
+    "hasDevMode": true,
+    "serveUrl": "https://apps-cdn.deskpro-service.com/__name__/__version__",
+    "targets": [
+        {
+            "target": "ticket_sidebar",
+            "entrypoint": "index.html",
+            "options": {
+                "actions": {
+                    "linkTicket": {
+                        "type": "ticket_addition",
+                        "title": "Trello Card",
+                        "description": "Link ticket to a Trello card"
+                    }
+                }
+            }
         }
-      }
+    ],
+    "settings": {
+        "api_key": {
+            "title": "API Key",
+            "type": "string",
+            "isRequired": true,
+            "isBackendOnly": false,
+            "order": 10
+        },
+        "callback_url": {
+            "title": "Callback URL Origin",
+            "type": "app_embedded",
+            "options": { "entrypoint": "#/admin/callback" },
+            "isRequired": false,
+            "isBackendOnly": true,
+            "order": 20
+        },
+        "add_comment_when_linking": {
+            "title": "Leave a comment on the card in Trello when it is linked to a ticket in Deskpro",
+            "description": "",
+            "type": "boolean",
+            "default": true,
+            "isRequired": false,
+            "isBackendOnly": false,
+            "order": 30
+        },
+        "default_comment_on_ticket_reply": {
+            "title": "Ticket reply as comment",
+            "description": "Enable option to add Deskpro replies as card comments when a Trello card is linked to a Deskpro ticket",
+            "type": "boolean",
+            "isRequired": false,
+            "isBackendOnly": false,
+            "order": 40
+        },
+        "default_comment_on_ticket_note": {
+            "title": "Ticket note as comment",
+            "description": "Enable option to add Deskpro notes as card comments when a Trello card is linked to a Deskpro ticket",
+            "type": "boolean",
+            "isRequired": false,
+            "isBackendOnly": false,
+            "order": 50
+        },
+        "add_deskpro_label": {
+            "title": "Add \"Deskpro\" label when creating or linking Card",
+            "description": "Automatically adding a label to indicate in Trello that the card is currently linked to a Deskpro ticket",
+            "type": "boolean",
+            "default": true,
+            "isRequired": false,
+            "isBackendOnly": false,
+            "order": 60
+        }
+    },
+    "entityAssociations": {
+        "linkedTrelloCards": {
+            "title": "Linked Trello Card",
+            "entity": "ticket",
+            "type": "external_id"
+        }
+    },
+    "proxy": {
+        "whitelist": [
+            {
+                "url": "https://api.trello.com/.*",
+                "methods": ["GET", "POST", "PUT", "DELETE"],
+                "timeout": 10
+            }
+        ]
     }
-  ],
-  "settings": {
-    "api_key": {
-      "title": "API Key",
-      "type": "string",
-      "isRequired": true,
-      "isBackendOnly": false,
-      "order": 10
-    },
-    "callback_url": {
-      "title": "Callback URL Origin",
-      "type": "app_embedded",
-      "options": { "entrypoint": "#/admin/callback" },
-      "isRequired": false,
-      "isBackendOnly": true,
-      "order": 20
-    },
-    "add_comment_when_linking": {
-      "title": "Leave a comment on the card in Trello when it is linked to a ticket in Deskpro",
-      "description": "",
-      "type": "boolean",
-      "default": true,
-      "isRequired": false,
-      "isBackendOnly": false,
-      "order": 30
-    },
-    "default_comment_on_ticket_reply": {
-      "title": "Ticket reply as comment",
-      "description": "Enable option to add Deskpro replies as card comments when a Trello card is linked to a Deskpro ticket",
-      "type": "boolean",
-      "isRequired": false,
-      "isBackendOnly": false,
-      "order": 40
-    },
-    "default_comment_on_ticket_note": {
-      "title": "Ticket note as comment",
-      "description": "Enable option to add Deskpro notes as card comments when a Trello card is linked to a Deskpro ticket",
-      "type": "boolean",
-      "isRequired": false,
-      "isBackendOnly": false,
-      "order": 50
-    },
-    "add_deskpro_label": {
-      "title": "Add \"Deskpro\" label when creating or linking Card",
-      "description": "Automatically adding a label to indicate in Trello that the card is currently linked to a Deskpro ticket",
-      "type": "boolean",
-      "default": true,
-      "isRequired": false,
-      "isBackendOnly": false,
-      "order": 60
-    }
-  },
-  "entityAssociations": {
-    "linkedTrelloCards": {
-      "title": "Linked Trello Card",
-      "entity": "ticket",
-      "type": "external_id"
-    }
-  },
-  "proxy": {
-    "whitelist": [
-      {
-        "url": "https://api.trello.com/.*",
-        "methods": ["GET", "POST", "PUT", "DELETE"],
-        "timeout": 10
-      }
-    ]
-  }
 }
