@@ -1,6 +1,7 @@
-import { DateTime } from "../../services/trello/types";
+import { DateTime } from "../../types";
 
-// eslint-disable-next-line
+// @todo: rewrite to use date-fns
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const parseDateTime = (date?: any): DateTime => {
     if (date instanceof Date) {
         return date.toISOString();

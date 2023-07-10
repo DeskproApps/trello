@@ -1,9 +1,21 @@
 import { FC } from "react";
 import { NoFound } from "../NoFound";
 import { Card } from "./Card";
+import type { CardType, Organization } from "../../../services/trello/types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Cards: FC<any> = ({ onChange, cards, selectedCards }) => {
+type Props = {
+    cards: CardType[],
+    organizations: Organization[],
+    selectedCards: Array<CardType["id"]>,
+    onChange: (cardId: CardType["id"]) => void,
+};
+
+const Cards: FC<Props> = ({
+    cards,
+    onChange,
+    organizations,
+    selectedCards,
+}) => {
     if (!Array.isArray(cards)) {
         return (<NoFound />);
     }
@@ -14,12 +26,14 @@ const Cards: FC<any> = ({ onChange, cards, selectedCards }) => {
 
     return (
         <>
-            {cards.map(({ id, ...card }) => (
+            {cards.map((card) => (
                 <Card
-                    key={id}
-                    id={id}
-                    checked={selectedCards.includes(id)}
-                    onChange={() => onChange(id)} {...card}/>
+                    key={card.id}
+                    card={card}
+                    organizations={organizations}
+                    checked={selectedCards.includes(card.id)}
+                    onChange={() => onChange(card.id)}
+                />
             ))}
         </>
     );

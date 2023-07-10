@@ -1,27 +1,78 @@
-import { DeskproAppProvider } from "@deskpro/app-sdk";
-import { StoreProvider } from "./context/StoreProvider";
-import { Main } from "./pages/Main";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en.json";
+import { useMemo } from "react";
+import { match } from "ts-pattern";
+import get from "lodash/get";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
+import {
+    LoadingSpinner,
+    useDeskproAppClient,
+    useDeskproAppEvents,
+} from "@deskpro/app-sdk";
+import { useLogout, useUnlinkCard } from "./hooks";
+import { isNavigatePayload } from "./utils";
+import {
+    AddCommentPage,
+    AdminCallbackPage,
+    CreateCardPage,
+    EditCardPage,
+    HomePage,
+    LinkCardPage,
+    LoadingAppPage,
+    LogInPage,
+    ViewCardPage,
+} from "./pages";
+import type { EventPayload } from "./types";
 
-import "iframe-resizer/js/iframeResizer.contentWindow.js";
-import "flatpickr/dist/themes/light.css";
-import "tippy.js/dist/tippy.css";
-import "simplebar/dist/simplebar.min.css";
+const App = () => {
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const { logout, isLoading: isLoadingLogout } = useLogout();
+    const { unlink, isLoading: isLoadingUnlink } = useUnlinkCard();
+    const { client } = useDeskproAppClient();
+    const isAdmin = useMemo(() => pathname.includes("/admin/"), [pathname]);
+    const isLoading = [isLoadingLogout, isLoadingUnlink].some((isLoading) => isLoading);
 
-import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
-import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
+    const debounceElementEvent = useDebouncedCallback((_, __, payload: EventPayload) => {
+        match(payload.type)
+            .with("changePage", () => {
+                if (isNavigatePayload(payload)) {
+                    navigate(payload.path);
+                }
+            })
+            .with("logout", logout)
+            .with("unlink", () => unlink(get(payload, ["card"])))
+            .run();
+    }, 500);
 
-TimeAgo.addDefaultLocale(en)
+    useDeskproAppEvents({
+        onShow: () => client && setTimeout(() => client.resize(), 200),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        onElementEvent: debounceElementEvent,
+    }, [client]);
 
-function App() {
+    if (isLoading) {
+        return (
+            <LoadingSpinner/>
+        );
+    }
+
     return (
-        <DeskproAppProvider>
-            <StoreProvider>
-                <Main />
-            </StoreProvider>
-        </DeskproAppProvider>
+        <>
+            <Routes>
+                <Route path="/home" element={<HomePage />}/>)
+                <Route path="/log_in" element={<LogInPage />}/>)
+                <Route path="/link_card" element={<LinkCardPage />}/>)
+                <Route path="/create_card" element={<CreateCardPage/>}/>)
+                <Route path="/view_card/:cardId" element={<ViewCardPage />}/>)
+                <Route path="/edit_card/:cardId" element={<EditCardPage />}/>)
+                <Route path="/add_comment/:cardId" element={<AddCommentPage />}/>)
+                <Route path="/admin/callback" element={<AdminCallbackPage/>}/>)
+                <Route index element={<LoadingAppPage/>} />
+            </Routes>
+            {!isAdmin && (<><br/><br/><br/></>)}
+        </>
     );
-}
+};
 
-export default App;
+export { App };

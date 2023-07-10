@@ -1,1 +1,0 @@
-export { FindCard } from "./FindCard";

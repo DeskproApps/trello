@@ -9,9 +9,9 @@ const getCardService = (
     return baseRequest<CardType>(client, {
         url: `/cards/${cardId}`,
         queryParams: {
-            members: true,
-            board: true,
-            list: true,
+            members: `${true}`,
+            board: `${true}`,
+            list: `${true}`,
             checklists: "all",
             fields: "all",
         },

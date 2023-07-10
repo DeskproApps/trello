@@ -1,7 +1,15 @@
-import { FC } from "react";
 import styled from "styled-components";
 import { Checkbox, HorizontalDivider } from "@deskpro/app-sdk";
 import { CardInfo } from "./CardInfo";
+import type { FC } from "react";
+import type { CardType, Organization } from "../../../services/trello/types";
+
+type Props = {
+    card: CardType,
+    onChange: () => void,
+    checked: boolean,
+    organizations: Organization[],
+};
 
 const CardUI = styled.div`
     display: flex;
@@ -17,8 +25,7 @@ const CardBody = styled.div`
     width: calc(100% - 12px - 8px);
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Card: FC<any> = ({ checked, onChange, ...props }) => (
+const Card: FC<Props> = ({ checked, onChange, card, organizations }) => (
     <>
         <CardUI>
             <CardMedia>
@@ -26,10 +33,15 @@ const Card: FC<any> = ({ checked, onChange, ...props }) => (
                     size={12}
                     checked={checked}
                     onChange={onChange}
+                    containerStyle={{ marginTop: 4 }}
                 />
             </CardMedia>
             <CardBody>
-                <CardInfo {...props} onTitleClick={onChange} />
+                <CardInfo
+                    card={card}
+                    organizations={organizations}
+                    onTitleClick={onChange}
+                />
             </CardBody>
         </CardUI>
         <HorizontalDivider style={{ marginBottom: 9 }} />

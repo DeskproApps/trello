@@ -1,73 +1,25 @@
-import { FC, useState } from "react";
+import get from "lodash/get";
+import find from "lodash/find";
+import size from "lodash/size";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Avatar } from "@deskpro/deskpro-ui";
-import {
-    H3,
-    P5,
-    Stack,
-    useDeskproAppTheme,
-    useInitialisedDeskproAppClient,
-} from "@deskpro/app-sdk";
-import { CardType } from "../../../services/trello/types";
+import { P5, Avatar, Stack } from "@deskpro/deskpro-ui";
+import { Title } from "@deskpro/app-sdk";
 import { getDate } from "../../../utils/date";
 import { TwoSider } from "../TwoSider";
 import { OverflowText } from "../OverflowText";
 import { NoFound } from "../NoFound";
 import { TextBlockWithLabel } from "../TextBlockWithLabel";
 import { LinkIcon } from "../LinkIcon";
-import { TrelloLink } from "../TrelloLink";
+import { Link } from "../Link";
+import { TrelloLogo } from "../TrelloLink";
+import { DeskproTickets } from "../DeskproTickets";
+import type { FC } from "react";
+import type { CardType, Organization } from "../../../services/trello/types";
 
-const Title: FC<CardType & { onClick?: () => void }> = ({ name, shortUrl, onClick }) => {
-    const { theme } = useDeskproAppTheme();
-
-    return (
-        <Stack gap={6} style={{ marginBottom: "6px" }} align="center">
-            <H3>
-                <a
-                    href="#"
-                    style={{ color: theme.colors.cyan100, textDecoration: "none" }}
-                    onClick={onClick}
-                >{name}</a>
-            </H3>
-            <TrelloLink href={shortUrl} />
-        </Stack>
-    );
-};
-
-const Workspace: FC<CardType> = ({ board, list }) => (
-    <TwoSider
-        leftLabel={(
-            <>
-                Board&nbsp;
-                {board?.url && <LinkIcon size={10} href={board.url}/>}
-            </>
-        )}
-        leftText={(
-            <>
-                <OverflowText>{board.name}</OverflowText>
-                {board?.url && <LinkIcon size={10} href={board.url}/>}
-            </>
-        )}
-        rightLabel="List"
-        rightText={<OverflowText>{list.name}</OverflowText>}
-    />
-);
-
-const Info: FC<CardType> = ({ id, due }) => {
-    const [ticketCount, setTicketCount] = useState<number>(0);
-
-    useInitialisedDeskproAppClient((client) => {
-        client.entityAssociationCountEntities("linkedTrelloCards", id).then(setTicketCount);
-    });
-
-    return (
-        <TwoSider
-            leftLabel="Deskpro Tickets"
-            leftText={ticketCount}
-            rightLabel="Due Date"
-            rightText={getDate(due)}
-        />
-    );
+type Props = {
+    card: CardType,
+    onTitleClick?: () => void,
+    organizations: Organization[],
 };
 
 const Members: FC<{ members: CardType["members"] }> = ({ members }) => {
@@ -77,11 +29,11 @@ const Members: FC<{ members: CardType["members"] }> = ({ members }) => {
         content = (<NoFound/>);
     }
 
-    if (members.length === 0) {
+    if (!size(members)) {
         content = (<>-</>);
     }
 
-    if (members.length > 0) {
+    if (size(members)) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         content = members.map(({ id, fullName }: any) => (
             <Stack gap={6} key={id}>
@@ -102,16 +54,55 @@ const Members: FC<{ members: CardType["members"] }> = ({ members }) => {
     );
 }
 
-const CardInfo: FC<CardType & { onTitleClick?: () => void }> = (props) => (
-    <>
-        <Title
-            {...props}
-            onClick={props.onTitleClick}
-        />
-        <Workspace {...props} />
-        <Info {...props} />
-        <Members {...props} />
-    </>
-);
+const CardInfo: FC<Props> = ({ card, organizations, onTitleClick }) => {
+    const workspace = find(organizations, {
+        id: get(card, ["board", "idOrganization"]),
+    });
+
+    return (
+        <>
+            <Title
+                title={(
+                    <Link href="#" onClick={(e) => {e.preventDefault(); onTitleClick && onTitleClick()}}>
+                        {get(card, ["name"], "-")}
+                    </Link>
+                )}
+                icon={<TrelloLogo/>}
+                link={get(card, ["shortUrl"], "#")}
+            />
+            <TwoSider
+                leftLabel="Workspace"
+                leftText={(
+                    <>
+                        <OverflowText>{get(workspace, ["displayName"], "-")}</OverflowText>
+                        {get(workspace, ["url"]) && (
+                            <LinkIcon size={10} href={get(workspace, ["url"], "#")}/>
+                        )}
+                    </>
+                )}
+                rightLabel="Board"
+                rightText={(
+                    <>
+                        <OverflowText>{get(card, ["board", "name"], "-")}</OverflowText>
+                        {get(card, ["board", "url"]) && (
+                            <LinkIcon size={10} href={get(card, ["board", "url"], "#")}/>
+                        )}
+                    </>
+                )}
+            />
+            <TwoSider
+                leftLabel="List"
+                leftText={<OverflowText>{get(card, ["list", "name"], "-")}</OverflowText>}
+                rightLabel="Due Date"
+                rightText={getDate(get(card, ["due"]))}
+            />
+            <TextBlockWithLabel
+                label="Deskpro Tickets"
+                text={<DeskproTickets entityId={get(card, ["id"], "")} />}
+            />
+            <Members {...card} />
+        </>
+    );
+}
 
 export { CardInfo, Members }

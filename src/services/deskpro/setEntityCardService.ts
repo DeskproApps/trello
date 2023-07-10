@@ -1,6 +1,6 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { TRELLO_ENTITY } from "../../constants";
-import { EntityMetadata } from "../../context/StoreProvider/types";
+import { EntityMetadata } from "../../types";
 
 const setEntityCardService = (
     client: IDeskproClient,

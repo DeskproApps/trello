@@ -1,2 +1,1 @@
-export { FindCard } from "./FindCard";
-export { CreateCard } from "./CreateCard";
+export { LinkCard } from "./LinkCard";

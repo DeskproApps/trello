@@ -12,7 +12,7 @@ const createAttachService = async (
         method: "POST",
         data,
         queryParams: {
-            setCover: false,
+            setCover: `${false}`,
         }
     });
 };

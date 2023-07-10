@@ -1,0 +1,1 @@
+export { LinkCardPage } from "./LinkCardPage";
