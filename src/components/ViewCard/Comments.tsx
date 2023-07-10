@@ -9,24 +9,22 @@ const Comments: FC<{
     comments: Maybe<CommentType[]>,
     onClickTitleAction: () => void,
 }> = ({ comments, onClickTitleAction }) => {
-    return (Array.isArray(comments) && size(comments))
-        ? (
-            <Container>
-                <Title
-                    title={`Comments  (${size(comments)})`}
-                    onClick={onClickTitleAction}
+    return (
+        <Container>
+            <Title
+                title={`Comments  (${size(comments)})`}
+                onClick={onClickTitleAction}
+            />
+            {(Array.isArray(comments) && Boolean(size(comments))) && comments.map(({ id, date, data, memberCreator }) => (
+                <Comment
+                    key={id}
+                    name={memberCreator.fullName}
+                    text={data.text}
+                    date={new Date(date)}
                 />
-                {comments.map(({ id, date, data, memberCreator }) => (
-                    <Comment
-                        key={id}
-                        name={memberCreator.fullName}
-                        text={data.text}
-                        date={new Date(date)}
-                    />
-                ))}
-            </Container>
-        )
-        : null;
+            ))}
+        </Container>
+    );
 }
 
 export { Comments };
