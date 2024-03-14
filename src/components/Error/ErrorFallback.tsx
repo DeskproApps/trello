@@ -1,4 +1,4 @@
-import { Stack } from "@deskpro/app-sdk";
+import { Stack } from "@deskpro/deskpro-ui";
 import { TrelloError } from "../../services/trello";
 import { UNKNOWN_ERROR } from "../../constants";
 import { Container, ErrorBlock } from "../common";

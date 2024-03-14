@@ -1,4 +1,4 @@
-import type { DropdownValueType } from "@deskpro/app-sdk";
+import type { DropdownValueType } from "@deskpro/deskpro-ui";
 import type { Option } from "../types";
 
 const getOption = <Value>(

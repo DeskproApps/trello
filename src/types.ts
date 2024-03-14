@@ -1,9 +1,6 @@
 import type { To, ParamKeyValuePair } from "react-router-dom";
-import type {
-    Context,
-    IDeskproClient,
-    DropdownValueType,
-} from "@deskpro/app-sdk";
+import type { DropdownValueType } from "@deskpro/deskpro-ui";
+import type { Context, IDeskproClient } from "@deskpro/app-sdk";
 import type { CardType, Board, Label, List, Member } from "./services/trello/types";
 
 /** Common types */

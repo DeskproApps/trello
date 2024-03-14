@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Checkbox, HorizontalDivider } from "@deskpro/app-sdk";
+import { Checkbox } from "@deskpro/deskpro-ui";
+import { HorizontalDivider } from "@deskpro/app-sdk";
 import { CardInfo } from "./CardInfo";
 import type { FC } from "react";
 import type { CardType, Organization } from "../../../services/trello/types";

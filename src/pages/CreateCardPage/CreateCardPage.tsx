@@ -15,21 +15,22 @@ import {
     faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
+    P5,
+    Pill,
+    Stack,
     TSpan,
     Avatar,
+    Dropdown,
     InputWithDisplay,
+    Label as LabelUI,
+    Button as ButtonUI,
     DropdownTargetProps,
     DivAsInputWithDisplay,
 } from "@deskpro/deskpro-ui";
 import {
-    P5,
-    Pill,
-    Stack,
-    Dropdown,
+    DateInput,
     LoadingSpinner,
     TwoButtonGroup,
-    Label as LabelUI,
-    Button as ButtonUI,
     useDeskproAppTheme,
     useDeskproElements,
     useDeskproAppClient,
@@ -51,7 +52,6 @@ import {
     Label,
     Button,
     TextArea,
-    DateField,
     Container,
     SingleSelect,
     EmptyInlineBlock,
@@ -397,7 +397,7 @@ const CreateCardPage: FC = () => {
                     />
                 </Label>
 
-                <DateField
+                <DateInput
                     id="dueDateSdk"
                     label="Due date"
                     error={!!(touched.dueDate && errors.dueDate)}

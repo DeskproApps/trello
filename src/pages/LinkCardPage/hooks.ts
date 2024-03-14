@@ -29,7 +29,8 @@ const useSearch: UseSearch = () => {
     const { client } = useDeskproAppClient();
     const [loading, setLoading] = useState<boolean>(false);
     const [boardOptions, setBoardOptions] = useState<BoardOptionsMap>({
-        any: getOption("any", "Any"),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        any: getOption("any", "Any") as any,
     });
 
     const [searchCard, setSearchCard] = useState<string>("");
@@ -50,13 +51,15 @@ const useSearch: UseSearch = () => {
         searchByCardService(client, q)
             .then(({ cards }) => {
                 setCards(cards);
-                const options: BoardOptionsMap = { any: getOption("any", "Any") };
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const options: BoardOptionsMap = { any: getOption("any", "Any") as any };
 
                 setBoardOptions({
                     ...options,
                     ...cards.reduce((acc: BoardOptionsMap, { board }: CardType): BoardOptionsMap => {
                         if (!acc[board.id]) {
-                            acc[board.id] = getOption(board.id, board.name);
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            acc[board.id] = getOption(board.id, board.name) as Option<any>;
                         }
                         return acc;
                     }, {})

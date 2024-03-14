@@ -12,21 +12,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+    P5,
+    Pill,
+    Stack,
     TSpan,
     Avatar,
+    Dropdown,
     InputWithDisplay,
     Label as LabelUI,
+    DropdownValueType,
     Button as ButtonUI,
     DropdownTargetProps,
     DivAsInputWithDisplay,
 } from "@deskpro/deskpro-ui";
 import {
-    P5,
-    Pill,
-    Stack,
-    Dropdown,
+    DateInput,
     LoadingSpinner,
-    DropdownValueType,
     useDeskproAppTheme,
     useDeskproElements,
     useDeskproAppClient,
@@ -46,7 +47,6 @@ import {
     Label,
     Button,
     TextArea,
-    DateField,
     Container,
     ErrorBlock,
     SingleSelect,
@@ -402,7 +402,7 @@ const EditCardPage: FC = () => {
                     />
                 </Label>
 
-                <DateField
+                <DateInput
                     id="dueDate"
                     label="Due date"
                     error={!!(touched.dueDate && errors.dueDate)}
