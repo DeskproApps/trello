@@ -34,7 +34,7 @@
         "callback_url": {
             "title": "Callback URL Origin",
             "type": "app_embedded",
-            "options": { "entrypoint": "#/admin/callback" },
+            "options": { "entrypoint": "https://localhost:3003/#/admin/callback" },
             "isRequired": false,
             "isBackendOnly": true,
             "order": 20
