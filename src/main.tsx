@@ -10,7 +10,7 @@ import { queryClient } from "./query";
 import { ReplyBoxProvider } from "./hooks";
 import { App } from "./App";
 import { ErrorFallback } from "./components";
-
+import "iframe-resizer/js/iframeResizer.contentWindow.js";
 import "flatpickr/dist/themes/light.css";
 import "tippy.js/dist/tippy.css";
 import "simplebar/dist/simplebar.min.css";
@@ -18,18 +18,18 @@ import "simplebar/dist/simplebar.min.css";
 import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
 import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
 
-TimeAgo.addDefaultLocale(en)
+TimeAgo.addDefaultLocale(en);
 
-const root = ReactDOM.createRoot(document.getElementById('root') as Element);
-root.render((
+const root = ReactDOM.createRoot(document.getElementById("root") as Element);
+root.render(
     <React.StrictMode>
         <DeskproAppProvider>
             <HashRouter>
                 <QueryClientProvider client={queryClient}>
-                    <Suspense fallback={<LoadingSpinner/>}>
+                    <Suspense fallback={<LoadingSpinner />}>
                         <ErrorBoundary FallbackComponent={ErrorFallback}>
                             <ReplyBoxProvider>
-                                <App/>
+                                <App />
                             </ReplyBoxProvider>
                         </ErrorBoundary>
                     </Suspense>
@@ -37,4 +37,4 @@ root.render((
             </HashRouter>
         </DeskproAppProvider>
     </React.StrictMode>
-));
+);

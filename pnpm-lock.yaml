@@ -32,6 +32,9 @@ dependencies:
   formik:
     specifier: ^2.2.9
     version: 2.4.5(react@18.2.0)
+  iframe-resizer:
+    specifier: ^4.3.11
+    version: 4.3.11
   javascript-time-ago:
     specifier: ^2.5.5
     version: 2.5.9
@@ -3387,6 +3390,11 @@ packages:
     dependencies:
       safer-buffer: 2.1.2
     dev: true
+
+  /iframe-resizer@4.3.11:
+    resolution: {integrity: sha512-5QtnsmfH11GDsuC7Gxd/eNzojudX3346Gb0E+Ku8ln8AtfSq+cWCZtnhCrthrtE7f1CI2/kwHkZ9G4sFYzHP7A==}
+    engines: {node: '>=0.8.0'}
+    dev: false
 
   /ignore@4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==}
