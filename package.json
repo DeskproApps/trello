@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "BSD-3-Clause",
   "scripts": {
-    "start": "vite --https",
+    "start": "vite",
     "build": "rimraf ./dist/* && tsc && vite build",
     "build:package": "pnpm build && pnpm package",
     "package": "rimraf ./build/* && node ./bin/package.js",
