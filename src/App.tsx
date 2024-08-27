@@ -1,7 +1,6 @@
-import { useMemo } from "react";
 import { match } from "ts-pattern";
 import get from "lodash/get";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import {
     LoadingSpinner,
@@ -25,7 +24,6 @@ import type { EventPayload } from "./types";
 
 const App = () => {
     const navigate = useNavigate();
-    const { pathname } = useLocation();
     const { logout, isLoading: isLoadingLogout } = useLogout();
     const { unlink, isLoading: isLoadingUnlink } = useUnlinkCard();
     const { client } = useDeskproAppClient();
