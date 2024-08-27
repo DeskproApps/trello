@@ -29,7 +29,6 @@ const App = () => {
     const { logout, isLoading: isLoadingLogout } = useLogout();
     const { unlink, isLoading: isLoadingUnlink } = useUnlinkCard();
     const { client } = useDeskproAppClient();
-    const isAdmin = useMemo(() => pathname.includes("/admin/"), [pathname]);
     const isLoading = [isLoadingLogout, isLoadingUnlink].some((isLoading) => isLoading);
 
     const debounceElementEvent = useDebouncedCallback((_, __, payload: EventPayload) => {
