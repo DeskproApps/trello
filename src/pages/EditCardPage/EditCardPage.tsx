@@ -402,13 +402,15 @@ const EditCardPage: FC = () => {
                     />
                 </Label>
 
-                <DateInput
-                    id="dueDate"
-                    label="Due date"
-                    error={!!(touched.dueDate && errors.dueDate)}
-                    {...getFieldProps("dueDate")}
-                    onChange={(date: [Date]) => setFieldValue("dueDate", date[0])}
-                />
+                <Label htmlFor="dueDate" label="Due Date">
+                    <DateInput
+                        id="dueDate"
+                        label="Due date"
+                        error={!!(touched.dueDate && errors.dueDate)}
+                        {...getFieldProps("dueDate")}
+                        onChange={(date: [Date]) => setFieldValue("dueDate", date[0])}
+                    />
+                </Label>
 
                 {values.board.value && (
                     <>

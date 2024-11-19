@@ -11,7 +11,7 @@ import { getUrlOrigin } from "../../utils";
 
 const Description = styled(P1)`
   margin-top: 8px;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
   color: ${({ theme }) => theme.colors.grey80};
 `;
 
