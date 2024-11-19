@@ -20,9 +20,4 @@ export const placeholders = {
     TOKEN: `[user[oauth2/token]]`,
 };
 
-export const requireQeuryParams = {
-    key: placeholders.KEY,
-    token: placeholders.TOKEN,
-};
-
 export const BASE_URL = "https://api.trello.com/1";
