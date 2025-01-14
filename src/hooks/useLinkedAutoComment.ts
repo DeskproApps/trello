@@ -28,8 +28,8 @@ const useLinkedAutoComment = (): Result => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const isEnable = get(context, ["settings", "add_comment_when_linking"], false);
-    const ticketId: string = get(context, ["data", "ticket", "id"]);
-    const permalink: string = get(context, ["data", "ticket", "permalinkUrl"]);
+    const ticketId = get(context, ["data", "ticket", "id"]);
+    const permalink = get(context, ["data", "ticket", "permalinkUrl"]);
 
     const addLinkComment = useCallback((cardId: CardType["id"]) => {
         if (!client || !isEnable) {
@@ -37,7 +37,7 @@ const useLinkedAutoComment = (): Result => {
         }
 
         setIsLoading(true);
-        return createCardCommentService(client, cardId, getLinkedMessage(ticketId, permalink))
+        return createCardCommentService(client, cardId, getLinkedMessage(ticketId as string, permalink as string))
             .finally(() => setIsLoading(false));
     }, [client, isEnable, ticketId, permalink]);
 
@@ -47,7 +47,7 @@ const useLinkedAutoComment = (): Result => {
         }
 
         setIsLoading(true)
-        return createCardCommentService(client, cardId, getUnlinkedMessage(ticketId, permalink))
+        return createCardCommentService(client, cardId, getUnlinkedMessage(ticketId as string, permalink as string))
             .finally(() => setIsLoading(false));
     }, [client, isEnable, ticketId, permalink]);
 
