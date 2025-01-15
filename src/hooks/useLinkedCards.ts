@@ -26,19 +26,19 @@ const useLinkedCards: UseLinkedCards = () => {
         { enabled: Boolean(ticketId) },
     );
 
-    if (!ticketId) {
-        return {
-            isLoading: false,
-            cards: []
-        };
-    };
-
     const cards = useQueriesWithClient((get(linkedIds, ["data"], []) || []).map((cardId) => ({
         queryKey: [QueryKey.CARD, cardId],
         queryFn: (client) => getCardService(client, cardId),
         enabled: Boolean(size(linkedIds)),
         useErrorBoundary: false,
     })));
+
+    if (!ticketId) {
+        return {
+            isLoading: false,
+            cards: []
+        };
+    };
 
     return {
         isLoading: [linkedIds, ...cards].some(({ isLoading }) => isLoading),
