@@ -22,7 +22,7 @@ const useLinkedCards: UseLinkedCards = () => {
 
     const linkedIds = useQueryWithClient(
         [QueryKey.LINKED_CARDS],
-        (client) => getEntityListService(client, ticketId),
+        (client) => getEntityListService(client, ticketId as string),
         { enabled: Boolean(ticketId) },
     );
 

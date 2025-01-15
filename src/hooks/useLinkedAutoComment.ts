@@ -37,7 +37,7 @@ const useLinkedAutoComment = (): Result => {
         }
 
         setIsLoading(true);
-        return createCardCommentService(client, cardId, getLinkedMessage(ticketId, permalink))
+        return createCardCommentService(client, cardId, getLinkedMessage(ticketId as string, permalink))
             .finally(() => setIsLoading(false));
     }, [client, isEnable, ticketId, permalink]);
 
@@ -47,7 +47,7 @@ const useLinkedAutoComment = (): Result => {
         }
 
         setIsLoading(true)
-        return createCardCommentService(client, cardId, getUnlinkedMessage(ticketId, permalink))
+        return createCardCommentService(client, cardId, getUnlinkedMessage(ticketId as string, permalink))
             .finally(() => setIsLoading(false));
     }, [client, isEnable, ticketId, permalink]);
 
