@@ -98,7 +98,7 @@ const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
         }, {});
     }, [cards]);
 
-    const ticketId = context.data?.ticket.id ?? '';
+    const ticketId = useMemo(() => get(context, ['data', 'ticket', 'id']), [context]);
     const isCommentOnNote = useMemo(() => get(context, ["settings", "default_comment_on_ticket_note"]), [context]);
     const isCommentOnEmail = useMemo(() => get(context, ["settings", "default_comment_on_ticket_reply"]), [context]);
 

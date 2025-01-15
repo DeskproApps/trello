@@ -18,7 +18,7 @@ type UseLinkedCards = () => {
 
 const useLinkedCards: UseLinkedCards = () => {
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
-    const ticketId = context.data?.ticket.id ?? '';
+    const ticketId = get(context, ['data', 'ticket', 'id']);
 
     const linkedIds = useQueryWithClient(
         [QueryKey.LINKED_CARDS],
