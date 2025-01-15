@@ -22,7 +22,7 @@ const useLinkedCards: UseLinkedCards = () => {
 
     const linkedIds = useQueryWithClient(
         [QueryKey.LINKED_CARDS],
-        (client) => getEntityListService(client, ticketId),
+        (client) => ticketId ? getEntityListService(client, ticketId) : Promise.resolve([]),
         { enabled: Boolean(ticketId) },
     );
 
@@ -32,13 +32,6 @@ const useLinkedCards: UseLinkedCards = () => {
         enabled: Boolean(size(linkedIds)),
         useErrorBoundary: false,
     })));
-
-    if (!ticketId) {
-        return {
-            isLoading: false,
-            cards: []
-        };
-    };
 
     return {
         isLoading: [linkedIds, ...cards].some(({ isLoading }) => isLoading),
