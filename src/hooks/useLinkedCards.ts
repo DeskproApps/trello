@@ -21,8 +21,6 @@ const useLinkedCards: UseLinkedCards = () => {
     const ticketId = get(context, ['data', 'ticket', 'id']);
 
     if (!ticketId) {
-        console.error('no ticketID');
-
         return {
             isLoading: false,
             cards: []
