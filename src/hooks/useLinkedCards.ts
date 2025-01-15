@@ -20,18 +20,18 @@ const useLinkedCards: UseLinkedCards = () => {
     const { context } = useDeskproLatestAppContext() as { context: TicketContext };
     const ticketId = get(context, ['data', 'ticket', 'id']);
 
+    const linkedIds = useQueryWithClient(
+        [QueryKey.LINKED_CARDS],
+        (client) => getEntityListService(client, ticketId),
+        { enabled: Boolean(ticketId) },
+    );
+
     if (!ticketId) {
         return {
             isLoading: false,
             cards: []
         };
     };
-
-    const linkedIds = useQueryWithClient(
-        [QueryKey.LINKED_CARDS],
-        (client) => getEntityListService(client, ticketId),
-        { enabled: Boolean(ticketId) },
-    );
 
     const cards = useQueriesWithClient((get(linkedIds, ["data"], []) || []).map((cardId) => ({
         queryKey: [QueryKey.CARD, cardId],
