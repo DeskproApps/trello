@@ -32,22 +32,22 @@ const useLinkedAutoComment = (): Result => {
     const permalink = get(context, ['data', 'ticket', 'permalinkUrl']);
 
     const addLinkComment = useCallback((cardId: CardType["id"]) => {
-        if (!client || !isEnable) {
+        if (!client || !isEnable || !ticketId) {
             return Promise.resolve();
-        }
+        };
 
         setIsLoading(true);
-        return createCardCommentService(client, cardId, getLinkedMessage(ticketId as string, permalink))
+        return createCardCommentService(client, cardId, getLinkedMessage(ticketId, permalink))
             .finally(() => setIsLoading(false));
     }, [client, isEnable, ticketId, permalink]);
 
     const addUnlinkComment = useCallback((cardId: CardType["id"]) => {
-        if (!client || !isEnable) {
+        if (!client || !isEnable || !ticketId) {
             return Promise.resolve();
-        }
+        };
 
         setIsLoading(true)
-        return createCardCommentService(client, cardId, getUnlinkedMessage(ticketId as string, permalink))
+        return createCardCommentService(client, cardId, getUnlinkedMessage(ticketId, permalink))
             .finally(() => setIsLoading(false));
     }, [client, isEnable, ticketId, permalink]);
 
