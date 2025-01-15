@@ -98,7 +98,7 @@ const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
         }, {});
     }, [cards]);
 
-    const ticketId = useMemo(() => get(context, ["data", "ticket", "id"]), [context]);
+    const ticketId = useMemo(() => context.data?.ticket.id ?? '', [context]);
     const isCommentOnNote = useMemo(() => get(context, ["settings", "default_comment_on_ticket_note"]), [context]);
     const isCommentOnEmail = useMemo(() => get(context, ["settings", "default_comment_on_ticket_reply"]), [context]);
 
@@ -142,12 +142,12 @@ const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
 
     useInitialisedDeskproAppClient((client) => {
         if (isCommentOnNote) {
-            registerReplyBoxNotesAdditionsTargetAction(client, ticketId as string, map(cards, "id"), cardsMap);
+            registerReplyBoxNotesAdditionsTargetAction(client, ticketId, map(cards, "id"), cardsMap);
             client.registerTargetAction(`${APP_PREFIX}OnReplyBoxNote`, "on_reply_box_note");
         }
 
         if (isCommentOnEmail) {
-            registerReplyBoxEmailsAdditionsTargetAction(client, ticketId as string, map(cards, "id"), cardsMap);
+            registerReplyBoxEmailsAdditionsTargetAction(client, ticketId, map(cards, "id"), cardsMap);
             client.registerTargetAction(`${APP_PREFIX}OnReplyBoxEmail`, "on_reply_box_email");
         }
     }, [cards, ticketId, isCommentOnNote, isCommentOnEmail, cardsMap]);
