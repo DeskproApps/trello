@@ -98,7 +98,7 @@ const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
         }, {});
     }, [cards]);
 
-    const ticketId = useMemo(() => get(context, ["data", "ticket", "id"]), [context]);
+    const ticketId = useMemo(() => get(context, ['data', 'ticket', 'id']), [context]);
     const isCommentOnNote = useMemo(() => get(context, ["settings", "default_comment_on_ticket_note"]), [context]);
     const isCommentOnEmail = useMemo(() => get(context, ["settings", "default_comment_on_ticket_reply"]), [context]);
 
@@ -141,6 +141,10 @@ const ReplyBoxProvider: FC<PropsWithChildren> = ({ children }) => {
     }, [client, ticketId, cardsMap]);
 
     useInitialisedDeskproAppClient((client) => {
+        if (!ticketId) {
+            return;
+        };
+
         if (isCommentOnNote) {
             registerReplyBoxNotesAdditionsTargetAction(client, ticketId, map(cards, "id"), cardsMap);
             client.registerTargetAction(`${APP_PREFIX}OnReplyBoxNote`, "on_reply_box_note");
