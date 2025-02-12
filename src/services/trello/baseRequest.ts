@@ -12,7 +12,7 @@ const baseRequest: Request = async (client, {
 }) => {
     const dpFetch = await proxyFetch(client);
 
-    let body = undefined;
+    let body: FormData | string | undefined = undefined;
     const headers: Record<string, string> = {};
 
     const requestUrl = `${BASE_URL}${url}/?${

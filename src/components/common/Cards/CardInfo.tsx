@@ -13,7 +13,7 @@ import { LinkIcon } from "../LinkIcon";
 import { Link } from "../Link";
 import { TrelloLogo } from "../TrelloLink";
 import { DeskproTickets } from "../DeskproTickets";
-import type { FC } from "react";
+import type { ChangeEvent, FC, ReactElement } from "react";
 import type { CardType, Organization } from "../../../services/trello/types";
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
 };
 
 const Members: FC<{ members: CardType["members"] }> = ({ members }) => {
-    let content = null;
+    let content: ReactElement | ReactElement[] | null = null;
 
     if (!Array.isArray(members)) {
         content = (<NoFound/>);
@@ -63,7 +63,7 @@ const CardInfo: FC<Props> = ({ card, organizations, onTitleClick }) => {
         <>
             <Title
                 title={(
-                    <Link href="#" onClick={(e) => {e.preventDefault(); onTitleClick && onTitleClick()}}>
+                    <Link href="#" onClick={(e: ChangeEvent<HTMLAnchorElement>) => {e.preventDefault(); onTitleClick && onTitleClick()}}>
                         {get(card, ["name"], "-")}
                     </Link>
                 )}
