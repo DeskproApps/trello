@@ -15,7 +15,7 @@ const getFilteredCards = (cards: CardType[], options: Options) => {
         return cards;
     }
 
-    let filteredCards = [];
+    let filteredCards: CardType[] = [];
 
     if (!boardId || boardId === "any") {
         filteredCards = cards;

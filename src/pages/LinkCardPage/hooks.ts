@@ -36,7 +36,7 @@ const useSearch: UseSearch = () => {
     const [searchCard, setSearchCard] = useState<string>("");
     const [cards, setCards] = useState<CardType[]>([]);
 
-    const searchInTrello = useDebouncedCallback<(q: string) => void>((q) => {
+    const searchInTrello = useDebouncedCallback<(q: string) => void>((q: string) => {
         if (!client) {
             return;
         }
