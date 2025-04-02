@@ -38,7 +38,7 @@ const Info: FC<Props> = ({ card, organizations }) => {
                 link={get(card, ["shortUrl"], "#")}
             />
             <TextBlockWithLabel
-                label="Board"
+                label="Workspace"
                 text={(
                     <>
                         <P5 style={{ marginRight: 4 }}>{get(workspace, ["displayName"], "-")}</P5>
