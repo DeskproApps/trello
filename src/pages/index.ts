@@ -1,7 +1,7 @@
 export { AddCommentPage } from "./AddCommentPage";
 export { AdminCallbackPage } from "./AdminCallbackPage";
 export { CreateCardPage } from "./CreateCardPage";
-export { EditCardPage } from "./EditCardPage";
+export { default as EditCardPage } from "./EditCardPage";
 export { HomePage } from "./HomePage";
 export { LinkCardPage } from "./LinkCardPage";
 export { LoadingAppPage } from "./LoadingAppPage";
