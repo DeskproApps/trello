@@ -1,92 +1,19 @@
-import { FC, useMemo, useState, useEffect } from "react";
-import get from "lodash/get";
-import has from "lodash/has";
-import * as yup from "yup";
-import { useFormik } from "formik";
-import isEmpty from "lodash/isEmpty";
-import {
-  faUser,
-  faPlus,
-  faCheck,
-  faExternalLinkAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  P5,
-  Pill,
-  Stack,
-  TSpan,
-  Avatar,
-  Dropdown,
-  InputWithDisplay,
-  Label as LabelUI,
-  DropdownValueType,
-  Button as ButtonUI,
-  DropdownTargetProps,
-  DivAsInputWithDisplay,
-} from "@deskpro/deskpro-ui";
-import {
-  DateInput,
-  LoadingSpinner,
-  useDeskproAppTheme,
-  useDeskproElements,
-  useDeskproAppClient,
-  useDeskproLatestAppContext,
-} from "@deskpro/app-sdk";
+import { Avatar, Button as ButtonUI, DivAsInputWithDisplay, Dropdown, DropdownTargetProps, DropdownValueType, InputWithDisplay, P5, Pill, Stack, TextArea, TSpan } from "@deskpro/deskpro-ui";
+import { Button, Container, EmptyInlineBlock, Label, SingleSelect, TextBlockWithLabel } from "../../components/common";
+import { CardType, Member } from "../../services/trello/types";
+import { DateInput, LoadingSpinner, useDeskproAppClient, useDeskproAppTheme, useDeskproElements, useDeskproLatestAppContext, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
+import { faUser, faPlus, faCheck, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { getEntityMetadata, getLabelColor } from "../../utils";
 import { setEntityCardService } from "../../services/deskpro";
-import {
-  getCardService,
-  updateCardService,
-  getCurrentMemberService,
-  getLabelsOnBoardService,
-  getMembersOfOrganizationService,
-} from "../../services/trello";
-import { getLabelColor, getEntityMetadata } from "../../utils";
-import { useAsyncError } from "../../hooks";
-import {
-  Label,
-  Button,
-  TextArea,
-  Container,
-  ErrorBlock,
-  SingleSelect,
-  EmptyInlineBlock,
-  TextBlockWithLabel,
-} from "../../components/common";
-import type { Board, CardType, Member } from "../../services/trello/types";
-import type { TicketContext } from "../../types";
+import { Settings, TicketData } from "../../types";
+import { updateCardService } from "../../services/trello";
+import { useFormik } from "formik";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import editCardValidationSchema from "./editCardValidationSchema";
+import getCardDefaultData from "./getCardDefaultData";
 
-export type Option = DropdownValueType<string>;
-
-export type Options = Option[];
-
-type MemberOption = Option & {
-  metadata: { id: string, fullName: string },
-};
-
-const validationSchema = yup.object().shape({
-  title: yup.string().required(),
-  board: yup.object({
-    key: yup.string().required(),
-    label: yup.string().required(),
-    value: yup.string().required(),
-    type: yup.string().oneOf(["value"]).required(),
-  }),
-  list: yup.object({
-    key: yup.string().required(),
-    label: yup.string().required(),
-    value: yup.string().required(),
-    type: yup.string().oneOf(["value"]).required(),
-  }),
-  description: yup.string(),
-  labels: yup.array(yup.string()),
-  members: yup.array(yup.string()),
-  dueDate: yup.date(),
-});
-
-const resetValue = { key: "", label: "", value: "", type: "value" };
-
-const initValues = {
+const initialFormValues = {
   title: "",
   board: { key: "", label: "", value: "", type: "value" },
   list: { key: "", label: "", value: "", type: "value" },
@@ -94,26 +21,46 @@ const initValues = {
   labels: [],
   dueDate: "",
   members: [],
+}
+
+type MemberOption = DropdownValueType<string> & {
+  metadata: { id: string, fullName: string },
 };
 
-const EditCardPage: FC = () => {
-  const navigate = useNavigate();
-  const { cardId } = useParams();
-  const { theme } = useDeskproAppTheme();
+export function EditCardPage(): JSX.Element {
+
+  // Set the app's header elements
+  useInitialisedDeskproAppClient((client) => {
+    client.setTitle("Edit Card")
+  }, [])
+
+  useDeskproElements(({ clearElements, registerElement }) => {
+    clearElements();
+    registerElement("trelloRefreshButton", { type: "refresh_button" });
+    registerElement("trelloHomeButton", {
+      type: "home_button",
+      payload: { type: "changePage", path: "/home" }
+    });
+  })
+
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  // Meta related state
+  const [card, setCard] = useState<CardType>()
+  const [member, setMember] = useState<Member | null>(null)
+  const [boards, setBoards] = useState<DropdownValueType<string>[]>([])
+  const [lists, setLists] = useState<DropdownValueType<string>[]>([])
+  const [labels, setLabels] = useState<DropdownValueType<string>[]>([])
+  const [members, setMembers] = useState<MemberOption[]>([])
+
+  const { cardId } = useParams()
   const { client } = useDeskproAppClient();
-  const { context } = useDeskproLatestAppContext() as { context: TicketContext };
-  const { asyncErrorHandler } = useAsyncError();
-  const ticketId = useMemo(() => get(context, ["data", "ticket", "id"]), [context]);
+  const { context } = useDeskproLatestAppContext<TicketData, Settings>()
+  const { theme } = useDeskproAppTheme();
 
-  const [error] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [card, setCard] = useState<CardType>();
+  const navigate = useNavigate()
 
-  const [member, setMember] = useState<Member | null>(null);
-  const [boards, setBoards] = useState<Options>([]);
-  const [lists, setLists] = useState<Options>([]);
-  const [labels, setLabels] = useState<Options>([]);
-  const [members, setMembers] = useState<MemberOption[]>([]);
+  const ticketId = context?.data?.ticket.id
 
   const {
     values,
@@ -124,23 +71,23 @@ const EditCardPage: FC = () => {
     getFieldProps,
     setFieldValue,
   } = useFormik({
-    validationSchema,
-    initialValues: initValues,
+    validationSchema: editCardValidationSchema,
+    initialValues: initialFormValues,
     onSubmit: async (values) => {
       if (!client || !card?.id || !ticketId) {
         return
       }
 
+      // Construct the edit payload to be sent
+      const dueDate: unknown = values.dueDate
       const newCard = {
         name: values.title,
         desc: values.description,
         idList: values.list.value,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        due: !values.dueDate ? "" : values.dueDate.toISOString(),
+        due: dueDate instanceof Date ? dueDate.toISOString() : dueDate ?? "",
         idLabels: values.labels,
         idMembers: values.members,
-      };
+      }
 
       await updateCardService(client, card.id, newCard)
         .then((card) => {
@@ -154,213 +101,116 @@ const EditCardPage: FC = () => {
               .map(({ metadata }) => metadata),
           }))
         })
-        .then(() => navigate(`/view_card/${card.id}`))
-        .catch(asyncErrorHandler);
+        .then(() => { navigate(`/view_card/${card.id}`); })
     },
-  });
+  })
 
-  useDeskproElements(({ clearElements, registerElement }) => {
-    clearElements();
-    registerElement("trelloRefreshButton", { type: "refresh_button" });
-    registerElement("trelloHomeButton", {
-      type: "home_button",
-      payload: { type: "changePage", path: "/home" }
-    });
-  });
-
-  /* Set title */
-  useEffect(() => {
-    if (!client || !card?.shortLink) {
-      return;
+  useInitialisedDeskproAppClient((client) => {
+    if (!cardId) {
+      return
     }
 
-    client.setTitle(`Edit Card`);
-  }, [client, card?.shortLink]);
+    const getDefaultData = async () => {
+      setIsLoading(true)
+      const cardData = await getCardDefaultData(client, cardId)
 
-  /* get member */
-  useEffect(() => {
-    if (!client) {
-      return;
-    }
+      // Only update the state if a member & card were found
+      if (cardData.member && cardData.card !== null) {
 
-    setLoading(true);
+        setCard(cardData.card)
 
-    getCurrentMemberService(client)
-      .then((member) => {
-        has(member, ["error"])
-          ? asyncErrorHandler(get(member, ["error"]))
-          : setMember(member);
-      })
-      .finally(() => setLoading(false));
+        setMember(cardData.member)
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client]);
-
-  /* get dependent data */
-  useEffect(() => {
-    if (!client || !cardId) {
-      return;
-    }
-
-    setLoading(true);
-
-    getCurrentMemberService(client)
-      .then((member) => has(member, ["error"])
-        ? asyncErrorHandler(get(member, ["error"]))
-        : setMember(member)
-      )
-      .then(() => getCardService(client, cardId))
-      .then((card) => {
-        setCard(card);
-        setFieldValue("title", card.name);
-        setFieldValue("description", card.desc);
-        setFieldValue("board", {
-          type: "value",
-          key: card.board.id,
-          value: card.board.id,
-          label: card.board.name,
-        });
-        setFieldValue("list", {
-          key: card.list.id,
-          label: card.list.name,
-          value: card.list.id,
-          type: "value",
-        });
-        card.due && setFieldValue("dueDate", new Date(card.due));
-        setFieldValue("labels", card.idLabels);
-        setFieldValue("members", card.idMembers);
-
-        return Promise.all([
-          getMembersOfOrganizationService(client, card.board.idOrganization)
-            .then((members) => {
-              setMembers(members.map(({ id, fullName }) => ({
-                key: id,
-                value: id,
-                type: "value",
-                metadata: { id, fullName },
-                selected: card.idMembers.includes(id),
-                label: (
-                  <Stack key={id} gap={6}>
-                    <Avatar size={18} name={fullName} backupIcon={faUser} />
-                    <P5>{fullName}</P5>
-                  </Stack>
-                ),
-              })));
-
-              return Promise.resolve();
-            }),
-          getLabelsOnBoardService(client, card.idBoard)
-            .then((labels) => {
-              if (!isEmpty(labels)) {
-                setLabels(labels.map(({ id, name, color }): Option => ({
-                  key: id,
-                  value: id,
-                  type: "value",
-                  selected: card.idLabels.includes(id),
-                  label: (
-                    <Pill
-                      key={id}
-                      label={name ? name : <EmptyInlineBlock />}
-                      {...getLabelColor(theme, color)}
-                    />
-                  ),
-                })));
-              }
-              return Promise.resolve();
-            }),
-        ])
-      })
-      .catch(() => { })
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client, cardId]);
-
-  /* Set boards */
-  useEffect(() => {
-    if (!isEmpty(member?.boards) && card?.board?.idOrganization) {
-      setBoards(
-        (member?.boards as Board[])
-          .filter(({ idOrganization }) => idOrganization === card.board.idOrganization)
+        setBoards((cardData.member.boards ?? [])
+          .filter(({ idOrganization }) => idOrganization === cardData.card?.board.idOrganization)
           .map(({ id, name }) => ({
             key: id,
             value: id,
             type: "value",
             label: name,
-          }))
-      );
-    }
-  }, [member?.boards, card?.board?.idOrganization]);
+          })))
 
-  /* set lists & labels if change board */
-  useEffect(() => {
-    if (!client || !values.board.value) {
-      return;
-    }
-
-    const board = member?.boards?.find(({ id }) => id === values.board.value) as Board;
-
-    if (!isEmpty(board)) {
-      setLists(
-        board.lists?.map(({ id, name }): Option => ({
+        setMembers(cardData.organizationMembers.map(({ id, fullName }) => ({
           key: id,
           value: id,
-          label: name,
           type: "value",
-          selected: false,
-        })) as Options
-      );
+          metadata: { id, fullName },
+          selected: cardData.card?.idMembers.includes(id),
+          label: (
+            <Stack key={id} gap={6}>
+              <Avatar size={18} name={fullName} backupIcon={faUser} />
+              <P5>{fullName}</P5>
+            </Stack>
+          ),
+        })))
 
-      getLabelsOnBoardService(client, values.board.value)
-        .then((labels) => {
-          if (!isEmpty(labels)) {
-            setLabels(labels.map(({ id, name, color }): Option => ({
-              key: id,
-              value: id,
-              type: "value",
-              selected: values.labels.includes(id as never),
-              label: (
-                <Pill
-                  key={id}
-                  label={name ? name : <EmptyInlineBlock />}
-                  {...getLabelColor(theme, color)}
-                />
-              ),
-            })));
-          }
-        })
-        .catch(() => { });
+        setLabels(cardData.labels.map(({ id, name, color }): DropdownValueType<string> => ({
+          key: id,
+          value: id,
+          type: "value",
+          selected: cardData.card?.idLabels.includes(id),
+          label: (
+            <Pill
+              key={id}
+              label={name ? name : <EmptyInlineBlock />}
+              {...getLabelColor(theme, color)}
+            />
+          ),
+        })))
 
-      setFieldValue("list", resetValue);
+        // Set the default values
+        await Promise.all([
+          setFieldValue("title", cardData.card.name),
+          setFieldValue("description", cardData.card.desc),
+          setFieldValue("board", {
+            type: "value",
+            key: cardData.card.board.id,
+            value: cardData.card.board.id,
+            label: cardData.card.board.name,
+          }),
+          setFieldValue("list", {
+            key: cardData.card.list.id,
+            label: cardData.card.list.name,
+            value: cardData.card.list.id,
+            type: "value",
+          }),
+          cardData.card.due && setFieldValue("dueDate", new Date(cardData.card.due)),
+          setFieldValue("labels", cardData.card.idLabels),
+          setFieldValue("members", cardData.card.idMembers)
+        ])
+
+      }
+
+      setIsLoading(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values.board.value]);
 
-  /* mark selected labels */
+    void getDefaultData()
+
+  }, [cardId])
+
+  // Reset the list options when the selected board changes
   useEffect(() => {
-    setLabels(labels.map((label) => ({
-      ...label,
-      selected: values.labels.includes(label.value as never),
-    })));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values.labels]);
+    if (!member) {
+      return
+    }
+    const board = member?.boards?.find(({ id }) => id === values.board.value);
 
-  /* mark Selected members */
-  useEffect(() => {
-    setMembers(members.map((member) => ({
-      ...member,
-      selected: values.members.includes(member.value as never)
-    })));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values.members])
+    setLists(
+      board?.lists?.map(({ id, name }): DropdownValueType<string> => ({
+        key: id,
+        value: id,
+        label: name,
+        type: "value",
+        selected: false,
+      })) ?? []
+    )
+  }, [member, values.board.value])
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingSpinner />
   }
-
-  if (error) {
-    return <ErrorBlock text="An error occurred" />
-  }
-
+  
+  // Render edit form
   return (
     <Container>
       <form onSubmit={handleSubmit}>
@@ -382,7 +232,7 @@ const EditCardPage: FC = () => {
           value={values.board}
           searchPlaceholder="Select value"
           error={!!(touched.board && errors.board)}
-          onChange={(value: Option) => setFieldValue("board", value)}
+          onChange={(value: DropdownValueType<string>) => setFieldValue("board", value)}
         />
 
         <SingleSelect
@@ -392,7 +242,7 @@ const EditCardPage: FC = () => {
           value={values.list}
           searchPlaceholder="Select value"
           error={!!(touched.list && errors.list)}
-          onChange={(value: Option) => setFieldValue("list", value)}
+          onChange={(value: DropdownValueType<string>) => setFieldValue("list", value)}
         />
 
         <Label htmlFor="description" label="Description">
@@ -414,7 +264,7 @@ const EditCardPage: FC = () => {
 
         {values.board.value && (
           <>
-            <LabelUI htmlFor="labels" label="Labels" />
+            <Label htmlFor="labels" label="Labels" />
             <Dropdown
               fetchMoreText={"Fetch more"}
               autoscrollText={"Autoscroll"}
@@ -428,15 +278,13 @@ const EditCardPage: FC = () => {
                     ? values.labels.filter((labelId) => labelId !== option.value)
                     : [...values.labels, option.value]
 
-                  setFieldValue("labels", newValue);
+                  void setFieldValue("labels", newValue)
                 }
               }}
               closeOnSelect={false}
             >
               {({ active, targetProps, targetRef }) => (
                 <Stack gap={6} wrap="wrap" align="baseline" style={{ marginBottom: 10 }}>
-                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                  {/* @ts-ignore */}
                   <ButtonUI
                     id="labels"
                     ref={targetRef}
@@ -467,7 +315,7 @@ const EditCardPage: FC = () => {
                 ? values.members.filter((labelId) => labelId !== option.value)
                 : [...values.members, option.value]
 
-              setFieldValue("members", newValue);
+              void setFieldValue("members", newValue);
             }
           }}
           closeOnSelect={false}
@@ -509,18 +357,16 @@ const EditCardPage: FC = () => {
           <Button
             type="submit"
             text="Save"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !cardId}
             loading={isSubmitting}
           />
           <Button
             text="Cancel"
             intent="tertiary"
-            onClick={() => navigate(`/view_card/${card?.id}`)}
+            onClick={() => { navigate(`/view_card/${card?.id}`); }}
           />
         </Stack>
       </form>
     </Container>
   );
-};
-
-export { EditCardPage };
+}
