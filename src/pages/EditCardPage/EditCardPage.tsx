@@ -27,7 +27,7 @@ type MemberOption = DropdownValueType<string> & {
   metadata: { id: string, fullName: string },
 };
 
-export default function EditCardPage(): JSX.Element {
+export function EditCardPage(): JSX.Element {
 
   // Set the app's header elements
   useInitialisedDeskproAppClient((client) => {
@@ -209,7 +209,7 @@ export default function EditCardPage(): JSX.Element {
   if (isLoading) {
     return <LoadingSpinner />
   }
-
+  
   // Render edit form
   return (
     <Container>
