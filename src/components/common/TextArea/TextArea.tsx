@@ -8,7 +8,8 @@ type Props = TextAreaWithDisplayProps & {
     minWidth?: number | string | "auto",
 };
 
-const TextArea = styled(TextAreaWithDisplay)<Props>`
+const TextArea = styled(TextAreaWithDisplay) <Props>`
+    height: auto;
     min-height: ${({ minWidth = 100 }) => typeof minWidth === "number" ? `${minWidth}px` : minWidth};
     font-size: 11px;
     font-family: ${({ theme }) => theme.fonts.primary};
