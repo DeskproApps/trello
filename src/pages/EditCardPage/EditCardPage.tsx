@@ -209,7 +209,7 @@ export function EditCardPage(): JSX.Element {
   if (isLoading) {
     return <LoadingSpinner />
   }
-  
+
   // Render edit form
   return (
     <Container>
@@ -247,6 +247,7 @@ export function EditCardPage(): JSX.Element {
 
         <Label htmlFor="description" label="Description">
           <TextArea
+            minWidth="auto"
             placeholder="Enter description"
             {...getFieldProps("description")}
           />
