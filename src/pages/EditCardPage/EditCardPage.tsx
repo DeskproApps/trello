@@ -1,5 +1,5 @@
-import { Avatar, Button as ButtonUI, DivAsInputWithDisplay, Dropdown, DropdownTargetProps, DropdownValueType, InputWithDisplay, P5, Pill, Stack, TextArea, TSpan } from "@deskpro/deskpro-ui";
-import { Button, Container, EmptyInlineBlock, Label, SingleSelect, TextBlockWithLabel } from "../../components/common";
+import { Avatar, Button as ButtonUI, DivAsInputWithDisplay, Dropdown, DropdownTargetProps, DropdownValueType, InputWithDisplay, P5, Pill, Stack, TSpan } from "@deskpro/deskpro-ui";
+import { Button, Container, EmptyInlineBlock, Label, SingleSelect, TextArea, TextBlockWithLabel } from "../../components/common";
 import { CardType, Member } from "../../services/trello/types";
 import { DateInput, LoadingSpinner, useDeskproAppClient, useDeskproAppTheme, useDeskproElements, useDeskproLatestAppContext, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
 import { faUser, faPlus, faCheck, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
@@ -209,7 +209,7 @@ export function EditCardPage(): JSX.Element {
   if (isLoading) {
     return <LoadingSpinner />
   }
-  
+
   // Render edit form
   return (
     <Container>
@@ -247,6 +247,7 @@ export function EditCardPage(): JSX.Element {
 
         <Label htmlFor="description" label="Description">
           <TextArea
+            minWidth="auto"
             placeholder="Enter description"
             {...getFieldProps("description")}
           />

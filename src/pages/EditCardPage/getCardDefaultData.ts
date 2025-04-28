@@ -9,7 +9,6 @@ interface CardDefaultData {
     labels: Labels
 }
 export default async function getCardDefaultData(client: IDeskproClient, cardId: string): Promise<CardDefaultData> {
-
     // Get the authenticated user
     const member = await getCurrentMemberService(client)
 
