@@ -2,14 +2,9 @@ import { Stack } from "@deskpro/deskpro-ui";
 import { TrelloError } from "../../services/trello";
 import { UNKNOWN_ERROR } from "../../constants";
 import { Container, ErrorBlock } from "../common";
-import type { FC } from "react";
-import type { FallbackProps } from "react-error-boundary";
+import { FallbackRender } from "@sentry/react";
 
-type Props = Omit<FallbackProps, "error"> & {
-    error: Error,
-};
-
-const ErrorFallback: FC<Props> = ({ error }) => {
+const ErrorFallback: FallbackRender = ({ error }) => {
   const message = UNKNOWN_ERROR;
   const button = null;
 
