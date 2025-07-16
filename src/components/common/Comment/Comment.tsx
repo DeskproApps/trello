@@ -4,8 +4,9 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { P11, Stack, Avatar, TSpan } from "@deskpro/deskpro-ui";
 import { Markdown } from "../Markdown";
 import type { FC } from "react";
+import { DeskproAppTheme } from "@deskpro/app-sdk";
 
-const TimeAgo = styled(ReactTimeAgo)`
+const TimeAgo = styled(ReactTimeAgo)<DeskproAppTheme>`
     color: ${({ theme }) => theme.colors.grey80};
 `;
 

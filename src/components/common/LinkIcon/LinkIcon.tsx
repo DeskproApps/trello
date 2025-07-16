@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { Icon } from "@deskpro/deskpro-ui";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { Props } from "./types";
+import { DeskproAppTheme } from "@deskpro/app-sdk";
 
-const Link = styled.a`
+const Link = styled.a<DeskproAppTheme>`
     color: ${({ theme, color }) => color || theme.colors.grey40 };
 `;
 
